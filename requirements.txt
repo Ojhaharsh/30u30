@@ -1,0 +1,22 @@
+# Requirements for 30u30 Project
+# ===============================
+
+# Core dependencies (minimal for CPU-friendly training)
+numpy>=1.21.0
+
+# Visualization
+matplotlib>=3.4.0
+seaborn>=0.11.0
+
+# Jupyter notebooks
+jupyter>=1.0.0
+ipykernel>=6.0.0
+
+# Optional: For better notebook experience
+jupyter_contrib_nbextensions>=0.5.1
+
+# Optional: For code formatting
+black>=21.0
+
+# Optional: For progress bars (used in some training scripts)
+tqdm>=4.60.0
