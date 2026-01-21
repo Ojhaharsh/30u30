@@ -59,6 +59,19 @@ papers/*/data/*
 *.h5
 *.ckpt
 
+# LSTM/Training outputs
+lstm_model.pkl
+*_checkpoint.pkl
+gate_*.png
+cell_state_*.png
+gradient_flow_*.png
+training_*.png
+lstm_analysis/
+
+# Visualization outputs (keep examples, ignore generated)
+papers/*/visualizations/*.png
+papers/*/plots/*.png
+
 # OS
 Thumbs.db
 .DS_Store

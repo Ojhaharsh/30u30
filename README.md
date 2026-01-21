@@ -8,16 +8,19 @@
 
 > Complete implementations • Interactive notebooks • Beginner-friendly • 100% Free
 
-## 🚀 Day 1 is LIVE!
+## 🚀 Days 1 & 2 are LIVE!
 
-**"The Unreasonable Effectiveness of Recurrent Neural Networks"**
-
-✅ Character-level RNN from scratch (pure NumPy)  
-✅ Interactive Jupyter notebook with visualizations  
-✅ 5 progressive exercises + solutions  
-✅ Train on any text in minutes  
-
+**Day 1: "The Unreasonable Effectiveness of Recurrent Neural Networks"**
+- Character-level RNN from scratch (pure NumPy)  
+- Interactive Jupyter notebook with visualizations  
+- 5 progressive exercises + solutions  
 **[Start Day 1 →](papers/01_Unreasonable_Effectiveness/)**
+
+**Day 2: "Understanding LSTM Networks"** 🆕
+- Complete LSTM with 4 gates from scratch
+- Gate activation analysis & visualizations
+- 5 exercises including LSTM vs GRU comparison  
+**[Start Day 2 →](papers/02_Understanding_LSTM/)**
 
 ---
 
@@ -44,7 +47,7 @@ Each paper gets the full treatment:
 | Day | Paper | Status | Core Concept |
 |-----|-------|--------|--------------|
 | 1 | [The Unreasonable Effectiveness of RNNs](papers/01_Unreasonable_Effectiveness/) | 🚀 **LIVE** | Why predicting = intelligence |
-| 2 | [Understanding LSTM Networks](papers/02_Understanding_LSTM/) | ⏳ Coming | The mechanics of memory |
+| 2 | [Understanding LSTM Networks](papers/02_Understanding_LSTM/) | 🚀 **LIVE** | The mechanics of memory |
 | 3 | [RNN Regularization](papers/03_RNN_Regularization/) | ⏳ Coming | Making RNNs work |
 | 4 | [Minimizing Description Length](papers/04_Description_Length/) | ⏳ Coming | Compression = Intelligence |
 | 5 | [Minimum Description Length Principle](papers/05_MDL_Principle/) | ⏳ Coming | Math of compression |
@@ -150,6 +153,7 @@ MIT License - Free to use, learn, and share.
 
 ---
 
-**Ready to start?** → **[Day 1: Character-Level RNN](papers/01_Unreasonable_Effectiveness/)**
-
+**Ready to start?**  
+→ **[Day 1: Character-Level RNN](papers/01_Unreasonable_Effectiveness/)**  
+→ **[Day 2: Understanding LSTMs](papers/02_Understanding_LSTM/)**  
 Let's build something amazing together! 🚀
