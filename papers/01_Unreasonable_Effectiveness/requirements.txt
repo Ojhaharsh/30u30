@@ -1,0 +1,16 @@
+# Day 1: Character-Level RNN - Requirements
+# ==========================================
+
+# Core dependencies
+numpy>=1.21.0
+matplotlib>=3.4.0
+
+# For notebooks
+jupyter>=1.0.0
+ipykernel>=6.0.0
+
+# Optional: Better visualizations
+seaborn>=0.11.0
+
+# Optional: Progress bars for training
+tqdm>=4.60.0
