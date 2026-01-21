@@ -125,7 +125,7 @@ If this helps you, ⭐ star the repo and share it with others!
 We'd love your help making this better!
 
 - 🐛 **Found a bug?** [Open an issue](../../issues)
-- 💡 **Have an idea?** [Open an issue](../../issues) with the "enhancement" label
+- 💡 **Have an idea?** [Open an issue](../../issues) with the "enhancement" label or [Start a discussion](../../discussions)
 - 📝 **Want to contribute code?** See [CONTRIBUTING.md](CONTRIBUTING.md)
 
 Every contribution helps thousands of learners.
