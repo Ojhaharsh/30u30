@@ -44,7 +44,10 @@ Use solutions as a starting point:
 ## Solutions Index
 
 - `exercise_01_solution.py` - Complete CharRNN implementation
-- More solutions coming as you complete exercises!
+- `exercise_02_solution.py` - Temperature sampling analysis
+- `exercise_03_solution.md` - Custom dataset training guide
+- `exercise_04_solution.py` - Training diagnostics toolkit
+- `exercise_05_solution.py` - Author style classification pipeline
 
 ---
 
