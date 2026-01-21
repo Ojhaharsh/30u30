@@ -106,7 +106,7 @@ Learn by building! These exercises progress from simple to challenging.
 - Include samples at 3 temperatures
 - Explain the pattern
 
-**Solution:** `solutions/exercise_02_solution.md`
+**Solution:** `solutions/exercise_02_solution.py`
 
 ---
 
@@ -234,7 +234,7 @@ Train loss ↓, Val loss ↑
 
 ---
 
-## Project: Shakespeare vs Hemingway Classifier ⏱️⏱️⏱️
+## Exercise 5: Shakespeare vs Hemingway Classifier ⏱️⏱️⏱️
 
 **Goal:** Train two models and build a classifier to distinguish them.
 
@@ -301,7 +301,7 @@ accuracy = clf.score(test_features, test_labels)
 - Report analyzing stylistic differences
 - Code for the entire pipeline
 
-**Solution:** `solutions/project_shakespeare_hemingway/`
+**Solution:** `solutions/exercise_05_solution.py`
 
 ---
 
