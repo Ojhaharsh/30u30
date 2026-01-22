@@ -102,13 +102,11 @@ Neuron A → [?] → Neuron C
 (A and C must learn independently, creating redundancy)
 ```
 
-**The key equation:**
-$$\text{output} = \frac{1}{\text{keep\_prob}} \cdot x \cdot \text{mask}$$
+**The key equation:** `output = (x * mask) / keep_prob`
 
-Where mask is binary (0 or 1) with probability keep_prob of being 1.
+Where mask is binary (0 or 1) with probability `keep_prob` of being 1.
 
 ---
-
 ### 2️⃣ Layer Normalization: Stabilizing the Gradient Highway
 
 **What it does:** Normalize each layer's output to zero mean and unit variance.

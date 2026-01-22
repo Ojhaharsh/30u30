@@ -1,0 +1,19 @@
+# Day 3: RNN Regularization & Generalization - Requirements
+# ==========================================================
+
+# Core dependencies
+numpy>=1.21.0
+matplotlib>=3.4.0
+
+# For notebooks
+jupyter>=1.0.0
+ipykernel>=6.0.0
+
+# Optional: Better visualizations
+seaborn>=0.11.0
+
+# Optional: Progress bars for training
+tqdm>=4.60.0
+
+# Optional: For comparing regularization techniques
+scikit-learn>=0.24.0
