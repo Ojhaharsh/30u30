@@ -8,7 +8,7 @@
 
 > Complete implementations • Interactive notebooks • Beginner-friendly • 100% Free
 
-## 🚀 Days 1 & 2 are LIVE!
+## 🚀 Days 1, 2 & 3 are LIVE!
 
 **Day 1: "The Unreasonable Effectiveness of Recurrent Neural Networks"**
 - Character-level RNN from scratch (pure NumPy)  
@@ -16,11 +16,17 @@
 - 5 progressive exercises + solutions  
 **[Start Day 1 →](papers/01_Unreasonable_Effectiveness/)**
 
-**Day 2: "Understanding LSTM Networks"** 🆕
+**Day 2: "Understanding LSTM Networks"**
 - Complete LSTM with 4 gates from scratch
 - Gate activation analysis & visualizations
 - 5 exercises including LSTM vs GRU comparison  
 **[Start Day 2 →](papers/02_Understanding_LSTM/)**
+
+**Day 3: "RNN Regularization"** 🆕
+- Dropout, Layer Norm, Weight Decay, Early Stopping
+- Complete regularization pipeline from scratch
+- 5 exercises on preventing overfitting  
+**[Start Day 3 →](papers/03_RNN_Regularization/)**
 
 ---
 
@@ -48,7 +54,7 @@ Each paper gets the full treatment:
 |-----|-------|--------|--------------|
 | 1 | [The Unreasonable Effectiveness of RNNs](papers/01_Unreasonable_Effectiveness/) | 🚀 **LIVE** | Why predicting = intelligence |
 | 2 | [Understanding LSTM Networks](papers/02_Understanding_LSTM/) | 🚀 **LIVE** | The mechanics of memory |
-| 3 | [RNN Regularization](papers/03_RNN_Regularization/) | ⏳ Coming | Making RNNs work |
+| 3 | [RNN Regularization](papers/03_RNN_Regularization/) | 🚀 **LIVE** | Making RNNs generalize |
 | 4 | [Minimizing Description Length](papers/04_Description_Length/) | ⏳ Coming | Compression = Intelligence |
 | 5 | [Minimum Description Length Principle](papers/05_MDL_Principle/) | ⏳ Coming | Math of compression |
 | 6 | [The First Law of Complexodynamics](papers/06_Complexodynamics/) | ⏳ Coming | Physics of complexity |
@@ -156,4 +162,5 @@ MIT License - Free to use, learn, and share.
 **Ready to start?**  
 → **[Day 1: Character-Level RNN](papers/01_Unreasonable_Effectiveness/)**  
 → **[Day 2: Understanding LSTMs](papers/02_Understanding_LSTM/)**  
+→ **[Day 3: RNN Regularization](papers/03_RNN_Regularization/)**  
 Let's build something amazing together! 🚀
