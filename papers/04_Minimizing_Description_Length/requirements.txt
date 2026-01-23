@@ -1,0 +1,17 @@
+# Day 4: MDL & Bayesian Networks - Requirements
+# =============================================
+
+# Core dependencies
+numpy>=1.21.0
+matplotlib>=3.4.0
+scipy>=1.7.0     # Needed for Gaussian distributions (stats)
+
+# For notebooks
+jupyter>=1.0.0
+ipykernel>=6.0.0
+
+# Optional: Better visualizations
+seaborn>=0.11.0  # Crucial for the weight distribution plots
+
+# Optional: Progress bars
+tqdm>=4.60.0
