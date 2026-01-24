@@ -1,0 +1,100 @@
+# Sample Data for MDL Experiments
+# ================================
+# This file contains sample polynomial data for testing MDL model selection.
+# Format: x,y pairs (comma-separated)
+
+# Dataset 1: True polynomial degree = 2 (quadratic)
+# y = 3 + 2x - 0.5x² + noise
+# Use this to test if MDL correctly identifies degree 2
+
+0.00,3.21
+0.51,3.85
+1.02,4.42
+1.53,4.89
+2.04,5.12
+2.55,5.38
+3.06,5.21
+3.57,5.15
+4.08,4.78
+4.59,4.32
+5.10,3.95
+5.61,3.28
+6.12,2.51
+6.63,1.89
+7.14,1.12
+7.65,0.25
+8.16,-0.58
+8.67,-1.42
+9.18,-2.35
+9.69,-3.18
+
+# Dataset 2: Temperature readings (sinusoidal pattern)
+# Use this to see how MDL handles non-polynomial data
+# Hour, Temperature (°C)
+
+TEMP_DATA:
+0,12.5
+1,10.2
+2,8.8
+3,7.5
+4,7.1
+5,7.8
+6,9.2
+7,12.1
+8,15.5
+9,18.3
+10,21.2
+11,23.5
+12,24.8
+13,25.1
+14,24.5
+15,23.2
+16,21.1
+17,18.5
+18,15.8
+19,13.5
+20,11.8
+21,10.5
+22,9.8
+23,10.1
+
+# Dataset 3: Random noise (no pattern)
+# MDL should select degree 0 (just the mean)
+# Any higher degree would be overfitting
+
+RANDOM_DATA:
+0.00,1.24
+0.50,-0.32
+1.00,2.15
+1.50,-1.08
+2.00,0.67
+2.50,1.89
+3.00,-0.45
+3.50,0.23
+4.00,-1.56
+4.50,0.91
+5.00,0.12
+5.50,-0.78
+6.00,1.45
+6.50,-0.23
+7.00,0.56
+7.50,-1.12
+8.00,0.34
+8.50,0.89
+9.00,-0.67
+9.50,1.23
+10.00,-0.45
+
+# Instructions for use:
+# 1. Load the data using numpy:
+#    data = np.loadtxt('data/input.txt', delimiter=',', comments='#')
+#    x, y = data[:, 0], data[:, 1]
+#
+# 2. Apply MDL model selection:
+#    result = select_polynomial_degree(x, y)
+#    print(f"Best degree: {result['best_degree']}")
+#
+# 3. Expected results:
+#    - Dataset 1: Should select degree 2
+#    - Dataset 2: Will select higher degree (need polynomial to approximate sine)
+#    - Dataset 3: Should select degree 0 or 1 (no structure)
