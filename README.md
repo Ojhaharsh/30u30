@@ -8,7 +8,7 @@
 
 > Complete implementations • Interactive notebooks • Beginner-friendly • 100% Free
 
-## 🚀 Days 1, 2, 3 & 4 are LIVE!
+## 🚀 Days 1, 2, 3, 4 & 5 are LIVE!
 
 **Day 1: "The Unreasonable Effectiveness of Recurrent Neural Networks"**
 - Character-level RNN from scratch (pure NumPy)  
@@ -22,17 +22,23 @@
 - 5 exercises including LSTM vs GRU comparison  
 **[Start Day 2 →](papers/02_Understanding_LSTM/)**
 
-**Day 3: "RNN Regularization"** 🆕
+**Day 3: "RNN Regularization"**
 - Dropout, Layer Norm, Weight Decay, Early Stopping
 - Complete regularization pipeline from scratch
 - 5 exercises on preventing overfitting  
 **[Start Day 3 →](papers/03_RNN_Regularization/)**
 
-**Day 4: "Minimizing Description Length"** 🆕
+**Day 4: "Minimizing Description Length"**
 - Bayesian / Noisy-Weight networks, MDL intuition
 - Uncertainty envelopes, compression analysis, pareto frontier
 - 5 exercises that demonstrate gaps, beta tuning, MC inference
 **[Start Day 4 →](papers/04_Minimizing_Description_Length/)**
+
+**Day 5: "MDL Principle Tutorial"** 🆕
+- Two-Part Codes, Prequential MDL, NML Complexity
+- MDL vs AIC vs BIC comparison, compression analysis
+- 5 exercises: from basic MDL to model selection showdown
+**[Start Day 5 →](papers/05_MDL_Principle/)**
 
 ---
 
@@ -62,7 +68,7 @@ Each paper gets the full treatment:
 | 2 | [Understanding LSTM Networks](papers/02_Understanding_LSTM/) | 🚀 **LIVE** | The mechanics of memory |
 | 3 | [RNN Regularization](papers/03_RNN_Regularization/) | 🚀 **LIVE** | Making RNNs generalize |
 | 4 | [Minimizing Description Length](papers/04_Minimizing_Description_Length/) | 🚀 **LIVE** | Compression = Intelligence |
-| 5 | [Minimum Description Length Principle](papers/05_MDL_Principle/) | ⏳ Coming | Math of compression |
+| 5 | [MDL Principle Tutorial](papers/05_MDL_Principle/) | 🚀 **LIVE** | Math of compression |
 | 6 | [The First Law of Complexodynamics](papers/06_Complexodynamics/) | ⏳ Coming | Physics of complexity |
 | 7 | [The Coffee Automaton](papers/07_Coffee_Automaton/) | ⏳ Coming | Why intelligence exists |
 
@@ -171,4 +177,5 @@ MIT License - Free to use, learn, and share.
 → **[Day 2: Understanding LSTMs](papers/02_Understanding_LSTM/)**  
 → **[Day 3: RNN Regularization](papers/03_RNN_Regularization/)**  
 → **[Day 4: Minimizing Description Length](papers/04_Minimizing_Description_Length/)**  
+→ **[Day 5: MDL Principle Tutorial](papers/05_MDL_Principle/)**  
 Let's build something amazing together! 🚀
