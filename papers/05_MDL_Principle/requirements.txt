@@ -1,0 +1,6 @@
+# Day 5: MDL (Minimum Description Length) Principle
+# Required packages
+
+numpy>=1.19.0
+matplotlib>=3.3.0
+scipy>=1.5.0

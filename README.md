@@ -31,13 +31,13 @@
 **Day 4: "Minimizing Description Length"**
 - Bayesian / Noisy-Weight networks, MDL intuition
 - Uncertainty envelopes, compression analysis, pareto frontier
-- 5 exercises that demonstrate gaps, beta tuning, MC inference
+- 5 exercises that demonstrate gaps, beta tuning, MC inference  
 **[Start Day 4 →](papers/04_Minimizing_Description_Length/)**
 
 **Day 5: "MDL Principle Tutorial"** 🆕
 - Two-Part Codes, Prequential MDL, NML Complexity
 - MDL vs AIC vs BIC comparison, compression analysis
-- 5 exercises: from basic MDL to model selection showdown
+- 5 exercises: from basic MDL to model selection showdown  
 **[Start Day 5 →](papers/05_MDL_Principle/)**
 
 ---
