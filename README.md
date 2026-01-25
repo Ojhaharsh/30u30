@@ -8,7 +8,7 @@
 
 > Complete implementations • Interactive notebooks • Beginner-friendly • 100% Free
 
-## 🚀 Days 1, 2, 3, 4 & 5 are LIVE!
+## 🚀 Days 1, 2, 3, 4, 5 & 6 are LIVE!
 
 **Day 1: "The Unreasonable Effectiveness of Recurrent Neural Networks"**
 - Character-level RNN from scratch (pure NumPy)  
@@ -34,11 +34,17 @@
 - 5 exercises that demonstrate gaps, beta tuning, MC inference  
 **[Start Day 4 →](papers/04_Minimizing_Description_Length/)**
 
-**Day 5: "MDL Principle Tutorial"** 🆕
+**Day 5: "MDL Principle Tutorial"**
 - Two-Part Codes, Prequential MDL, NML Complexity
 - MDL vs AIC vs BIC comparison, compression analysis
 - 5 exercises: from basic MDL to model selection showdown  
 **[Start Day 5 →](papers/05_MDL_Principle/)**
+
+**Day 6: "The First Law of Complexodynamics"** 🆕
+- Information equilibration, channel capacity, evolutionary dynamics
+- Complete complexity evolution simulator with 7 visualizations
+- 5 exercises: from Shannon entropy to real genome analysis  
+**[Start Day 6 →](papers/06_Complexodynamics/)**
 
 ---
 
@@ -69,7 +75,7 @@ Each paper gets the full treatment:
 | 3 | [RNN Regularization](papers/03_RNN_Regularization/) | 🚀 **LIVE** | Making RNNs generalize |
 | 4 | [Minimizing Description Length](papers/04_Minimizing_Description_Length/) | 🚀 **LIVE** | Compression = Intelligence |
 | 5 | [MDL Principle Tutorial](papers/05_MDL_Principle/) | 🚀 **LIVE** | Math of compression |
-| 6 | [The First Law of Complexodynamics](papers/06_Complexodynamics/) | ⏳ Coming | Physics of complexity |
+| 6 | [The First Law of Complexodynamics](papers/06_Complexodynamics/) | 🚀 **LIVE** | Physics of complexity |
 | 7 | [The Coffee Automaton](papers/07_Coffee_Automaton/) | ⏳ Coming | Why intelligence exists |
 
 ### Unit 2: Deep Learning Explosion (Days 8-12)
@@ -178,4 +184,5 @@ MIT License - Free to use, learn, and share.
 → **[Day 3: RNN Regularization](papers/03_RNN_Regularization/)**  
 → **[Day 4: Minimizing Description Length](papers/04_Minimizing_Description_Length/)**  
 → **[Day 5: MDL Principle Tutorial](papers/05_MDL_Principle/)**  
+→ **[Day 6: The First Law of Complexodynamics](papers/06_Complexodynamics/)** 🆕  
 Let's build something amazing together! 🚀
