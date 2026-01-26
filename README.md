@@ -8,7 +8,7 @@
 
 > Complete implementations • Interactive notebooks • Beginner-friendly • 100% Free
 
-## 🚀 Days 1, 2, 3, 4, 5 & 6 are LIVE!
+## 🚀 Days 1-7 are LIVE!
 
 **Day 1: "The Unreasonable Effectiveness of Recurrent Neural Networks"**
 - Character-level RNN from scratch (pure NumPy)  
@@ -40,11 +40,17 @@
 - 5 exercises: from basic MDL to model selection showdown  
 **[Start Day 5 →](papers/05_MDL_Principle/)**
 
-**Day 6: "The First Law of Complexodynamics"** 🆕
+**Day 6: "The First Law of Complexodynamics"**
 - Information equilibration, channel capacity, evolutionary dynamics
 - Complete complexity evolution simulator with 7 visualizations
 - 5 exercises: from Shannon entropy to real genome analysis  
 **[Start Day 6 →](papers/06_Complexodynamics/)**
+
+**Day 7: "The Coffee Automaton"** 🆕
+- Cellular automaton complexity, heat diffusion, emergent behavior
+- Chaos theory, Lyapunov exponents, information flow analysis
+- 5 exercises: edge of chaos, pattern classification, neural network initialization  
+**[Start Day 7 →](papers/07_coffee_automaton/)**
 
 ---
 
@@ -76,7 +82,8 @@ Each paper gets the full treatment:
 | 4 | [Minimizing Description Length](papers/04_Minimizing_Description_Length/) | 🚀 **LIVE** | Compression = Intelligence |
 | 5 | [MDL Principle Tutorial](papers/05_MDL_Principle/) | 🚀 **LIVE** | Math of compression |
 | 6 | [The First Law of Complexodynamics](papers/06_Complexodynamics/) | 🚀 **LIVE** | Physics of complexity |
-| 7 | [The Coffee Automaton](papers/07_Coffee_Automaton/) | ⏳ Coming | Why intelligence exists |
+| 7 | [The Coffee Automaton](papers/07_coffee_automaton/) | 🚀 **LIVE** | Why intelligence exists |
+| 8 | ImageNet Classification (AlexNet) | ⏳ Coming | Deep learning revolution |
 
 ### Unit 2: Deep Learning Explosion (Days 8-12)
 *Vision, depth, and the techniques that changed everything*
@@ -184,5 +191,7 @@ MIT License - Free to use, learn, and share.
 → **[Day 3: RNN Regularization](papers/03_RNN_Regularization/)**  
 → **[Day 4: Minimizing Description Length](papers/04_Minimizing_Description_Length/)**  
 → **[Day 5: MDL Principle Tutorial](papers/05_MDL_Principle/)**  
-→ **[Day 6: The First Law of Complexodynamics](papers/06_Complexodynamics/)** 🆕  
+→ **[Day 6: The First Law of Complexodynamics](papers/06_Complexodynamics/)**  
+→ **[Day 7: The Coffee Automaton](papers/07_coffee_automaton/)** 🆕  V
+
 Let's build something amazing together! 🚀
