@@ -8,7 +8,9 @@
 
 > Complete implementations • Interactive notebooks • Beginner-friendly • 100% Free
 
-## 🚀 Days 1-7 are LIVE!
+## 🚀 Unit 1 Complete! Now Starting Unit 2: Deep Learning Explosion
+
+### ✅ Unit 1: The Foundations (Days 1-7) - COMPLETE!
 
 **Day 1: "The Unreasonable Effectiveness of Recurrent Neural Networks"**
 - Character-level RNN from scratch (pure NumPy)  
@@ -46,11 +48,19 @@
 - 5 exercises: from Shannon entropy to real genome analysis  
 **[Start Day 6 →](papers/06_Complexodynamics/)**
 
-**Day 7: "The Coffee Automaton"** 🆕
+**Day 7: "The Coffee Automaton"**
 - Cellular automaton complexity, heat diffusion, emergent behavior
 - Chaos theory, Lyapunov exponents, information flow analysis
 - 5 exercises: edge of chaos, pattern classification, neural network initialization  
 **[Start Day 7 →](papers/07_coffee_automaton/)**
+
+### 🔥 Unit 2: Deep Learning Explosion (Vision & Architectures) - STARTING NOW!
+
+**Day 8: "ImageNet Classification with Deep CNNs (AlexNet)"** 🆕
+- The paper that sparked the deep learning revolution
+- GPU-accelerated training, ReLU activations, dropout regularization
+- 5 exercises: GPU impact analysis, activation functions, data augmentation  
+**[Start Day 8 →](papers/08_alexnet/)**
 
 ---
 
@@ -83,11 +93,17 @@ Each paper gets the full treatment:
 | 5 | [MDL Principle Tutorial](papers/05_MDL_Principle/) | 🚀 **LIVE** | Math of compression |
 | 6 | [The First Law of Complexodynamics](papers/06_Complexodynamics/) | 🚀 **LIVE** | Physics of complexity |
 | 7 | [The Coffee Automaton](papers/07_coffee_automaton/) | 🚀 **LIVE** | Why intelligence exists |
-| 8 | ImageNet Classification (AlexNet) | ⏳ Coming | Deep learning revolution |
 
-### Unit 2: Deep Learning Explosion (Days 8-12)
+### Unit 2: Deep Learning Explosion (Days 8-12) - 🔥 IN PROGRESS
 *Vision, depth, and the techniques that changed everything*
-- ImageNet classification, residual networks, batch normalization, dropout
+
+| Day | Paper | Status | Core Concept |
+|-----|-------|--------|-------------|
+| 8 | [ImageNet Classification (AlexNet)](papers/08_alexnet/) | 🆕 **NEXT** | Deep learning revolution |
+| 9 | Deep Residual Learning (ResNet) | ⏳ Coming | Skip connections |
+| 10 | Batch Normalization | ⏳ Coming | Training stability |
+| 11 | Dropout | ⏳ Coming | Regularization |
+| 12 | Network in Network | ⏳ Coming | 1x1 convolutions |
 
 ### Unit 3: The Transformer Era (Days 13-15)
 *The architecture that ate the world*
@@ -192,6 +208,7 @@ MIT License - Free to use, learn, and share.
 → **[Day 4: Minimizing Description Length](papers/04_Minimizing_Description_Length/)**  
 → **[Day 5: MDL Principle Tutorial](papers/05_MDL_Principle/)**  
 → **[Day 6: The First Law of Complexodynamics](papers/06_Complexodynamics/)**  
-→ **[Day 7: The Coffee Automaton](papers/07_coffee_automaton/)** 🆕  V
+→ **[Day 7: The Coffee Automaton](papers/07_coffee_automaton/)**  
+→ **[Day 8: ImageNet Classification (AlexNet)](papers/08_alexnet/)** 🆕 **← START HERE!**
 
 Let's build something amazing together! 🚀
