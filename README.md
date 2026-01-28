@@ -54,9 +54,9 @@
 - 5 exercises: edge of chaos, pattern classification, neural network initialization  
 **[Start Day 7 →](papers/07_coffee_automaton/)**
 
-### 🔥 Unit 2: Deep Learning Explosion (Vision & Architectures) - IN PROGRESS!
+### 🔥 Unit 2: Deep Learning Explosion (Vision & Architectures) - STARTING NOW!
 
-**Day 8: "ImageNet Classification with Deep CNNs (AlexNet)"** ✅
+**Day 8: "ImageNet Classification with Deep CNNs (AlexNet)"**
 - The paper that sparked the deep learning revolution
 - GPU-accelerated training, ReLU activations, dropout regularization
 - 5 exercises: GPU impact analysis, activation functions, data augmentation  
