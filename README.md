@@ -62,11 +62,17 @@
 - 5 exercises: GPU impact analysis, activation functions, data augmentation  
 **[Start Day 8 →](papers/08_alexnet/)**
 
-**Day 9: "Deep Residual Learning for Image Recognition (ResNet)"** 🆕
+**Day 9: "Deep Residual Learning for Image Recognition (ResNet)"**
 - Skip connections that enable 100+ layer networks
 - Identity mappings, residual blocks, gradient highway
 - 5 exercises: vanishing gradients, skip connection ablation, depth analysis  
 **[Start Day 9 →](papers/09_resnet/)**
+
+**Day 10: "Identity Mappings in Deep Residual Networks (ResNet v2)"** 🆕
+- Pre-activation design: BN → ReLU → Conv
+- Why order matters for 1000+ layer networks
+- 5 exercises: pre vs post activation, information flow, extreme depth  
+**[Start Day 10 →](papers/10_resnet_v2/)**
 
 ---
 
@@ -106,10 +112,10 @@ Each paper gets the full treatment:
 | Day | Paper | Status | Core Concept |
 |-----|-------|--------|-------------|
 | 8 | [ImageNet Classification (AlexNet)](papers/08_alexnet/) | 🚀 **LIVE** | Deep learning revolution |
-| 9 | [Deep Residual Learning (ResNet)](papers/09_resnet/) | 🆕 **NEXT** | Skip connections |
-| 10 | Identity Mappings in ResNets | ⏳ Coming | Pre-activation design |
+| 9 | [Deep Residual Learning (ResNet)](papers/09_resnet/) | 🚀 **LIVE** | Skip connections |
+| 10 | [Identity Mappings in ResNets](papers/10_resnet_v2/) | 🆕 **NEXT** | Pre-activation design |
 | 11 | Multi-Scale Context Aggregation | ⏳ Coming | Dilated convolutions |
-| 12 | Neural Turning Machines | ⏳ Coming | External memory |
+| 12 | Neural Turing Machines | ⏳ Coming | External memory |
 
 ### Unit 3: The Transformer Era (Days 13-15)
 *The architecture that ate the world*
@@ -216,6 +222,7 @@ MIT License - Free to use, learn, and share.
 → **[Day 6: The First Law of Complexodynamics](papers/06_Complexodynamics/)**  
 → **[Day 7: The Coffee Automaton](papers/07_coffee_automaton/)**  
 → **[Day 8: ImageNet Classification (AlexNet)](papers/08_alexnet/)**  
-→ **[Day 9: Deep Residual Learning (ResNet)](papers/09_resnet/)** 🆕 **← START HERE!**
+→ **[Day 9: Deep Residual Learning (ResNet)](papers/09_resnet/)**  
+→ **[Day 10: Identity Mappings (ResNet v2)](papers/10_resnet_v2/)** 🆕 **← START HERE!**
 
 Let's build something amazing together! 🚀
