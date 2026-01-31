@@ -1,0 +1,18 @@
+# Day 12: Dropout Requirements
+
+# Core dependencies
+numpy>=1.19.0
+
+# Visualization
+matplotlib>=3.3.0
+
+# For Jupyter notebooks
+jupyter>=1.0.0
+ipykernel>=5.5.0
+
+# Optional: For PyTorch comparison
+# torch>=1.7.0
+# torchvision>=0.8.0
+
+# For progress bars (optional)
+tqdm>=4.50.0
