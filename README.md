@@ -74,11 +74,17 @@
 - 5 exercises: pre vs post activation, information flow, extreme depth  
 **[Start Day 10 →](papers/10_resnet_v2/)**
 
-**Day 11: "Multi-Scale Context Aggregation by Dilated Convolutions"** 🆕
+**Day 11: "Multi-Scale Context Aggregation by Dilated Convolutions"**
 - Exponentially expanding receptive fields without pooling
 - Dense prediction, semantic segmentation, WaveNet foundations
 - 5 exercises: receptive field analysis, dilation patterns, context modules  
 **[Start Day 11 →](papers/11_dilated_convolutions/)**
+
+**Day 12: "Dropout: A Simple Way to Prevent Overfitting"** 🆕
+- The standard regularization technique for neural networks
+- Inverted dropout, MC Dropout for uncertainty, ensemble interpretation
+- 5 exercises: implement dropout, rate sweep, spatial dropout, MC uncertainty  
+**[Start Day 12 →](papers/12_dropout/)**
 
 ---
 
@@ -120,8 +126,8 @@ Each paper gets the full treatment:
 | 8 | [ImageNet Classification (AlexNet)](papers/08_alexnet/) | 🚀 **LIVE** | Deep learning revolution |
 | 9 | [Deep Residual Learning (ResNet)](papers/09_resnet/) | 🚀 **LIVE** | Skip connections |
 | 10 | [Identity Mappings in ResNets](papers/10_resnet_v2/) | 🚀 **LIVE** | Pre-activation design |
-| 11 | [Multi-Scale Context (Dilated Conv)](papers/11_dilated_convolutions/) | 🆕 **NEXT** | Dilated convolutions |
-| 12 | Neural Turing Machines | ⏳ Coming | External memory |
+| 11 | [Multi-Scale Context (Dilated Conv)](papers/11_dilated_convolutions/) | 🚀 **LIVE** | Dilated convolutions |
+| 12 | [Dropout (Srivastava et al.)](papers/12_dropout/) | 🆕 **NEXT** | Preventing overfitting |
 
 ### Unit 3: The Transformer Era (Days 13-15)
 *The architecture that ate the world*
@@ -230,6 +236,7 @@ MIT License - Free to use, learn, and share.
 → **[Day 8: ImageNet Classification (AlexNet)](papers/08_alexnet/)**  
 → **[Day 9: Deep Residual Learning (ResNet)](papers/09_resnet/)**  
 → **[Day 10: Identity Mappings (ResNet v2)](papers/10_resnet_v2/)**  
-→ **[Day 11: Dilated Convolutions](papers/11_dilated_convolutions/)** 🆕 **← START HERE!**
+→ **[Day 11: Dilated Convolutions](papers/11_dilated_convolutions/)**  
+→ **[Day 12: Dropout](papers/12_dropout/)** 🆕 **← START HERE!**
 
 Let's build something amazing together! 🚀
