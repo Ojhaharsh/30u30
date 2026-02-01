@@ -1,0 +1,17 @@
+# Day 13: Transformer Requirements
+
+# Core dependencies
+numpy>=1.20.0
+
+# Visualization (optional but recommended)
+matplotlib>=3.5.0
+
+# For notebook support
+jupyter>=1.0.0
+ipykernel>=6.0.0
+
+# For comparisons with PyTorch implementation (optional)
+# torch>=1.9.0
+
+# Progress bars for training
+tqdm>=4.60.0
