@@ -8,7 +8,7 @@
 
 > Complete implementations • Interactive notebooks • Beginner-friendly • 100% Free
 
-## 🚀 Unit 1 Complete! Now Starting Unit 2: Deep Learning Explosion
+## 🚀 Units 1-2 Complete! Now Starting Unit 3: The Transformer Era
 
 ### ✅ Unit 1: The Foundations (Days 1-7) - COMPLETE!
 
@@ -80,11 +80,19 @@
 - 5 exercises: receptive field analysis, dilation patterns, context modules  
 **[Start Day 11 →](papers/11_dilated_convolutions/)**
 
-**Day 12: "Dropout: A Simple Way to Prevent Overfitting"** 🆕
+**Day 12: "Dropout: A Simple Way to Prevent Overfitting"**
 - The standard regularization technique for neural networks
 - Inverted dropout, MC Dropout for uncertainty, ensemble interpretation
 - 5 exercises: implement dropout, rate sweep, spatial dropout, MC uncertainty  
 **[Start Day 12 →](papers/12_dropout/)**
+
+### 🧠 Unit 3: The Transformer Era - STARTING NOW!
+
+**Day 13: "Attention Is All You Need"** 🆕
+- The paper that revolutionized NLP and beyond - the Transformer
+- Self-attention, multi-head attention, positional encoding
+- 5 exercises: from scaled dot-product to full Transformer + interactive visualization  
+**[Start Day 13 →](papers/13_attention/)**
 
 ---
 
@@ -118,7 +126,7 @@ Each paper gets the full treatment:
 | 6 | [The First Law of Complexodynamics](papers/06_Complexodynamics/) | 🚀 **LIVE** | Physics of complexity |
 | 7 | [The Coffee Automaton](papers/07_coffee_automaton/) | 🚀 **LIVE** | Why intelligence exists |
 
-### Unit 2: Deep Learning Explosion (Days 8-12) - 🔥 IN PROGRESS
+### Unit 2: Deep Learning Explosion (Days 8-12) - ✅ COMPLETE
 *Vision, depth, and the techniques that changed everything*
 
 | Day | Paper | Status | Core Concept |
@@ -127,11 +135,16 @@ Each paper gets the full treatment:
 | 9 | [Deep Residual Learning (ResNet)](papers/09_resnet/) | 🚀 **LIVE** | Skip connections |
 | 10 | [Identity Mappings in ResNets](papers/10_resnet_v2/) | 🚀 **LIVE** | Pre-activation design |
 | 11 | [Multi-Scale Context (Dilated Conv)](papers/11_dilated_convolutions/) | 🚀 **LIVE** | Dilated convolutions |
-| 12 | [Dropout (Srivastava et al.)](papers/12_dropout/) | 🆕 **NEXT** | Preventing overfitting |
+| 12 | [Dropout (Srivastava et al.)](papers/12_dropout/) | 🚀 **LIVE** | Preventing overfitting |
 
-### Unit 3: The Transformer Era (Days 13-15)
+### Unit 3: The Transformer Era (Days 13-15) - 🔥 IN PROGRESS
 *The architecture that ate the world*
-- Attention mechanism, transformers, BERT, GPT
+
+| Day | Paper | Status | Core Concept |
+|-----|-------|--------|-------------|
+| 13 | [Attention Is All You Need](papers/13_attention/) | 🆕 **LIVE** | Self-attention, Transformer |
+| 14 | BERT | 📅 Coming | Bidirectional encoders |
+| 15 | GPT | 📅 Coming | Autoregressive generation |
 
 ### Unit 4: Specialized Architectures (Days 16-21)
 *Memory, graphs, and reasoning*
@@ -237,6 +250,7 @@ MIT License - Free to use, learn, and share.
 → **[Day 9: Deep Residual Learning (ResNet)](papers/09_resnet/)**  
 → **[Day 10: Identity Mappings (ResNet v2)](papers/10_resnet_v2/)**  
 → **[Day 11: Dilated Convolutions](papers/11_dilated_convolutions/)**  
-→ **[Day 12: Dropout](papers/12_dropout/)** 🆕 **← START HERE!**
+→ **[Day 12: Dropout](papers/12_dropout/)**  
+→ **[Day 13: Attention Is All You Need](papers/13_attention/)** 🆕 **← START HERE!**
 
 Let's build something amazing together! 🚀
