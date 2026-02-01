@@ -1,0 +1,20 @@
+# Day 13: Data Directory
+
+This directory is for datasets used in Day 13 exercises.
+
+## Sample Data
+
+Generated synthetic data for training:
+- Copy task: Copy input sequence
+- Reverse task: Reverse input sequence
+
+## External Datasets (Optional)
+
+For real translation training, download:
+- WMT datasets: http://www.statmt.org/wmt14/
+- Multi30k: https://github.com/multi30k/dataset
+
+## Note
+
+Large datasets are not included in the repo.
+Run train_minimal.py to generate synthetic data.
