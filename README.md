@@ -54,7 +54,7 @@
 - 5 exercises: edge of chaos, pattern classification, neural network initialization  
 **[Start Day 7 →](papers/07_coffee_automaton/)**
 
-### 🔥 Unit 2: Deep Learning Explosion (Vision & Architectures) - STARTING NOW!
+### ✅ Unit 2: Deep Learning Explosion (Vision & Architectures) - COMPLETE!
 
 **Day 8: "ImageNet Classification with Deep CNNs (AlexNet)"**
 - The paper that sparked the deep learning revolution
@@ -115,7 +115,7 @@ Each paper gets the full treatment:
 
 ## 🗺️ The Journey
 
-### Unit 1: The Foundations (Days 1-7)
+### Unit 1: The Foundations (Days 1-7) - ✅ COMPLETE
 | Day | Paper | Status | Core Concept |
 |-----|-------|--------|--------------|
 | 1 | [The Unreasonable Effectiveness of RNNs](papers/01_Unreasonable_Effectiveness/) | 🚀 **LIVE** | Why predicting = intelligence |
@@ -142,7 +142,7 @@ Each paper gets the full treatment:
 
 | Day | Paper | Status | Core Concept |
 |-----|-------|--------|-------------|
-| 13 | [Attention Is All You Need](papers/13_attention/) | 🆕 **LIVE** | Self-attention, Transformer |
+| 13 | [Attention Is All You Need](papers/13_attention/) | 🚀 **LIVE** | Self-attention, Transformer |
 | 14 | BERT | 📅 Coming | Bidirectional encoders |
 | 15 | GPT | 📅 Coming | Autoregressive generation |
 
