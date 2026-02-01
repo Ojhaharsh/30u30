@@ -1,0 +1,1540 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Attention Is All You Need - Interactive Transformer</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #0a0a0f;
+            --bg-secondary: #12121a;
+            --bg-tertiary: #1a1a25;
+            --bg-card: #16161f;
+            --accent-primary: #6366f1;
+            --accent-secondary: #8b5cf6;
+            --accent-tertiary: #a855f7;
+            --accent-query: #f59e0b;
+            --accent-key: #10b981;
+            --accent-value: #3b82f6;
+            --accent-attention: #ec4899;
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --text-muted: #64748b;
+            --border: rgba(255,255,255,0.08);
+            --glow: rgba(99, 102, 241, 0.4);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Animated gradient background */
+        .bg-gradient {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(ellipse at 20% 20%, rgba(99, 102, 241, 0.15) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 80%, rgba(168, 85, 247, 0.12) 0%, transparent 50%),
+                radial-gradient(ellipse at 50% 50%, rgba(236, 72, 153, 0.08) 0%, transparent 60%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .container {
+            position: relative;
+            z-index: 1;
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        /* Hero Section */
+        .hero {
+            text-align: center;
+            padding: 60px 20px 80px;
+            position: relative;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(99, 102, 241, 0.2) 0%, transparent 70%);
+            pointer-events: none;
+            animation: pulse 4s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.5; transform: translate(-50%, -50%) scale(1); }
+            50% { opacity: 0.8; transform: translate(-50%, -50%) scale(1.1); }
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.2), rgba(168, 85, 247, 0.2));
+            border: 1px solid rgba(99, 102, 241, 0.3);
+            padding: 8px 16px;
+            border-radius: 50px;
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--accent-primary);
+            margin-bottom: 24px;
+            backdrop-filter: blur(10px);
+        }
+
+        .hero h1 {
+            font-size: clamp(2.5rem, 6vw, 4.5rem);
+            font-weight: 800;
+            background: linear-gradient(135deg, #fff 0%, #6366f1 50%, #a855f7 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 20px;
+            line-height: 1.1;
+            position: relative;
+        }
+
+        .hero p {
+            font-size: 1.25rem;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto 40px;
+            line-height: 1.6;
+        }
+
+        .authors {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-bottom: 40px;
+        }
+
+        .author-tag {
+            background: var(--bg-tertiary);
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 12px;
+            color: var(--text-secondary);
+            border: 1px solid var(--border);
+        }
+
+        /* Navigation Tabs */
+        .nav-tabs {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin-bottom: 60px;
+            flex-wrap: wrap;
+        }
+
+        .nav-tab {
+            padding: 12px 24px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            color: var(--text-secondary);
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .nav-tab:hover {
+            background: var(--bg-tertiary);
+            border-color: rgba(99, 102, 241, 0.3);
+            color: var(--text-primary);
+        }
+
+        .nav-tab.active {
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+            border-color: transparent;
+            color: white;
+            box-shadow: 0 4px 20px rgba(99, 102, 241, 0.4);
+        }
+
+        /* Section Styles */
+        .section {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .section-title h2 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 16px;
+            background: linear-gradient(135deg, #fff, #a855f7);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .section-title p {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Architecture Visualization */
+        .architecture-container {
+            display: grid;
+            grid-template-columns: 1fr 80px 1fr;
+            gap: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+            align-items: start;
+        }
+
+        .stack {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 30px;
+            position: relative;
+        }
+
+        .stack-title {
+            text-align: center;
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .encoder-title { color: var(--accent-key); }
+        .decoder-title { color: var(--accent-value); }
+
+        .layer {
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 16px 20px;
+            margin-bottom: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .layer::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, transparent, rgba(99, 102, 241, 0.1));
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .layer:hover {
+            transform: translateX(5px);
+            border-color: var(--accent-primary);
+            box-shadow: 0 0 20px rgba(99, 102, 241, 0.2);
+        }
+
+        .layer:hover::before {
+            opacity: 1;
+        }
+
+        .layer-name {
+            font-weight: 600;
+            font-size: 14px;
+            margin-bottom: 4px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .layer-icon {
+            width: 24px;
+            height: 24px;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+        }
+
+        .layer-desc {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        .layer.attention .layer-icon { background: rgba(236, 72, 153, 0.2); color: var(--accent-attention); }
+        .layer.ffn .layer-icon { background: rgba(59, 130, 246, 0.2); color: var(--accent-value); }
+        .layer.norm .layer-icon { background: rgba(16, 185, 129, 0.2); color: var(--accent-key); }
+        .layer.embed .layer-icon { background: rgba(245, 158, 11, 0.2); color: var(--accent-query); }
+
+        .nx-badge {
+            position: absolute;
+            right: -10px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+            color: white;
+            font-size: 11px;
+            font-weight: 600;
+            padding: 4px 10px;
+            border-radius: 20px;
+        }
+
+        .connector {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding-top: 200px;
+        }
+
+        .connector-line {
+            width: 3px;
+            height: 100px;
+            background: linear-gradient(180deg, var(--accent-key), var(--accent-value));
+            border-radius: 2px;
+            position: relative;
+        }
+
+        .connector-arrow {
+            width: 60px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 11px;
+            color: var(--text-secondary);
+        }
+
+        /* Attention Visualization */
+        .attention-demo {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .attention-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        .attention-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 30px;
+        }
+
+        .attention-card h3 {
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .sentence-input {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 30px;
+        }
+
+        .word-token {
+            background: var(--bg-tertiary);
+            border: 2px solid var(--border);
+            padding: 12px 20px;
+            border-radius: 12px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .word-token:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+        }
+
+        .word-token.query {
+            border-color: var(--accent-query);
+            box-shadow: 0 0 20px rgba(245, 158, 11, 0.3);
+        }
+
+        .word-token.key {
+            border-color: var(--accent-key);
+        }
+
+        .word-token.highlighted {
+            background: linear-gradient(135deg, rgba(236, 72, 153, 0.2), rgba(168, 85, 247, 0.2));
+            border-color: var(--accent-attention);
+        }
+
+        .attention-weight {
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            background: var(--accent-attention);
+            color: white;
+            font-size: 10px;
+            font-weight: 600;
+            padding: 2px 8px;
+            border-radius: 10px;
+            opacity: 0;
+            transform: scale(0.8);
+            transition: all 0.3s ease;
+        }
+
+        .word-token.highlighted .attention-weight {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        /* Attention Matrix */
+        .attention-matrix {
+            background: var(--bg-tertiary);
+            border-radius: 16px;
+            padding: 20px;
+            overflow-x: auto;
+        }
+
+        .matrix-grid {
+            display: grid;
+            gap: 4px;
+            width: fit-content;
+            margin: 0 auto;
+        }
+
+        .matrix-cell {
+            width: 50px;
+            height: 50px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .matrix-cell:hover {
+            transform: scale(1.1);
+            z-index: 10;
+        }
+
+        .matrix-header {
+            background: transparent;
+            font-weight: 600;
+            color: var(--text-secondary);
+        }
+
+        /* Multi-Head Visualization */
+        .multihead-container {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            margin-top: 40px;
+        }
+
+        .head-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 20px;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .head-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--accent-primary);
+            box-shadow: 0 10px 30px rgba(99, 102, 241, 0.2);
+        }
+
+        .head-number {
+            font-size: 2rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-tertiary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+        }
+
+        .head-label {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-bottom: 15px;
+        }
+
+        .head-pattern {
+            height: 80px;
+            background: var(--bg-tertiary);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .head-pattern canvas {
+            width: 100%;
+            height: 100%;
+        }
+
+        /* Positional Encoding */
+        .pe-container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .pe-visualizer {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+
+        .pe-canvas-container {
+            background: var(--bg-tertiary);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        #peCanvas {
+            width: 100%;
+            height: 300px;
+            border-radius: 8px;
+        }
+
+        .pe-controls {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .control-group {
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .control-label {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .slider {
+            width: 100%;
+            height: 8px;
+            -webkit-appearance: none;
+            background: var(--bg-tertiary);
+            border-radius: 4px;
+            outline: none;
+        }
+
+        .slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 20px;
+            height: 20px;
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 2px 10px rgba(99, 102, 241, 0.4);
+        }
+
+        /* QKV Explanation */
+        .qkv-container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+            margin-top: 40px;
+        }
+
+        .qkv-card {
+            background: var(--bg-card);
+            border-radius: 20px;
+            padding: 30px;
+            text-align: center;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .qkv-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+        }
+
+        .qkv-card.query::before { background: linear-gradient(90deg, var(--accent-query), #f97316); }
+        .qkv-card.key::before { background: linear-gradient(90deg, var(--accent-key), #14b8a6); }
+        .qkv-card.value::before { background: linear-gradient(90deg, var(--accent-value), #6366f1); }
+
+        .qkv-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+        }
+
+        .qkv-icon {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 20px;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            font-weight: 800;
+        }
+
+        .qkv-card.query .qkv-icon { background: rgba(245, 158, 11, 0.2); color: var(--accent-query); }
+        .qkv-card.key .qkv-icon { background: rgba(16, 185, 129, 0.2); color: var(--accent-key); }
+        .qkv-card.value .qkv-icon { background: rgba(59, 130, 246, 0.2); color: var(--accent-value); }
+
+        .qkv-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .qkv-subtitle {
+            color: var(--text-secondary);
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
+
+        .qkv-desc {
+            color: var(--text-muted);
+            font-size: 13px;
+            line-height: 1.6;
+        }
+
+        /* Formula Display */
+        .formula-box {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 40px;
+            text-align: center;
+            margin: 40px 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .formula-box::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at center, rgba(99, 102, 241, 0.1), transparent 70%);
+            pointer-events: none;
+        }
+
+        .formula {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.5rem;
+            color: var(--text-primary);
+            margin-bottom: 20px;
+        }
+
+        .formula-label {
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+
+        .formula .highlight-q { color: var(--accent-query); }
+        .formula .highlight-k { color: var(--accent-key); }
+        .formula .highlight-v { color: var(--accent-value); }
+        .formula .highlight-a { color: var(--accent-attention); }
+
+        /* Interactive Demo */
+        .demo-container {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 40px;
+            margin-top: 40px;
+        }
+
+        .demo-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 30px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .demo-title span {
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+        }
+
+        /* Stats Section */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            margin-top: 60px;
+        }
+
+        .stat-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 24px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--accent-primary);
+        }
+
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-tertiary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 8px;
+        }
+
+        .stat-label {
+            color: var(--text-secondary);
+            font-size: 13px;
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 60px 20px;
+            border-top: 1px solid var(--border);
+            margin-top: 80px;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-bottom: 20px;
+        }
+
+        .footer-link {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 14px;
+            transition: color 0.3s ease;
+        }
+
+        .footer-link:hover {
+            color: var(--accent-primary);
+        }
+
+        .footer-text {
+            color: var(--text-muted);
+            font-size: 13px;
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .architecture-container {
+                grid-template-columns: 1fr;
+            }
+            .connector {
+                flex-direction: row;
+                padding: 20px;
+            }
+            .connector-line {
+                width: 100px;
+                height: 3px;
+            }
+            .multihead-container {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .qkv-container {
+                grid-template-columns: 1fr;
+            }
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .attention-grid {
+                grid-template-columns: 1fr;
+            }
+            .hero h1 {
+                font-size: 2rem;
+            }
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Animations */
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .floating {
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes glow {
+            0%, 100% { box-shadow: 0 0 20px rgba(99, 102, 241, 0.3); }
+            50% { box-shadow: 0 0 40px rgba(99, 102, 241, 0.6); }
+        }
+
+        .glowing {
+            animation: glow 2s ease-in-out infinite;
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-gradient"></div>
+    
+    <div class="container">
+        <!-- Hero Section -->
+        <section class="hero">
+            <div class="hero-badge">
+                <span>📄</span> NeurIPS 2017 • 100,000+ Citations
+            </div>
+            <h1>Attention Is All You Need</h1>
+            <p>The paper that revolutionized deep learning. Interactive exploration of the Transformer architecture.</p>
+            <div class="authors">
+                <span class="author-tag">Vaswani</span>
+                <span class="author-tag">Shazeer</span>
+                <span class="author-tag">Parmar</span>
+                <span class="author-tag">Uszkoreit</span>
+                <span class="author-tag">Jones</span>
+                <span class="author-tag">Gomez</span>
+                <span class="author-tag">Kaiser</span>
+                <span class="author-tag">Polosukhin</span>
+            </div>
+        </section>
+
+        <!-- Navigation -->
+        <nav class="nav-tabs">
+            <button class="nav-tab active" onclick="showSection('architecture')">🏗️ Architecture</button>
+            <button class="nav-tab" onclick="showSection('attention')">👁️ Attention</button>
+            <button class="nav-tab" onclick="showSection('multihead')">🧠 Multi-Head</button>
+            <button class="nav-tab" onclick="showSection('positional')">📍 Position</button>
+            <button class="nav-tab" onclick="showSection('demo')">🎮 Demo</button>
+        </nav>
+
+        <!-- Architecture Section -->
+        <section id="architecture" class="section active">
+            <div class="section-title">
+                <h2>The Transformer Architecture</h2>
+                <p>Encoder-Decoder structure with attention as the only mechanism for learning dependencies</p>
+            </div>
+
+            <div class="architecture-container">
+                <!-- Encoder Stack -->
+                <div class="stack">
+                    <h3 class="stack-title encoder-title">ENCODER</h3>
+                    
+                    <div class="layer embed" onclick="highlightLayer(this)">
+                        <div class="layer-name">
+                            <span class="layer-icon">E</span>
+                            Input Embedding + Positional Encoding
+                        </div>
+                        <div class="layer-desc">Convert tokens to vectors, add position info</div>
+                    </div>
+
+                    <div style="position: relative; margin: 20px 0;">
+                        <div class="layer attention" onclick="highlightLayer(this)">
+                            <div class="layer-name">
+                                <span class="layer-icon">A</span>
+                                Multi-Head Self-Attention
+                            </div>
+                            <div class="layer-desc">Each position attends to all positions</div>
+                        </div>
+                        
+                        <div class="layer norm" onclick="highlightLayer(this)">
+                            <div class="layer-name">
+                                <span class="layer-icon">N</span>
+                                Add & Layer Norm
+                            </div>
+                            <div class="layer-desc">Residual connection + normalization</div>
+                        </div>
+                        
+                        <div class="layer ffn" onclick="highlightLayer(this)">
+                            <div class="layer-name">
+                                <span class="layer-icon">F</span>
+                                Feed-Forward Network
+                            </div>
+                            <div class="layer-desc">Two linear layers with ReLU</div>
+                        </div>
+                        
+                        <div class="layer norm" onclick="highlightLayer(this)">
+                            <div class="layer-name">
+                                <span class="layer-icon">N</span>
+                                Add & Layer Norm
+                            </div>
+                            <div class="layer-desc">Residual connection + normalization</div>
+                        </div>
+                        
+                        <span class="nx-badge">×N</span>
+                    </div>
+                </div>
+
+                <!-- Connector -->
+                <div class="connector">
+                    <div class="connector-arrow">K, V</div>
+                    <div class="connector-line"></div>
+                    <div class="connector-arrow">→</div>
+                </div>
+
+                <!-- Decoder Stack -->
+                <div class="stack">
+                    <h3 class="stack-title decoder-title">DECODER</h3>
+                    
+                    <div class="layer embed" onclick="highlightLayer(this)">
+                        <div class="layer-name">
+                            <span class="layer-icon">E</span>
+                            Output Embedding + Positional Encoding
+                        </div>
+                        <div class="layer-desc">Shifted right, with position info</div>
+                    </div>
+
+                    <div style="position: relative; margin: 20px 0;">
+                        <div class="layer attention" onclick="highlightLayer(this)">
+                            <div class="layer-name">
+                                <span class="layer-icon">M</span>
+                                Masked Multi-Head Self-Attention
+                            </div>
+                            <div class="layer-desc">Can only attend to past positions</div>
+                        </div>
+                        
+                        <div class="layer norm" onclick="highlightLayer(this)">
+                            <div class="layer-name">
+                                <span class="layer-icon">N</span>
+                                Add & Layer Norm
+                            </div>
+                            <div class="layer-desc">Residual connection + normalization</div>
+                        </div>
+                        
+                        <div class="layer attention" onclick="highlightLayer(this)" style="border-color: var(--accent-value);">
+                            <div class="layer-name">
+                                <span class="layer-icon" style="background: rgba(59, 130, 246, 0.2); color: var(--accent-value);">C</span>
+                                Cross-Attention
+                            </div>
+                            <div class="layer-desc">Query from decoder, K/V from encoder</div>
+                        </div>
+                        
+                        <div class="layer norm" onclick="highlightLayer(this)">
+                            <div class="layer-name">
+                                <span class="layer-icon">N</span>
+                                Add & Layer Norm
+                            </div>
+                            <div class="layer-desc">Residual connection + normalization</div>
+                        </div>
+                        
+                        <div class="layer ffn" onclick="highlightLayer(this)">
+                            <div class="layer-name">
+                                <span class="layer-icon">F</span>
+                                Feed-Forward Network
+                            </div>
+                            <div class="layer-desc">Two linear layers with ReLU</div>
+                        </div>
+                        
+                        <div class="layer norm" onclick="highlightLayer(this)">
+                            <div class="layer-name">
+                                <span class="layer-icon">N</span>
+                                Add & Layer Norm
+                            </div>
+                            <div class="layer-desc">Residual connection + normalization</div>
+                        </div>
+                        
+                        <span class="nx-badge">×N</span>
+                    </div>
+
+                    <div class="layer" onclick="highlightLayer(this)" style="background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(168, 85, 247, 0.1));">
+                        <div class="layer-name">
+                            <span class="layer-icon" style="background: rgba(168, 85, 247, 0.2); color: var(--accent-tertiary);">O</span>
+                            Linear + Softmax
+                        </div>
+                        <div class="layer-desc">Project to vocabulary, get probabilities</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Stats -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-value">512</div>
+                    <div class="stat-label">Model Dimension (d_model)</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">8</div>
+                    <div class="stat-label">Attention Heads</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">6</div>
+                    <div class="stat-label">Encoder/Decoder Layers</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">65M</div>
+                    <div class="stat-label">Parameters (Base)</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Attention Section -->
+        <section id="attention" class="section">
+            <div class="section-title">
+                <h2>Scaled Dot-Product Attention</h2>
+                <p>The core mechanism that makes Transformers work</p>
+            </div>
+
+            <!-- Formula -->
+            <div class="formula-box">
+                <div class="formula">
+                    Attention(<span class="highlight-q">Q</span>, <span class="highlight-k">K</span>, <span class="highlight-v">V</span>) = <span class="highlight-a">softmax</span>(<span class="highlight-q">Q</span><span class="highlight-k">K</span><sup>T</sup> / √d<sub>k</sub>) <span class="highlight-v">V</span>
+                </div>
+                <div class="formula-label">Where Q = Query, K = Key, V = Value, d_k = dimension of keys</div>
+            </div>
+
+            <!-- QKV Explanation -->
+            <div class="qkv-container">
+                <div class="qkv-card query">
+                    <div class="qkv-icon">Q</div>
+                    <div class="qkv-title">Query</div>
+                    <div class="qkv-subtitle">"What am I looking for?"</div>
+                    <div class="qkv-desc">Each position broadcasts a query - a representation of what information it needs from other positions.</div>
+                </div>
+                <div class="qkv-card key">
+                    <div class="qkv-icon">K</div>
+                    <div class="qkv-title">Key</div>
+                    <div class="qkv-subtitle">"What do I contain?"</div>
+                    <div class="qkv-desc">Each position provides a key - a representation of what information it holds that others might want.</div>
+                </div>
+                <div class="qkv-card value">
+                    <div class="qkv-icon">V</div>
+                    <div class="qkv-title">Value</div>
+                    <div class="qkv-subtitle">"What do I return?"</div>
+                    <div class="qkv-desc">The actual content that gets passed when a query matches a key. The output is a weighted sum of values.</div>
+                </div>
+            </div>
+
+            <!-- Interactive Attention Demo -->
+            <div class="demo-container">
+                <div class="demo-title">
+                    Interactive Attention
+                    <span>Click a word to see attention</span>
+                </div>
+                
+                <div class="sentence-input" id="sentenceTokens">
+                    <!-- Tokens will be generated by JS -->
+                </div>
+
+                <div class="attention-matrix" id="attentionMatrix">
+                    <!-- Matrix will be generated by JS -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Multi-Head Section -->
+        <section id="multihead" class="section">
+            <div class="section-title">
+                <h2>Multi-Head Attention</h2>
+                <p>Multiple attention mechanisms running in parallel, each learning different patterns</p>
+            </div>
+
+            <div class="formula-box">
+                <div class="formula">
+                    MultiHead(<span class="highlight-q">Q</span>, <span class="highlight-k">K</span>, <span class="highlight-v">V</span>) = Concat(head<sub>1</sub>, ..., head<sub>h</sub>)W<sup>O</sup>
+                </div>
+                <div class="formula-label">Each head: Attention(QW<sub>i</sub><sup>Q</sup>, KW<sub>i</sub><sup>K</sup>, VW<sub>i</sub><sup>V</sup>)</div>
+            </div>
+
+            <div class="multihead-container" id="multiheadContainer">
+                <!-- Heads will be generated by JS -->
+            </div>
+
+            <div class="demo-container" style="margin-top: 40px;">
+                <div class="demo-title">
+                    Why Multiple Heads?
+                </div>
+                <div class="attention-grid">
+                    <div class="attention-card">
+                        <h3>🎯 Different Patterns</h3>
+                        <p style="color: var(--text-secondary); font-size: 14px; line-height: 1.6;">
+                            Each head can specialize in different types of relationships:
+                            <br><br>
+                            • <strong>Syntactic</strong>: Subject-verb agreement<br>
+                            • <strong>Semantic</strong>: Word meaning similarity<br>
+                            • <strong>Positional</strong>: Nearby words<br>
+                            • <strong>Coreference</strong>: Pronouns to nouns
+                        </p>
+                    </div>
+                    <div class="attention-card">
+                        <h3>🔢 Dimension Split</h3>
+                        <p style="color: var(--text-secondary); font-size: 14px; line-height: 1.6;">
+                            With d_model = 512 and 8 heads:
+                            <br><br>
+                            • Each head: d_k = 512/8 = <strong>64 dimensions</strong><br>
+                            • Total params: Same as single-head!<br>
+                            • Compute: Parallel across heads<br>
+                            • Output: Concatenate & project
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Positional Section -->
+        <section id="positional" class="section">
+            <div class="section-title">
+                <h2>Positional Encoding</h2>
+                <p>Teaching the model about word order using sinusoidal functions</p>
+            </div>
+
+            <div class="formula-box">
+                <div class="formula" style="font-size: 1.2rem;">
+                    PE<sub>(pos, 2i)</sub> = sin(pos / 10000<sup>2i/d</sup>)
+                    &nbsp;&nbsp;&nbsp;
+                    PE<sub>(pos, 2i+1)</sub> = cos(pos / 10000<sup>2i/d</sup>)
+                </div>
+                <div class="formula-label">Different frequencies for different dimensions</div>
+            </div>
+
+            <div class="pe-container">
+                <div class="pe-visualizer">
+                    <div class="pe-canvas-container">
+                        <canvas id="peCanvas"></canvas>
+                    </div>
+                    <div class="pe-controls">
+                        <div class="control-group">
+                            <label class="control-label">Positions: <span id="posValue">50</span></label>
+                            <input type="range" class="slider" id="posSlider" min="10" max="100" value="50">
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label">Dimensions: <span id="dimValue">64</span></label>
+                            <input type="range" class="slider" id="dimSlider" min="16" max="128" value="64">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="attention-grid">
+                    <div class="attention-card">
+                        <h3>🌊 Why Sinusoids?</h3>
+                        <p style="color: var(--text-secondary); font-size: 14px; line-height: 1.6;">
+                            • <strong>Unique encoding</strong> for each position<br>
+                            • <strong>Relative positions</strong> computable as linear functions<br>
+                            • <strong>Extrapolates</strong> to longer sequences than training<br>
+                            • <strong>Bounded values</strong> between -1 and 1
+                        </p>
+                    </div>
+                    <div class="attention-card">
+                        <h3>📐 Different Frequencies</h3>
+                        <p style="color: var(--text-secondary); font-size: 14px; line-height: 1.6;">
+                            • <strong>Low dimensions</strong>: Slow waves (global position)<br>
+                            • <strong>High dimensions</strong>: Fast waves (local details)<br>
+                            • Combined: Unique fingerprint per position<br>
+                            • Similar positions → Similar encodings
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Demo Section -->
+        <section id="demo" class="section">
+            <div class="section-title">
+                <h2>Interactive Demo</h2>
+                <p>See the Transformer in action with a translation example</p>
+            </div>
+
+            <div class="demo-container">
+                <div class="demo-title">
+                    Translation: English → French
+                </div>
+                
+                <div style="display: grid; grid-template-columns: 1fr 60px 1fr; gap: 20px; align-items: center;">
+                    <div>
+                        <label class="control-label">Input (English)</label>
+                        <div class="sentence-input" style="background: var(--bg-tertiary); padding: 20px; border-radius: 12px;">
+                            <span class="word-token" style="border-color: var(--accent-key);">The</span>
+                            <span class="word-token" style="border-color: var(--accent-key);">cat</span>
+                            <span class="word-token" style="border-color: var(--accent-key);">sat</span>
+                            <span class="word-token" style="border-color: var(--accent-key);">on</span>
+                            <span class="word-token" style="border-color: var(--accent-key);">the</span>
+                            <span class="word-token" style="border-color: var(--accent-key);">mat</span>
+                        </div>
+                    </div>
+                    
+                    <div style="text-align: center; font-size: 2rem;">→</div>
+                    
+                    <div>
+                        <label class="control-label">Output (French)</label>
+                        <div class="sentence-input" id="outputTokens" style="background: var(--bg-tertiary); padding: 20px; border-radius: 12px;">
+                            <span class="word-token" style="border-color: var(--accent-value); opacity: 0.3;">_</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="text-align: center; margin-top: 30px;">
+                    <button onclick="runTranslation()" style="
+                        background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+                        border: none;
+                        color: white;
+                        padding: 16px 40px;
+                        font-size: 16px;
+                        font-weight: 600;
+                        border-radius: 12px;
+                        cursor: pointer;
+                        transition: all 0.3s ease;
+                        box-shadow: 0 4px 20px rgba(99, 102, 241, 0.4);
+                    " onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
+                        ▶ Generate Translation
+                    </button>
+                </div>
+
+                <div id="translationSteps" style="margin-top: 40px; display: none;">
+                    <!-- Steps will be shown here -->
+                </div>
+            </div>
+
+            <!-- Key Insights -->
+            <div class="stats-grid" style="margin-top: 40px;">
+                <div class="stat-card">
+                    <div class="stat-value">O(1)</div>
+                    <div class="stat-label">Path Length (vs O(n) for RNN)</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">10×</div>
+                    <div class="stat-label">Faster Training</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">28.4</div>
+                    <div class="stat-label">BLEU Score (EN-DE)</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">SOTA</div>
+                    <div class="stat-label">State of the Art (2017)</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="footer-links">
+                <a href="https://arxiv.org/abs/1706.03762" target="_blank" class="footer-link">📄 Original Paper</a>
+                <a href="http://jalammar.github.io/illustrated-transformer/" target="_blank" class="footer-link">📖 Illustrated Guide</a>
+                <a href="https://github.com/tensorflow/tensor2tensor" target="_blank" class="footer-link">💻 Official Code</a>
+            </div>
+            <p class="footer-text">Interactive visualization for the 30u30 Deep Learning Journey • Day 13</p>
+        </footer>
+    </div>
+
+    <script>
+        // Navigation
+        function showSection(sectionId) {
+            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+            document.getElementById(sectionId).classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        function highlightLayer(el) {
+            el.classList.toggle('glowing');
+            setTimeout(() => el.classList.remove('glowing'), 2000);
+        }
+
+        // Attention Demo
+        const sentence = ["The", "cat", "sat", "on", "the", "mat"];
+        let selectedWord = null;
+
+        // Simulated attention weights (would come from model in real scenario)
+        const attentionWeights = [
+            [0.15, 0.35, 0.20, 0.10, 0.10, 0.10],  // The
+            [0.30, 0.25, 0.20, 0.10, 0.05, 0.10],  // cat
+            [0.10, 0.40, 0.20, 0.15, 0.05, 0.10],  // sat
+            [0.05, 0.10, 0.30, 0.25, 0.15, 0.15],  // on
+            [0.20, 0.15, 0.10, 0.20, 0.20, 0.15],  // the
+            [0.05, 0.15, 0.25, 0.30, 0.10, 0.15]   // mat
+        ];
+
+        function initAttentionDemo() {
+            const container = document.getElementById('sentenceTokens');
+            container.innerHTML = '';
+            
+            sentence.forEach((word, i) => {
+                const token = document.createElement('div');
+                token.className = 'word-token';
+                token.textContent = word;
+                token.onclick = () => selectWord(i);
+                token.innerHTML = `${word}<span class="attention-weight"></span>`;
+                container.appendChild(token);
+            });
+
+            renderAttentionMatrix();
+        }
+
+        function selectWord(index) {
+            selectedWord = index;
+            const tokens = document.querySelectorAll('#sentenceTokens .word-token');
+            
+            tokens.forEach((token, i) => {
+                token.classList.remove('query', 'highlighted');
+                const weightSpan = token.querySelector('.attention-weight');
+                
+                if (i === index) {
+                    token.classList.add('query');
+                } else {
+                    const weight = attentionWeights[index][i];
+                    if (weight > 0.15) {
+                        token.classList.add('highlighted');
+                        weightSpan.textContent = (weight * 100).toFixed(0) + '%';
+                    }
+                }
+            });
+        }
+
+        function renderAttentionMatrix() {
+            const container = document.getElementById('attentionMatrix');
+            const n = sentence.length;
+            
+            let html = `<div class="matrix-grid" style="grid-template-columns: 60px repeat(${n}, 50px);">`;
+            
+            // Header row
+            html += '<div class="matrix-cell matrix-header"></div>';
+            sentence.forEach(word => {
+                html += `<div class="matrix-cell matrix-header">${word}</div>`;
+            });
+            
+            // Data rows
+            for (let i = 0; i < n; i++) {
+                html += `<div class="matrix-cell matrix-header">${sentence[i]}</div>`;
+                for (let j = 0; j < n; j++) {
+                    const weight = attentionWeights[i][j];
+                    const hue = 280 - weight * 80; // Purple to pink
+                    const lightness = 20 + weight * 30;
+                    html += `<div class="matrix-cell" style="background: hsl(${hue}, 70%, ${lightness}%); color: white;">
+                        ${(weight * 100).toFixed(0)}%
+                    </div>`;
+                }
+            }
+            
+            html += '</div>';
+            container.innerHTML = html;
+        }
+
+        // Multi-head visualization
+        function initMultihead() {
+            const container = document.getElementById('multiheadContainer');
+            container.innerHTML = '';
+            
+            const headPatterns = [
+                'Syntactic', 'Semantic', 'Positional', 'Previous',
+                'Next', 'Rare words', 'Punctuation', 'Global'
+            ];
+            
+            for (let i = 0; i < 8; i++) {
+                const card = document.createElement('div');
+                card.className = 'head-card';
+                card.innerHTML = `
+                    <div class="head-number">${i + 1}</div>
+                    <div class="head-label">Head ${i + 1}: ${headPatterns[i]}</div>
+                    <div class="head-pattern">
+                        <canvas id="headCanvas${i}" width="100" height="80"></canvas>
+                    </div>
+                `;
+                container.appendChild(card);
+                
+                // Draw random attention pattern
+                setTimeout(() => drawHeadPattern(i), 100);
+            }
+        }
+
+        function drawHeadPattern(headIndex) {
+            const canvas = document.getElementById(`headCanvas${headIndex}`);
+            if (!canvas) return;
+            
+            const ctx = canvas.getContext('2d');
+            const w = canvas.width;
+            const h = canvas.height;
+            
+            ctx.fillStyle = '#1a1a25';
+            ctx.fillRect(0, 0, w, h);
+            
+            // Draw different patterns for each head
+            const cellSize = 12;
+            const rows = 5;
+            const cols = 5;
+            const offsetX = (w - cols * cellSize) / 2;
+            const offsetY = (h - rows * cellSize) / 2;
+            
+            for (let i = 0; i < rows; i++) {
+                for (let j = 0; j < cols; j++) {
+                    let intensity = Math.random();
+                    
+                    // Create different patterns per head
+                    if (headIndex === 0) intensity = i === 0 ? 0.8 : 0.2; // First token
+                    if (headIndex === 1) intensity = Math.abs(i - j) < 2 ? 0.8 : 0.2; // Diagonal
+                    if (headIndex === 2) intensity = j === cols - 1 ? 0.8 : 0.2; // Last token
+                    if (headIndex === 3) intensity = j === i - 1 ? 0.9 : 0.2; // Previous
+                    if (headIndex === 4) intensity = j === i + 1 ? 0.9 : 0.2; // Next
+                    
+                    const hue = 280 + headIndex * 10;
+                    ctx.fillStyle = `hsla(${hue}, 70%, ${30 + intensity * 40}%, ${0.3 + intensity * 0.7})`;
+                    ctx.fillRect(offsetX + j * cellSize, offsetY + i * cellSize, cellSize - 1, cellSize - 1);
+                }
+            }
+        }
+
+        // Positional Encoding
+        function initPositionalEncoding() {
+            const canvas = document.getElementById('peCanvas');
+            const ctx = canvas.getContext('2d');
+            
+            function draw() {
+                const positions = parseInt(document.getElementById('posSlider').value);
+                const dimensions = parseInt(document.getElementById('dimSlider').value);
+                
+                document.getElementById('posValue').textContent = positions;
+                document.getElementById('dimValue').textContent = dimensions;
+                
+                const w = canvas.width = canvas.offsetWidth * 2;
+                const h = canvas.height = canvas.offsetHeight * 2;
+                ctx.scale(2, 2);
+                
+                const realW = w / 2;
+                const realH = h / 2;
+                
+                ctx.fillStyle = '#1a1a25';
+                ctx.fillRect(0, 0, realW, realH);
+                
+                const cellW = realW / positions;
+                const cellH = realH / dimensions;
+                
+                for (let pos = 0; pos < positions; pos++) {
+                    for (let dim = 0; dim < dimensions; dim++) {
+                        const divTerm = Math.pow(10000, (2 * Math.floor(dim / 2)) / dimensions);
+                        let value;
+                        if (dim % 2 === 0) {
+                            value = Math.sin(pos / divTerm);
+                        } else {
+                            value = Math.cos(pos / divTerm);
+                        }
+                        
+                        // Map [-1, 1] to color
+                        const hue = value > 0 ? 250 : 350; // Blue for positive, red for negative
+                        const lightness = 30 + Math.abs(value) * 40;
+                        ctx.fillStyle = `hsl(${hue}, 70%, ${lightness}%)`;
+                        ctx.fillRect(pos * cellW, dim * cellH, cellW - 0.5, cellH - 0.5);
+                    }
+                }
+                
+                ctx.setTransform(1, 0, 0, 1, 0, 0);
+            }
+            
+            draw();
+            document.getElementById('posSlider').oninput = draw;
+            document.getElementById('dimSlider').oninput = draw;
+        }
+
+        // Translation Demo
+        const frenchTranslation = ["Le", "chat", "était", "assis", "sur", "le", "tapis"];
+        let translationStep = 0;
+
+        function runTranslation() {
+            translationStep = 0;
+            const container = document.getElementById('outputTokens');
+            container.innerHTML = '';
+            
+            document.getElementById('translationSteps').style.display = 'block';
+            
+            function addToken() {
+                if (translationStep < frenchTranslation.length) {
+                    const token = document.createElement('span');
+                    token.className = 'word-token';
+                    token.style.borderColor = 'var(--accent-value)';
+                    token.style.opacity = '0';
+                    token.style.transform = 'translateY(10px)';
+                    token.textContent = frenchTranslation[translationStep];
+                    container.appendChild(token);
+                    
+                    // Animate in
+                    setTimeout(() => {
+                        token.style.transition = 'all 0.3s ease';
+                        token.style.opacity = '1';
+                        token.style.transform = 'translateY(0)';
+                    }, 50);
+                    
+                    translationStep++;
+                    setTimeout(addToken, 400);
+                }
+            }
+            
+            addToken();
+        }
+
+        // Initialize everything
+        document.addEventListener('DOMContentLoaded', () => {
+            initAttentionDemo();
+            initMultihead();
+            initPositionalEncoding();
+        });
+    </script>
+</body>
+</html>
