@@ -45,9 +45,10 @@ logs/
 *.log
 wandb/
 
-# Data files (except samples)
+# Data files (except samples and READMEs)
 papers/*/data/*
 !papers/*/data/*.txt
+!papers/*/data/README.md
 *.csv
 *.json
 !requirements.txt
