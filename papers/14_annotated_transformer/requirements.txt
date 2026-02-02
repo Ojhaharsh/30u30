@@ -1,0 +1,21 @@
+# Day 14 Requirements
+
+# Core PyTorch
+torch>=1.9.0
+
+# Visualization
+matplotlib>=3.4.0
+seaborn>=0.11.0
+
+# Jupyter
+jupyter>=1.0.0
+ipywidgets>=7.6.0
+
+# Utilities
+numpy>=1.20.0
+tqdm>=4.60.0
+
+# Optional: For real translation tasks
+# tokenizers>=0.10.0
+# sacrebleu>=2.0.0
+# sentencepiece>=0.1.95
