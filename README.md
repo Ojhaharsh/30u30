@@ -88,11 +88,17 @@
 
 ### 🧠 Unit 3: The Transformer Era - STARTING NOW!
 
-**Day 13: "Attention Is All You Need"** 🆕
+**Day 13: "Attention Is All You Need"**
 - The paper that revolutionized NLP and beyond - the Transformer
 - Self-attention, multi-head attention, positional encoding
 - 5 exercises: from scaled dot-product to full Transformer + interactive visualization  
 **[Start Day 13 →](papers/13_attention/)**
+
+**Day 14: "The Annotated Transformer"** 🆕
+- Code-level understanding of the Transformer - from math to PyTorch
+- Production-quality implementation with all training infrastructure
+- 5 exercises: attention, multi-head, encoder, training, inference  
+**[Start Day 14 →](papers/14_annotated_transformer/)**
 
 ---
 
@@ -143,7 +149,7 @@ Each paper gets the full treatment:
 | Day | Paper | Status | Core Concept |
 |-----|-------|--------|-------------|
 | 13 | [Attention Is All You Need](papers/13_attention/) | 🚀 **LIVE** | Self-attention, Transformer |
-| 14 | BERT | 📅 Coming | Bidirectional encoders |
+| 14 | [The Annotated Transformer](papers/14_annotated_transformer/) | 🆕 **LIVE** | Code-level Transformer |
 | 15 | GPT | 📅 Coming | Autoregressive generation |
 
 ### Unit 4: Specialized Architectures (Days 16-21)
@@ -251,6 +257,7 @@ MIT License - Free to use, learn, and share.
 → **[Day 10: Identity Mappings (ResNet v2)](papers/10_resnet_v2/)**  
 → **[Day 11: Dilated Convolutions](papers/11_dilated_convolutions/)**  
 → **[Day 12: Dropout](papers/12_dropout/)**  
-→ **[Day 13: Attention Is All You Need](papers/13_attention/)** 🆕 **← START HERE!**
+→ **[Day 13: Attention Is All You Need](papers/13_attention/)**  
+→ **[Day 14: The Annotated Transformer](papers/14_annotated_transformer/)** 🆕 **← START HERE!**
 
 Let's build something amazing together! 🚀
