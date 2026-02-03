@@ -84,18 +84,24 @@ https://arxiv.org/abs/1706.03762
 Code-level understanding of the Transformer.  
 https://nlp.seas.harvard.edu/annotated-transformer/
 
-**14. Neural Machine Translation by Jointly Learning to Align and Translate (Bahdanau Attention)**  
-*Bahdanau, Cho, Bengio (2014)*  The precursor to the Transformer (Attention v1).  https://arxiv.org/abs/1409.0473
+**15. Neural Machine Translation by Jointly Learning to Align and Translate (Bahdanau Attention)**  
+*Bahdanau, Cho, Bengio (2014)*  
+The precursor to the Transformer (Attention v1).  
+https://arxiv.org/abs/1409.0473
 
-**15. Order Matters: Sequence to Sequence for Sets**  
-*Vinyals et al. (2015)*  Teaching networks that the order of inputs sometimes doesn't matter (Sets vs. Sequences).  https://arxiv.org/abs/1511.06391
+**16. Order Matters: Sequence to Sequence for Sets**  
+*Vinyals et al. (2015)*  
+Teaching networks that the order of inputs sometimes doesn't matter (Sets vs. Sequences).  
+https://arxiv.org/abs/1511.06391
 
 ---
 
 ## Unit 4: Specialized Architectures (Memory & Graphs)
 
-**16. Neural Turing Machines**  
-*Graves, Wayne, Danihelka (2014)*  Giving neural networks external RAM (writing/reading memory).  https://arxiv.org/abs/1410.5401
+**17. Neural Turing Machines**  
+*Graves, Wayne, Danihelka (2014)*  
+Giving neural networks external RAM (writing/reading memory).  
+https://arxiv.org/abs/1410.5401
 
 **18. Pointer Networks**  
 *Vinyals, Fortunato, Jaitly (2015)*  
@@ -111,9 +117,11 @@ https://arxiv.org/abs/1706.01427
 https://arxiv.org/abs/1806.01822
 
 **21. Neural Message Passing for Quantum Chemistry**  
-*Gilmer et al. (2017)*  Proves that "Intelligence" (Graph Networks) is universal—works for biology and chemistry just as well as for language.  https://arxiv.org/abs/1704.01212
+*Gilmer et al. (2017)*  
+Proves that "Intelligence" (Graph Networks) is universal—works for biology and chemistry just as well as for language.  
+https://arxiv.org/abs/1704.01212
 
-**21. Deep Speech 2: End-to-End Speech Recognition**  
+**22. Deep Speech 2: End-to-End Speech Recognition**  
 *Amodei et al. (2015)*  
 End-to-end deep learning applied to audio.  
 https://arxiv.org/abs/1512.02595
@@ -122,58 +130,58 @@ https://arxiv.org/abs/1512.02595
 
 ## Unit 5: Generative Models & Scaling
 
-**22. Variational Lossy Autoencoder**  
+**23. Variational Lossy Autoencoder**  
 *Chen et al. (2016)*  
 Information theory applied to generation.  
 https://arxiv.org/abs/1611.02731
 
-**23. GPipe: Easy Scaling with Micro-Batch Pipeline Parallelism**  
+**24. GPipe: Easy Scaling with Micro-Batch Pipeline Parallelism**  
 *Huang et al. (2019)*  
 How to train really big models across many GPUs.  
 https://arxiv.org/abs/1811.06965
 
-**24. Scaling Laws for Neural Language Models**  
+**25. Scaling Laws for Neural Language Models**  
 *Kaplan et al., OpenAI (2020)*  
 The "Physics" of AI. Predicting performance before you train.  
 https://arxiv.org/abs/2001.08361
 
-**25. Kolmogorov Complexity and Algorithmic Randomness**  
+**26. Kolmogorov Complexity and Algorithmic Randomness**  
 *Shen, Uspensky, Vereshchagin*  
 The pure math of compression.  
 https://www.lirmm.fr/~ashen/kolmbook-eng-scan.pdf
 
-**26. Machine Super Intelligence**  
+**27. Machine Super Intelligence**  
 *Shane Legg (2008)*  
 The alignment and safety perspective from a DeepMind founder.  
 https://www.vetta.org/documents/Machine_Super_Intelligence.pdf
 
-**27. CS231n: Convolutional Neural Networks for Visual Recognition**  
+**28. CS231n: Convolutional Neural Networks for Visual Recognition**  
 *Stanford Course (Karpathy, Fei-Fei Li)*  
 The Stanford course that solidifies everything.  
 https://cs231n.github.io/
 
 ---
 
-## The Missing 3 (Modern Extensions)
+## Unit 6: Reinforcement Learning & Human Feedback
 
-**28. Proximal Policy Optimization (PPO)**  
+**29. Proximal Policy Optimization (PPO)**  
 *Schulman et al., OpenAI (2017)*  
 The algorithm that trained ChatGPT (RLHF).  
 https://arxiv.org/abs/1707.06347
 
-**29. Deep Reinforcement Learning from Human Feedback**  
+**30. Deep Reinforcement Learning from Human Feedback**  
 *Christiano et al., OpenAI (2017)*  
 The birth of "Human Feedback" (RLHF).  
 https://arxiv.org/abs/1706.03741
 
-**30. Hindsight Experience Replay**  
-*Andrychowicz et al., OpenAI (2017)*  
-How agents learn from failure.  
-https://arxiv.org/abs/1707.01495
-
 ---
 
 ## Additional Resources
+
+**Hindsight Experience Replay**  
+*Andrychowicz et al., OpenAI (2017)*  
+How agents learn from failure.  
+https://arxiv.org/abs/1707.01495
 
 **Neural Ordinary Differential Equations**  
 https://arxiv.org/abs/1806.07366
