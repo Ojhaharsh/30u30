@@ -176,6 +176,27 @@ https://arxiv.org/abs/1706.03741
 
 ---
 
+## 🌟 Bonus Papers: The Language Model Revolution
+
+*These aren't in Ilya's original list, but they're the applications that changed the world.*
+
+**Bonus 1: BERT: Pre-training of Deep Bidirectional Transformers for Language Understanding**  
+*Devlin et al., Google (2018)*  
+Bidirectional pre-training that revolutionized NLP. The "understand everything" approach.  
+https://arxiv.org/abs/1810.04805
+
+**Bonus 2: Language Models are Unsupervised Multitask Learners (GPT-2)**  
+*Radford et al., OpenAI (2019)*  
+The paper that showed language models can do *any* task. Zero-shot learning emerges.  
+https://cdn.openai.com/better-language-models/language_models_are_unsupervised_multitask_learners.pdf
+
+**Bonus 3: Language Models are Few-Shot Learners (GPT-3)**  
+*Brown et al., OpenAI (2020)*  
+Scale is all you need. 175B parameters, emergent abilities, and in-context learning.  
+https://arxiv.org/abs/2005.14165
+
+---
+
 ## Additional Resources
 
 **Hindsight Experience Replay**  
