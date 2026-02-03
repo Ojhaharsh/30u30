@@ -94,11 +94,17 @@
 - 5 exercises: from scaled dot-product to full Transformer + interactive visualization  
 **[Start Day 13 →](papers/13_attention/)**
 
-**Day 14: "The Annotated Transformer"** 🆕
+**Day 14: "The Annotated Transformer"**
 - Code-level understanding of the Transformer - from math to PyTorch
 - Production-quality implementation with all training infrastructure
 - 5 exercises: attention, multi-head, encoder, training, inference  
 **[Start Day 14 →](papers/14_annotated_transformer/)**
+
+**Day 15: "Neural Machine Translation by Jointly Learning to Align and Translate"** 🆕
+- The original attention mechanism - before Transformers existed!
+- Bahdanau (additive) attention, bidirectional encoder, alignment visualization
+- 5 exercises: attention from scratch, encoder-decoder, beam search, visualization  
+**[Start Day 15 →](papers/15_bahdanau_attention/)**
 
 ---
 
@@ -149,8 +155,8 @@ Each paper gets the full treatment:
 | Day | Paper | Status | Core Concept |
 |-----|-------|--------|-------------|
 | 13 | [Attention Is All You Need](papers/13_attention/) | 🚀 **LIVE** | Self-attention, Transformer |
-| 14 | [The Annotated Transformer](papers/14_annotated_transformer/) | 🆕 **LIVE** | Code-level Transformer |
-| 15 | GPT | 📅 Coming | Autoregressive generation |
+| 14 | [The Annotated Transformer](papers/14_annotated_transformer/) | 🚀 **LIVE** | Code-level Transformer |
+| 15 | [Bahdanau Attention (NMT)](papers/15_bahdanau_attention/) | 🆕 **LIVE** | Original attention mechanism |
 
 ### Unit 4: Specialized Architectures (Days 16-21)
 *Memory, graphs, and reasoning*
@@ -258,6 +264,7 @@ MIT License - Free to use, learn, and share.
 → **[Day 11: Dilated Convolutions](papers/11_dilated_convolutions/)**  
 → **[Day 12: Dropout](papers/12_dropout/)**  
 → **[Day 13: Attention Is All You Need](papers/13_attention/)**  
-→ **[Day 14: The Annotated Transformer](papers/14_annotated_transformer/)** 🆕 **← START HERE!**
+→ **[Day 14: The Annotated Transformer](papers/14_annotated_transformer/)**  
+→ **[Day 15: Bahdanau Attention (NMT)](papers/15_bahdanau_attention/)** 🆕 **← START HERE!**
 
 Let's build something amazing together! 🚀
