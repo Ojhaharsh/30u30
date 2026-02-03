@@ -1707,6 +1707,67 @@ section {
     text-decoration: underline;
 }
 
+/* Analytics CTA */
+.analytics-cta {
+    text-align: center;
+    padding: 40px 20px;
+}
+
+.analytics-message {
+    font-size: 1.4rem;
+    color: var(--text-primary);
+    margin-bottom: 12px;
+}
+
+.analytics-sub {
+    font-size: 1rem;
+    color: var(--text-secondary);
+    margin-bottom: 30px;
+    max-width: 500px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.analytics-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--gradient-primary);
+    color: white;
+    padding: 14px 28px;
+    border-radius: 30px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    box-shadow: var(--shadow-md);
+}
+
+.analytics-button:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-lg), var(--shadow-glow);
+}
+
+.analytics-button svg {
+    transition: transform 0.3s ease;
+}
+
+.analytics-button:hover svg {
+    transform: translate(3px, -3px);
+}
+
+/* Live counter pulse */
+.live-counter {
+    color: #4ade80 !important;
+    font-size: 1.8rem !important;
+    animation: live-pulse 2s ease-in-out infinite;
+}
+
+@keyframes live-pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.6; }
+}
+
 /* Stats Section Responsive */
 @media (max-width: 992px) {
     .stats-grid {
