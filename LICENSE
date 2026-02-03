@@ -1,21 +1,64 @@
-MIT License
+# License
 
-Copyright (c) 2026 30u30 Contributors
+## Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International (CC BY-NC-ND 4.0)
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
+### You are free to:
 
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
+**Share** — copy and redistribute the material in any medium or format
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
+The licensor cannot revoke these freedoms as long as you follow the license terms.
+
+---
+
+### Under the following terms:
+
+**Attribution** — You must give appropriate credit, provide a link to the license, and indicate if changes were made. You may do so in any reasonable manner, but not in any way that suggests the licensor endorses you or your use.
+
+**NonCommercial** — You may not use the material for commercial purposes.
+
+**NoDerivatives** — If you remix, transform, or build upon the material, you may not distribute the modified material.
+
+**No additional restrictions** — You may not apply legal terms or technological measures that legally restrict others from doing anything the license permits.
+
+---
+
+### Notices:
+
+You do not have to comply with the license for elements of the material in the public domain or where your use is permitted by an applicable exception or limitation.
+
+No warranties are given. The license may not give you all of the permissions necessary for your intended use. For example, other rights such as publicity, privacy, or moral rights may limit how you use the material.
+
+---
+
+## In Plain English:
+
+✅ **You CAN:**
+- Read and learn from this code
+- Share links to this repository
+- Use concepts for your own understanding
+- Reference this work with proper attribution
+
+❌ **You CANNOT:**
+- Copy this code and claim it as your own
+- Use this code in commercial products
+- Create derivative works for distribution
+- Remove or hide attribution
+
+---
+
+## Why This License?
+
+30u30 represents significant effort in implementing foundational AI papers from scratch. This license ensures:
+
+1. **Education remains free** — Anyone can learn from this work
+2. **Credit is preserved** — The original author maintains attribution
+3. **No exploitation** — The work cannot be stolen or commercialized
+
+---
+
+**Full license text:** https://creativecommons.org/licenses/by-nc-nd/4.0/legalcode
+
+**© 2026 Harsh Ojha (harshvardhanojha900@gmail.com)**
+
+GitHub: https://github.com/ojhaharsh
+LinkedIn: https://www.linkedin.com/in/harshvardhan-ojha/
