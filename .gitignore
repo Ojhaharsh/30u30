@@ -73,6 +73,14 @@ lstm_analysis/
 papers/*/visualizations/*.png
 papers/*/plots/*.png
 
+# Day 16 specific (Pointer Networks generated files)
+papers/16_order_matters/checkpoints/
+papers/16_order_matters/saved_models/
+papers/16_order_matters/results/
+papers/16_order_matters/tours/
+papers/16_order_matters/*.png
+papers/16_order_matters/*.pdf
+
 # OS
 Thumbs.db
 .DS_Store
