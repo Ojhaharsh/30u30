@@ -100,11 +100,17 @@
 - 5 exercises: attention, multi-head, encoder, training, inference  
 **[Start Day 14 →](papers/14_annotated_transformer/)**
 
-**Day 15: "Neural Machine Translation by Jointly Learning to Align and Translate"** 🆕
+**Day 15: "Neural Machine Translation by Jointly Learning to Align and Translate"**
 - The original attention mechanism - before Transformers existed!
 - Bahdanau (additive) attention, bidirectional encoder, alignment visualization
 - 5 exercises: attention from scratch, encoder-decoder, beam search, visualization  
 **[Start Day 15 →](papers/15_bahdanau_attention/)**
+
+**Day 16: "Order Matters: Sequence to Sequence for Sets"** 🆕
+- Pointer Networks - process sets, output sequences by pointing!
+- Order-invariant encoding, Read-Process-Write framework
+- 5 exercises: pointer attention, set encoder, sorting, convex hull, TSP  
+**[Start Day 16 →](papers/16_order_matters/)**
 
 ---
 
@@ -149,14 +155,15 @@ Each paper gets the full treatment:
 | 11 | [Multi-Scale Context (Dilated Conv)](papers/11_dilated_convolutions/) | 🚀 **LIVE** | Dilated convolutions |
 | 12 | [Dropout (Srivastava et al.)](papers/12_dropout/) | 🚀 **LIVE** | Preventing overfitting |
 
-### Unit 3: The Transformer Era (Days 13-15) - 🔥 IN PROGRESS
+### Unit 3: The Transformer Era (Days 13-16) - 🔥 IN PROGRESS
 *The architecture that ate the world*
 
 | Day | Paper | Status | Core Concept |
 |-----|-------|--------|-------------|
 | 13 | [Attention Is All You Need](papers/13_attention/) | 🚀 **LIVE** | Self-attention, Transformer |
 | 14 | [The Annotated Transformer](papers/14_annotated_transformer/) | 🚀 **LIVE** | Code-level Transformer |
-| 15 | [Bahdanau Attention (NMT)](papers/15_bahdanau_attention/) | 🆕 **LIVE** | Original attention mechanism |
+| 15 | [Bahdanau Attention (NMT)](papers/15_bahdanau_attention/) | 🚀 **LIVE** | Original attention mechanism |
+| 16 | [Order Matters (Pointer Networks)](papers/16_order_matters/) | 🆕 **LIVE** | Set-to-sequence problems |
 
 ### Unit 4: Specialized Architectures (Days 16-21)
 *Memory, graphs, and reasoning*
@@ -265,6 +272,7 @@ MIT License - Free to use, learn, and share.
 → **[Day 12: Dropout](papers/12_dropout/)**  
 → **[Day 13: Attention Is All You Need](papers/13_attention/)**  
 → **[Day 14: The Annotated Transformer](papers/14_annotated_transformer/)**  
-→ **[Day 15: Bahdanau Attention (NMT)](papers/15_bahdanau_attention/)** 🆕 **← START HERE!**
+→ **[Day 15: Bahdanau Attention (NMT)](papers/15_bahdanau_attention/)**  
+→ **[Day 16: Order Matters (Pointer Networks)](papers/16_order_matters/)** 🆕 **← START HERE!**
 
 Let's build something amazing together! 🚀
