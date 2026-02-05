@@ -227,9 +227,9 @@ def numerical_gradient_check():
     diff = np.max(np.abs(dgamma - num_dgamma))
     print(f"  Max difference (gamma): {diff:.2e}")
     assert diff < 1e-4, f"Gradient check failed! Diff: {diff}"
-    print("  ✓ Gamma gradient correct")
+    print("  [ok] Gamma gradient correct")
     
-    print("✓ Numerical gradient check passed!\n")
+    print("[ok] Numerical gradient check passed!\n")
 
 
 def test_layer_norm_basic():
@@ -245,7 +245,7 @@ def test_layer_norm_basic():
     # Should have mean ≈ 0 and std ≈ 1
     assert abs(np.mean(y)) < 0.01, f"Mean should be ~0, got {np.mean(y)}"
     assert abs(np.std(y) - 1) < 0.01, f"Std should be ~1, got {np.std(y)}"
-    print("  ✓ Single sample normalized correctly")
+    print("  [ok] Single sample normalized correctly")
     
     # Test batch
     x_batch = np.random.randn(5, 10) * 10 + 7
@@ -257,9 +257,9 @@ def test_layer_norm_basic():
         std = np.std(y_batch[i])
         assert abs(mean) < 0.01, f"Sample {i} mean should be ~0"
         assert abs(std - 1) < 0.01, f"Sample {i} std should be ~1"
-    print("  ✓ Batch normalized correctly (each sample independent)")
+    print("  [ok] Batch normalized correctly (each sample independent)")
     
-    print("✓ Basic layer norm tests passed!\n")
+    print("[ok] Basic layer norm tests passed!\n")
 
 
 def test_rnn_layer_norm():
@@ -276,10 +276,10 @@ def test_rnn_layer_norm():
     assert len(hidden_states) == 5, f"Expected 5 states, got {len(hidden_states)}"
     assert hidden_states[-1].shape == (2, 10), f"Wrong shape: {hidden_states[-1].shape}"
     
-    print(f"  ✓ Processed sequence of length 4")
-    print(f"  ✓ Final hidden state shape: {hidden_states[-1].shape}")
+    print(f"  [ok] Processed sequence of length 4")
+    print(f"  [ok] Final hidden state shape: {hidden_states[-1].shape}")
     
-    print("✓ RNN layer norm tests passed!\n")
+    print("[ok] RNN layer norm tests passed!\n")
 
 
 if __name__ == "__main__":
@@ -291,4 +291,4 @@ if __name__ == "__main__":
     numerical_gradient_check()
     test_rnn_layer_norm()
     
-    print("🎉 All tests passed!")
+    print("All tests passed!")
