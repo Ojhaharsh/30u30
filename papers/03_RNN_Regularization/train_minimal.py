@@ -184,7 +184,7 @@ def main():
         # Early stopping
         should_continue = early_stop.check(val_loss, epoch)
         
-        status = "✓ IMPROVED" if val_loss < early_stop.best_loss else "✗ No improve"
+        status = "[ok] IMPROVED" if val_loss < early_stop.best_loss else "[FAIL] No improve"
         print(f"{epoch:<6} {train_loss:<12.4f} {val_loss:<12.4f} {status:<20}")
         
         if not should_continue:
