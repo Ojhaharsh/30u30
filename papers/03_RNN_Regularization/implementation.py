@@ -313,12 +313,12 @@ class EarlyStoppingMonitor:
             self.best_model_state = model_state
             
             if self.verbose:
-                print(f"  ✓ Epoch {epoch}: val_loss improved to {val_loss:.4f}")
+                print(f"  [ok] Epoch {epoch}: val_loss improved to {val_loss:.4f}")
         else:
             self.no_improve_count += 1
             
             if self.verbose:
-                print(f"  ✗ Epoch {epoch}: val_loss {val_loss:.4f} "
+                print(f"  [FAIL] Epoch {epoch}: val_loss {val_loss:.4f} "
                       f"(no improve for {self.no_improve_count}/{self.patience})")
         
         return self.no_improve_count < self.patience
