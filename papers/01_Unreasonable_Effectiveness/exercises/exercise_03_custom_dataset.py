@@ -18,7 +18,7 @@ Learning Objectives:
 4. Overfitting vs underfitting detection
 
 Time: 30-60 minutes
-Difficulty: Medium ⏱️⏱️
+Difficulty: Medium
 """
 
 import numpy as np
@@ -196,11 +196,11 @@ if __name__ == "__main__":
     print(__doc__)
     
     print("\nSuggested datasets:")
-    print("  📚 Books: Shakespeare, Jane Austen, Harry Potter")
-    print("  💻 Code: Your GitHub repos, Linux kernel")
-    print("  🎵 Lyrics: Your favorite artist")
-    print("  📱 Social: Your Twitter archive")
-    print("  📰 News: Wikipedia, news articles")
+    print("  Books: Shakespeare, Jane Austen, Harry Potter")
+    print("  Code: Your GitHub repos, Linux kernel")
+    print("  Lyrics: Your favorite artist")
+    print("  Social: Your Twitter archive")
+    print("  News: Wikipedia, news articles")
     
     # TODO 7: Specify your dataset path
     dataset_path = "your_dataset.txt"  # CHANGE THIS
@@ -223,5 +223,5 @@ if __name__ == "__main__":
     # Bonus: Compare datasets
     # compare_datasets()
     
-    print("\n✅ Exercise 3 complete!")
+    print("\nExercise 3 complete!")
     print("Compare your results with solutions/exercise_03_solution.md")

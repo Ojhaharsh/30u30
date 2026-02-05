@@ -227,7 +227,7 @@ if __name__ == "__main__":
     print("3. Implement backward pass")
     print("4. Implement weight updates")
     print("5. Implement sampling")
-    print("\nGood luck! 🚀")
+    print("\nGood luck!")
     print("\n" + "=" * 50)
     
     # Uncomment when you're ready to test:

@@ -17,7 +17,7 @@ Learning Objectives:
 4. Mathematical effect on softmax
 
 Time: 15-30 minutes
-Difficulty: Quick ⏱️
+Difficulty: Quick
 """
 
 import numpy as np
@@ -176,5 +176,5 @@ if __name__ == "__main__":
     # Visualize (bonus)
     visualize_temperature_effect()
     
-    print("\n✅ Exercise 2 complete!")
+    print("\nExercise 2 complete!")
     print("Compare your analysis with solutions/exercise_02_solution.md")
