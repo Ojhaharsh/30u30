@@ -17,7 +17,7 @@ Learning Objectives:
 4. Real-world applications (edge devices, mobile)
 
 Time: 30-40 minutes
-Difficulty: Hard ⏱️⏱️⏱️
+Difficulty: Hard
 """
 
 import numpy as np
@@ -191,7 +191,7 @@ def study_pareto_frontier():
     print("  Saved to: pareto_frontier.png")
     plt.close()
     
-    print("\n✓ Pareto frontier analysis completed!")
+    print("\n[ok] Pareto frontier analysis completed.")
     print("\nKey insights:")
     print("  - LEFT side: Underfitting (KL too high)")
     print("  - RIGHT side: Overfitting (Recon too high)")

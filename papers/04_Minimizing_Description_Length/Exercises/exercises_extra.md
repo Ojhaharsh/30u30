@@ -1,6 +1,6 @@
-# 🏋️ Day 4 Exercises: Mastering Bayesian Networks
+# Day 4 Extra Exercises: Bayesian Networks
 
-Welcome to the dojo. Today is about unlearning "Determinism" and embracing "Uncertainty."
+These exercises build on the MDL implementation. All are our additions for practice.
 
 ## Exercise 1: The "Reparameterization" Trick (Math -> Code)
 **Goal:** Implement the Gaussian sampling manually.

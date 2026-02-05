@@ -17,7 +17,7 @@ Learning Objectives:
 4. Computational cost vs accuracy tradeoff
 
 Time: 20-30 minutes
-Difficulty: Medium ⏱️⏱️
+Difficulty: Medium
 """
 
 import numpy as np
@@ -191,7 +191,7 @@ def analyze_mc_convergence():
     print("  Saved to: mc_convergence.png")
     plt.close()
     
-    print("\n✓ MC convergence analysis completed!")
+    print("\n[ok] MC convergence analysis completed.")
     print("\nKey insights:")
     print("  - 1 sample: Just a point estimate (not Bayesian!)")
     print("  - 5-10 samples: Basic uncertainty estimates")
