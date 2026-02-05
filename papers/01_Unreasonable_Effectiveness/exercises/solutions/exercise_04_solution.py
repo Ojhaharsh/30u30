@@ -231,11 +231,11 @@ def suggest_fixes(diagnoses):
     print("="*60)
     
     if not diagnoses:
-        print("✅ No obvious problems detected!")
+        print("No obvious problems detected!")
         print("   Training appears healthy.")
         return
     
-    print(f"\n⚠️  Found {len(diagnoses)} potential issues:\n")
+    print(f"\nFound {len(diagnoses)} potential issues:\n")
     
     for i, diag in enumerate(diagnoses, 1):
         print(f"{i}. {diag['problem'].upper()}")
