@@ -17,7 +17,7 @@ Learning Objectives:
 4. Design tasks that test memory
 
 Time: 1-2 hours
-Difficulty: Medium ⏱️⏱️
+Difficulty: Medium
 """
 
 import numpy as np
@@ -216,5 +216,5 @@ if __name__ == "__main__":
     # Optional: Compare with RNN
     # compare_with_rnn(distances)
     
-    print("\n✅ Exercise 4 complete!")
+    print("\nExercise 4 complete.")
     print("Compare with solutions/solution_04_long_range_deps.py")

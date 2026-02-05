@@ -17,7 +17,7 @@ Learning Objectives:
 4. Appreciate design simplifications
 
 Time: 2-3 hours
-Difficulty: Hard ⏱️⏱️⏱️
+Difficulty: Hard
 """
 
 import numpy as np
@@ -271,17 +271,7 @@ if __name__ == "__main__":
     # TODO 18: Write report
     # write_comparison_report(results)
     
-    print("\n✅ Exercise 5 complete!")
+    print("\nExercise 5 complete.")
     print("Compare with solutions/solution_05_lstm_vs_gru.py")
     
-    print("\n" + "=" * 60)
-    print("CONGRATULATIONS!")
-    print("=" * 60)
-    print("\nYou've completed all 5 exercises!")
-    print("You now have a deep understanding of:")
-    print("  - LSTM architecture")
-    print("  - Gate behavior")
-    print("  - Component importance")
-    print("  - Memory capacity")
-    print("  - LSTM vs GRU trade-offs")
-    print("\nYou're ready for Day 3! 🚀")
+    print("\nAll exercises complete. You're ready for Day 3.")
