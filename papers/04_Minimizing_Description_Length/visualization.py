@@ -2,14 +2,14 @@
 Visualization Tools for MDL / Bayesian Networks
 ===============================================
 
-Comprehensive suite for analyzing "Noisy Weight" Networks.
+Plotting functions for analyzing Bayesian neural networks.
 
-This file provides deep introspection into the Bayesian Brain:
-1. Uncertainty Envelopes (The visual proof of doubt)
-2. Weight Distributions (The "Bits Back" compression visual)
-3. Signal-to-Noise Analysis (Which neurons actually matter?)
-4. Prior-Posterior Shifts (How much did the model learn?)
-5. Complexity Dynamics (The battle between Accuracy and Simplicity)
+Includes:
+1. Uncertainty Envelopes — prediction confidence across input space
+2. Weight Distributions — learned mu and sigma histograms
+3. Signal-to-Noise Analysis — which weights carry information
+4. Prior-Posterior Shifts — how far weights moved from prior
+5. Loss Dynamics — error vs. complexity trade-off over training
 """
 
 import numpy as np
@@ -24,7 +24,7 @@ sns.set_context("talk")
 
 def plot_uncertainty_envelope(model, X_train, y_train, X_test=None, n_samples=100, save_path=None):
     """
-    Visualize the "Confidence" of the model (The Holy Grail of Bayesian NN).
+    Visualize the uncertainty envelope of the Bayesian network.
     
     This plot demonstrates the core value of MDL:
     - Near data: Model is confident (low variance, narrow tube).
@@ -265,7 +265,7 @@ def plot_prior_posterior_shift(model, save_path=None):
 
 def plot_loss_dynamics(history, save_path=None):
     """
-    The Battle: Complexity vs Error.
+    Plot loss dynamics: complexity vs error over training.
     Visualizes the optimization trajectory.
     """
     print("  [Visualizer] Plotting Loss Dynamics...")
