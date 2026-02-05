@@ -297,7 +297,7 @@ def train_on_simple_data():
             print(f"  Generated: '{txt}'\n")
     
     print("=" * 60)
-    print("Training complete! ✅")
+    print("Training complete!")
     print("\nFinal test - Generate with different temperatures:")
     
     for temp in [0.2, 0.5, 1.0, 2.0]:
