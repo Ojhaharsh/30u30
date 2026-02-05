@@ -1,62 +1,48 @@
-# MDL & Bayesian NN Cheatsheet 📋
+# MDL / Bayesian NN Cheatsheet
 
-Quick reference for "Keeping Neural Networks Simple" (Hinton 1993)
-
----
-
-## The Big Idea (30 seconds)
-
-Standard Neural Networks are "Point Estimates"—they learn one specific number for every weight.
-MDL (Bayesian) Networks are **"Distribution Estimates"**—they learn a range (Mean ± Uncertainty) for every weight.
-
-* **Standard NN:** "The weight is exactly 5.12." (Brittle, Overconfident)
-* **MDL NN:** "The weight is roughly 5.0 ± 0.2." (Robust, Honest)
-
-**The Trade-off:**
-We minimize: `Total Loss = Error (NLL) + Complexity (KL)`
-* **Error:** Tries to fit the data (makes weights precise).
-* **Complexity:** Tries to be simple (makes weights fuzzy).
+Quick reference for Hinton & van Camp (1993) and our implementation.
 
 ---
 
-## Architecture: The Bayesian Neuron
+## The Paper's Contribution (30 seconds)
 
-Instead of $y = wx + b$, we have:
+**Problem:** Standard NNs use high-precision weights that overfit by encoding training noise.
+**Insight:** Represent weights as Gaussian distributions. Minimize total description length = data error + weight complexity.
+**Result:** MDL objective = variational free energy. The "bits back" argument connects information theory to Bayesian inference.
 
-```python
-# 1. Sample a weight from the distribution
-w_epsilon ~ N(0, 1)
-w = w_mu + w_sigma * w_epsilon
+This is a theoretical paper (6 pages, one toy experiment). The framework it establishes is the foundation for VAEs, Bayes by Backprop, and much of Bayesian deep learning.
 
-# 2. Compute output
-y = w * x + b
+---
+
+## Key Equations
 
 ```
+Weight sampling:     w = mu + sigma * epsilon,    epsilon ~ N(0,1)
+Sigma from rho:      sigma = log(1 + exp(rho))    (softplus, ensures sigma > 0)
 
-**Parameters per Weight:**
+KL divergence:       KL = 0.5 * sum(sigma^2 + mu^2 - 1 - log(sigma^2))
+Error cost:          NLL ~ MSE (assuming Gaussian noise)
 
-1. `w_mu`: The center of the weight (the value).
-2. `w_rho`: The uncertainty parameter (controls spread).
-*  (Softplus)
+Total loss:          L = NLL + beta * KL
+```
 
-
+- **KL** pulls weights toward prior N(0,1) — makes them simpler/fuzzier
+- **NLL** pulls weights toward fitting data — makes them precise
+- **beta** controls the trade-off (most important hyperparameter)
 
 ---
 
 ## Quick Start
 
-### Training
-
 ```bash
-# Train on Gappy Sine Wave (Default)
+# Train with default settings (gappy sine wave)
 python train_minimal.py
 
-# Strong Regularization (Simpler Model)
+# More regularization (simpler model, more uncertainty)
 python train_minimal.py --kl-weight 0.5
 
-# Weak Regularization (Complex Model)
+# Less regularization (fits data harder, less uncertainty)
 python train_minimal.py --kl-weight 0.001
-
 ```
 
 ### In Python
@@ -64,132 +50,98 @@ python train_minimal.py --kl-weight 0.001
 ```python
 from implementation import MDLNetwork
 
-# Create Network
 net = MDLNetwork(input_size=1, hidden_size=20, output_size=1)
 
-# Forward pass (Returns DIFFERENT result every time!)
-pred_1 = net.forward(x)
-pred_2 = net.forward(x)
+# Forward pass — returns DIFFERENT result each time (weights are sampled)
+pred = net.forward(x)
 
-# Calculate Loss
-loss = mse_loss(pred_1, y) + kl_weight * net.total_kl()
+# Loss = error + beta * complexity
+loss = MSE(pred, y) + kl_weight * net.total_kl()
 
+# Prediction with uncertainty (100 forward passes)
+mean, std = net.predict_with_uncertainty(x_test, n_samples=100)
+```
+
+---
+
+## Paper's Hyperparameters
+
+The paper is theoretical and doesn't specify practical training details. These are **our** recommended settings:
+
+### Starting Point
+```python
+hidden_size = 20
+kl_weight = 0.1       # beta — adjust first if problems
+lr = 0.01
+epochs = 2000
+rho_init = -3.0       # sigma starts at ~0.05
 ```
 
 ---
 
 ## Hyperparameter Guide
 
-| Parameter | Typical Range | Description | Too Low | Too High |
-| --- | --- | --- | --- | --- |
-| `kl_weight` (Beta) | 0.001 - 1.0 | The "Price" of complexity. **Crucial.** | Overfits (Standard NN behavior) | Underfits (Flat line prediction) |
-| `hidden_size` | 10 - 50 | Number of neurons. | Can't fit the curve | Hard to train (too much noise) |
-| `rho_init` | -3.0 to -5.0 | Initial uncertainty. | Starts too precise (gets stuck) | Starts too noisy (diverges) |
-| `lr` | 0.001 - 0.01 | Learning rate. | Slow convergence | Unstable gradients |
-
-### Good Starting Point
-
-```python
-hidden_size = 20
-kl_weight = 0.1  # Adjust this if model ignores data!
-lr = 0.01
-epochs = 2000
-
-```
+| Parameter | Typical Range | Notes |
+|-----------|--------------|-------|
+| `kl_weight` (beta) | 0.001 - 1.0 | Most important. Higher = simpler, fuzzier. Lower = overfits. |
+| `hidden_size` | 10 - 50 | Network capacity |
+| `rho_init` | -3.0 to -5.0 | Initial uncertainty. softplus(-3) ~ 0.05 |
+| `lr` | 0.001 - 0.01 | Learning rate |
 
 ---
 
-## Common Issues & Fixes
+## Common Issues
 
-### 1. The "Flat Line" Problem (Underfitting)
+### Model predicts a flat line (underfitting)
+- `kl_weight` too high — the model is terrified of complexity
+- Fix: reduce `kl_weight` (try 0.1 -> 0.01)
 
-**Symptom:** The model predicts a straight line at y=0 and ignores the data.
-**Cause:** `kl_weight` is too high. The model is terrified of being complex, so it learns nothing.
-**Fix:**
+### No uncertainty in gaps (overfitting)
+- `kl_weight` too low — acting like a standard NN
+- Fix: increase `kl_weight`
 
-* Reduce `kl_weight` (try 0.1 → 0.01).
-* Increase data size (data overpowers the prior).
-
-### 2. The "Overconfident" Problem (Overfitting)
-
-**Symptom:** The Uncertainty Envelope is tiny, even where there is no data.
-**Cause:** `kl_weight` is too low. The model is effectively a Standard NN.
-**Fix:**
-
-* Increase `kl_weight`.
-* Check if `total_kl()` is being scaled correctly (should be divided by N_samples).
-
-### 3. Training Diverges (NaN)
-
-**Symptom:** Loss explodes.
-**Cause:** The variance () exploded or became 0.
-**Fix:**
-
-* Use `softplus` for sigma (ensures ).
-* Clip gradients.
-* Lower learning rate.
+### Loss explodes (NaN)
+- sigma blew up or collapsed
+- Fix: clip gradients, lower learning rate, check softplus for numerical issues
 
 ---
 
-## Visualization Guide
+## Standard vs. Bayesian Comparison
 
-```python
-from visualization import plot_uncertainty_envelope, plot_weight_distributions
-
-# 1. The Money Shot (Uncertainty)
-plot_uncertainty_envelope(net, X_train, y_train)
-# Look for: Wide bubbles in the gaps, tight fit on data.
-
-# 2. The Compression Check
-plot_weight_distributions(net, 'layer1')
-# Look for: Many weights with High Sigma (The "Prunable" ones).
-
-```
+| Aspect | Standard NN | MDL / Bayesian NN |
+|--------|------------|-------------------|
+| Weights | Fixed numbers | Distributions N(mu, sigma) |
+| Prediction | Deterministic | Stochastic (different each pass) |
+| Unknown data | Confidently wrong | Shows high uncertainty |
+| Parameters | W, b | mu, rho (2x params per weight) |
+| Loss | Error only | Error + KL divergence |
 
 ---
 
-## Comparison: Standard vs Bayesian
+## Debugging Checklist
 
-| Aspect | Standard NN (SGD) | MDL / Bayesian NN |
-| --- | --- | --- |
-| **Weights** | Fixed Numbers | Distributions (Mean, Std) |
-| **Prediction** | Always the same | Different every time (Sampling) |
-| **Unknown Data** | "I am 100% sure" (Wrong) | "I don't know" (High Variance) |
-| **Pruning** | Hard (Magnitude based) | Natural (Sigma based) |
-| **Math** | Calculus (Chain Rule) | Calculus + Statistics (KL Div) |
+- [ ] Is beta (kl_weight) reasonable? Not too high (flat line) or too low (overfit)?
+- [ ] Is sigma computed via softplus (always positive)?
+- [ ] Are gradients combining BOTH error and KL sources?
+- [ ] Is KL scaled by 1/N (number of data points)?
+- [ ] For uncertainty plots: using enough MC samples (50-100)?
 
 ---
 
-## Key Equations
+## What's From the Paper vs. Our Additions
 
-```text
-Weight Sample:    w = μ + σ * ε      where ε ~ N(0,1)
-Prediction:       y = w * x + b
-
-Complexity Cost:  KL = 0.5 * Σ(σ² + μ² - 1 - log(σ²))
-Error Cost:       NLL ≈ MSE / (2 * noise_variance)
-
-Total Loss:       L = NLL + β * KL
-
-```
-
-**Remember:**
-
-* **KL** pulls weights towards 0 and makes them fuzzy.
-* **NLL** pulls weights towards data and makes them precise.
-* Training is a tug-of-war between these two.
+| Concept | Source |
+|---------|--------|
+| Gaussian weight distributions | Paper |
+| KL divergence as complexity cost | Paper |
+| Bits back argument | Paper |
+| MDL = variational free energy | Paper |
+| Reparameterization trick | Kingma & Welling (2014) |
+| Softplus parameterization | Modern practice |
+| Monte Carlo uncertainty | Modern practice |
+| Gap experiment | Our addition |
+| All exercises | Our additions |
 
 ---
 
-## Resources
-
-* **Paper:** "Keeping Neural Networks Simple" (Hinton 1993)
-* **Code:** `implementation.py`
-* **Visuals:** `visualization.py`
-* **Modern Version:** "Bayes by Backprop" (Blundell 2015)
-
----
-
-That's it! You're now ready to go ahead like a pro! 🚀
-
-**Next**: Try exercises 1-5 to solidify your understanding.
+*For paper details, see [paper_notes.md](paper_notes.md). For implementation guide, see [README.md](README.md).*
