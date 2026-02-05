@@ -1,4 +1,4 @@
-# LSTM Cheatsheet 📋
+# LSTM Cheatsheet
 
 Quick reference for Understanding LSTM Networks
 
@@ -6,9 +6,7 @@ Quick reference for Understanding LSTM Networks
 
 ## The Big Idea (30 seconds)
 
-LSTMs solve vanishing gradients by adding a **cell state highway** that allows gradients to flow unchanged through time. Think of it as:
-- **Vanilla RNN** = Bucket brigade (loses water at each step)
-- **LSTM** = Pipeline with valves (preserves flow, only exits when needed)
+LSTMs solve vanishing gradients by adding a **cell state** that allows gradients to flow through time via addition rather than multiplication. Colah's metaphor: the cell state is a "conveyor belt" — information rides along it unchanged unless the LSTM explicitly modifies it through gates.
 
 ---
 
@@ -301,13 +299,11 @@ Loss:               L = -log(y_t[target])
 | **Memory**          | Hidden state only          | Hidden + Cell state            |
 | **Gates**           | None                       | 4 (forget, input, cell, output)|
 | **Gradient Flow**   | Multiplicative (vanishes)  | Additive (preserved)           |
-| **Long-term Deps**  | ❌ (<10 steps)             | ✅ (100+ steps)                |
+| **Long-term Deps**  | Poor (<10 steps)           | Good (100+ steps)              |
 | **Complexity**      | Simple                     | More complex                   |
 | **Training Speed**  | Fast                       | Slower                         |
 | **Parameters**      | Few                        | 4x more                        |
 
 ---
 
-That's it! You're now ready to train LSTMs like a pro! 🚀
-
-**Next**: Try exercises 1-5 to solidify your understanding.
+That's it. For exercises, see the `exercises/` folder.
