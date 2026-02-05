@@ -66,7 +66,7 @@ def exercise_1_solution():
     assert np.abs(sample_mean - mu) < 0.05, "Mean check failed!"
     assert np.abs(sample_std - sigma) < 0.05, "Std check failed!"
     
-    print("\n✅ Exercise 1 PASSED: Reparameterization trick works correctly!")
+    print("\n[OK] Exercise 1 PASSED: Reparameterization trick works correctly!")
     return samples, sigma
 
 
@@ -117,7 +117,7 @@ def exercise_2_solution():
     
     X_train, y_train, X_dense, y_true, mask = create_gappy_sine_solution(80)
     
-    print(f"\n✅ Exercise 2 PASSED: Gap experiment setup complete!")
+    print(f"\n[OK] Exercise 2 PASSED: Gap experiment setup complete!")
     print(f"  - Training points: {len(X_train)}")
     print(f"  - Gap region: x ∈ [π-0.5, π+0.5] ({np.sum(~mask)} points)")
     print(f"  - Data region: {np.sum(mask)} evaluation points")
@@ -154,7 +154,7 @@ def exercise_3_solution():
     print("     - Average std of predictions (mean uncertainty)")
     print("     - Calibration error (% points in 1σ band vs expected 68%)")
     print("  4. Plot 3 subplots: MSE, Uncertainty, Calibration vs β")
-    print("\n✅ Exercise 3 setup complete!")
+    print("\n[OK] Exercise 3 setup complete!")
 
 
 # ============================================================================
@@ -191,7 +191,7 @@ def exercise_4_solution():
     print("  3. Plot convergence: How std estimates stabilize")
     print("  4. Plot stability: How much variation with more samples")
     
-    print("\n✅ Exercise 4 setup complete!")
+    print("\n[OK] Exercise 4 setup complete!")
 
 
 # ============================================================================
@@ -233,7 +233,7 @@ def exercise_5_solution():
     print("  4. Plot Pareto frontier (recon_loss vs kl_div)")
     print("  5. Annotate with β values to show progression")
     
-    print("\n✅ Exercise 5 setup complete!")
+    print("\n[OK] Exercise 5 setup complete!")
 
 
 # ============================================================================
@@ -251,11 +251,11 @@ def print_all_solutions():
     print("\n" + "="*70)
     print("SUMMARY: All 5 Exercises")
     print("="*70)
-    print("\n✅ Exercise 1: Reparameterization trick (sampling)")
-    print("✅ Exercise 2: Gap experiment (uncertainty visualization)")
-    print("✅ Exercise 3: Beta parameter study (calibration)")
-    print("✅ Exercise 4: Monte Carlo predictions (convergence)")
-    print("✅ Exercise 5: Pareto frontier (compression analysis)")
+    print("\n[OK] Exercise 1: Reparameterization trick (sampling)")
+    print("[OK] Exercise 2: Gap experiment (uncertainty visualization)")
+    print("[OK] Exercise 3: Beta parameter study (calibration)")
+    print("[OK] Exercise 4: Monte Carlo predictions (convergence)")
+    print("[OK] Exercise 5: Pareto frontier (compression analysis)")
     print("\n" + "="*70)
 
 
