@@ -173,7 +173,7 @@ def visualize_early_stopping():
         
         action = ""
         if val_losses[epoch] <= early_stop.get_best_loss():
-            action = "✓ New best!"
+            action = "[ok] New best!"
         elif stopped_at is None:
             action = f"Wait {early_stop.wait}/{early_stop.patience}"
         
@@ -198,15 +198,15 @@ def test_early_stopping_basic():
     assert not es(2.0), "Should not stop on first call"
     assert not es(1.8), "Should not stop on improvement"
     assert es.get_best_loss() == 1.8
-    print("  ✓ Improvements tracked correctly")
+    print("  [ok] Improvements tracked correctly")
     
     # No improvements
     assert not es(2.0), "Should not stop yet (wait=1)"
     assert not es(2.1), "Should not stop yet (wait=2)"
     assert es(2.2), "Should stop now (wait=3)"
-    print("  ✓ Stops after patience epochs")
+    print("  [ok] Stops after patience epochs")
     
-    print("✓ Basic tests passed!")
+    print("[ok] Basic tests passed!")
 
 
 def test_min_delta():
@@ -218,13 +218,13 @@ def test_min_delta():
     es(2.0)  # Best = 2.0
     es(1.95)  # Not 0.1 better, wait = 1
     assert es.wait == 1
-    print("  ✓ Small improvement ignored")
+    print("  [ok] Small improvement ignored")
     
     es(1.89)  # 0.11 better, reset!
     assert es.wait == 0
-    print("  ✓ Sufficient improvement resets wait")
+    print("  [ok] Sufficient improvement resets wait")
     
-    print("✓ min_delta tests passed!")
+    print("[ok] min_delta tests passed!")
 
 
 def test_weight_saving():
@@ -248,14 +248,14 @@ def test_weight_saving():
     # Check best weights
     best = es.get_best_weights()
     assert np.allclose(best['W'], weights_1['W'])
-    print("  ✓ Best weights saved correctly")
+    print("  [ok] Best weights saved correctly")
     
     # Check deep copy
     weights_1['W'][0, 0] = 999
     assert best['W'][0, 0] != 999
-    print("  ✓ Weights are deep copied")
+    print("  [ok] Weights are deep copied")
     
-    print("✓ Weight saving tests passed!")
+    print("[ok] Weight saving tests passed!")
 
 
 def test_simulation():
@@ -272,10 +272,10 @@ def test_simulation():
     
     assert result['stopped_epoch'] == 5
     assert abs(result['best_val_loss'] - 1.3) < 1e-6
-    print(f"  ✓ Stopped at epoch {result['stopped_epoch']}")
-    print(f"  ✓ Best val loss: {result['best_val_loss']}")
+    print(f"  [ok] Stopped at epoch {result['stopped_epoch']}")
+    print(f"  [ok] Best val loss: {result['best_val_loss']}")
     
-    print("✓ Simulation tests passed!")
+    print("[ok] Simulation tests passed!")
 
 
 if __name__ == "__main__":
@@ -289,4 +289,4 @@ if __name__ == "__main__":
     test_weight_saving()
     test_simulation()
     
-    print("\n🎉 All tests passed!")
+    print("\nAll tests passed!")

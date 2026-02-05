@@ -313,20 +313,20 @@ def test_full_pipeline():
     # Dropout test
     h_train = cell.forward(np.random.randn(1, 3), np.zeros((1, 8)), training=True)
     h_test = cell.forward(np.random.randn(1, 3), np.zeros((1, 8)), training=False)
-    print(f"   ✓ Dropout works (training/inference modes)")
+    print(f"   [ok] Dropout works (training/inference modes)")
     
     # Layer norm test
     h = cell.forward(np.random.randn(1, 3) * 100, np.zeros((1, 8)), training=False)
-    print(f"   ✓ Layer norm works (output bounded: max={np.max(np.abs(h)):.2f})")
+    print(f"   [ok] Layer norm works (output bounded: max={np.max(np.abs(h)):.2f})")
     
     # Weight decay test
     penalty = cell.compute_l2_penalty()
-    print(f"   ✓ Weight decay works (penalty={penalty:.6f})")
+    print(f"   [ok] Weight decay works (penalty={penalty:.6f})")
     
     # Early stopping test
-    print(f"   ✓ Early stopping works (stopped at epoch {history['epochs_trained']})")
+    print(f"   [ok] Early stopping works (stopped at epoch {history['epochs_trained']})")
     
-    print("\n🎉 Full pipeline test passed!")
+    print("\nFull pipeline test passed!")
 
 
 def demonstrate_regularization_effects():
@@ -392,4 +392,4 @@ if __name__ == "__main__":
     test_full_pipeline()
     demonstrate_regularization_effects()
     
-    print("\n🎉 All tests passed!")
+    print("\nAll tests passed!")
