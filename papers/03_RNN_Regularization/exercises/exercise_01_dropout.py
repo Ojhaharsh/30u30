@@ -16,7 +16,7 @@ Learning Objectives:
 4. Understand how gradients flow through dropout
 
 Time: 30-45 minutes
-Difficulty: Medium ⏱️⏱️
+Difficulty: Medium
 """
 
 import numpy as np
@@ -113,7 +113,7 @@ def test_dropout_forward():
     out, mask = dropout_forward(x, keep_prob=1.0, training=False)
     assert np.allclose(out, x), "Should return input unchanged when training=False"
     assert mask is None, "Should return None mask when training=False"
-    print("  ✓ Test 1: No dropout mode works")
+    print("  [ok] Test 1: No dropout mode works")
     
     # Test 2: Shape preservation
     np.random.seed(42)
@@ -121,7 +121,7 @@ def test_dropout_forward():
     out, mask = dropout_forward(x, keep_prob=0.8, training=True)
     assert out.shape == x.shape, f"Shape mismatch: {out.shape} vs {x.shape}"
     assert mask.shape == x.shape, f"Mask shape mismatch: {mask.shape} vs {x.shape}"
-    print("  ✓ Test 2: Shape preservation works")
+    print("  [ok] Test 2: Shape preservation works")
     
     # Test 3: Correct dropout rate
     np.random.seed(42)
@@ -129,7 +129,7 @@ def test_dropout_forward():
     out, mask = dropout_forward(x, keep_prob=0.8, training=True)
     dropout_rate = np.mean(mask == 0)
     assert 0.15 < dropout_rate < 0.25, f"Dropout rate should be ~20%, got {dropout_rate*100:.1f}%"
-    print(f"  ✓ Test 3: Dropout rate correct (~20%, got {dropout_rate*100:.1f}%)")
+    print(f"  [ok] Test 3: Dropout rate correct (~20%, got {dropout_rate*100:.1f}%)")
     
     # Test 4: Correct scaling
     np.random.seed(42)
@@ -137,16 +137,16 @@ def test_dropout_forward():
     out, mask = dropout_forward(x, keep_prob=0.5, training=True)
     active_values = out[out > 0]
     assert 1.9 < np.mean(active_values) < 2.1, f"Active values should be ~2.0, got {np.mean(active_values):.2f}"
-    print(f"  ✓ Test 4: Output scaling correct (active mean={np.mean(active_values):.2f})")
+    print(f"  [ok] Test 4: Output scaling correct (active mean={np.mean(active_values):.2f})")
     
     # Test 5: Expected value preservation
     np.random.seed(42)
     x = np.ones(100000) * 5.0
     out, mask = dropout_forward(x, keep_prob=0.8, training=True)
     assert 4.9 < np.mean(out) < 5.1, f"Expected value should be ~5.0, got {np.mean(out):.2f}"
-    print(f"  ✓ Test 5: Expected value preserved (mean={np.mean(out):.2f})")
+    print(f"  [ok] Test 5: Expected value preserved (mean={np.mean(out):.2f})")
     
-    print("✓ All dropout_forward tests passed!\n")
+    print("[ok] All dropout_forward tests passed!\n")
 
 
 def test_dropout_backward():
@@ -157,7 +157,7 @@ def test_dropout_backward():
     dout = np.array([1.0, 2.0, 3.0, 4.0, 5.0])
     dx = dropout_backward(dout, mask=None)
     assert np.allclose(dx, dout), "Should return dout unchanged when mask is None"
-    print("  ✓ Test 1: No mask case works")
+    print("  [ok] Test 1: No mask case works")
     
     # Test 2: Gradient masking
     dout = np.array([1.0, 2.0, 3.0, 4.0, 5.0])
@@ -165,7 +165,7 @@ def test_dropout_backward():
     dx = dropout_backward(dout, mask)
     expected = dout * mask
     assert np.allclose(dx, expected), f"Gradient should be dout * mask"
-    print("  ✓ Test 2: Gradient masking works")
+    print("  [ok] Test 2: Gradient masking works")
     
     # Test 3: Zeros propagate correctly
     dout = np.ones(100)
@@ -173,9 +173,9 @@ def test_dropout_backward():
     mask[::2] = 2.0  # Every other element is active
     dx = dropout_backward(dout, mask)
     assert np.sum(dx[1::2]) == 0, "Gradient should be zero where mask is zero"
-    print("  ✓ Test 3: Zero gradients propagate correctly")
+    print("  [ok] Test 3: Zero gradients propagate correctly")
     
-    print("✓ All dropout_backward tests passed!\n")
+    print("[ok] All dropout_backward tests passed!\n")
 
 
 def test_dropout_integration():
@@ -197,9 +197,9 @@ def test_dropout_integration():
     zeros_out = out == 0
     zeros_dx = dx == 0
     assert np.allclose(zeros_out, zeros_dx), "Gradient should be zero where output was zero"
-    print("  ✓ Forward and backward are consistent")
+    print("  [ok] Forward and backward are consistent")
     
-    print("✓ Integration test passed!\n")
+    print("[ok] Integration test passed!\n")
 
 
 if __name__ == "__main__":
@@ -211,10 +211,10 @@ if __name__ == "__main__":
         test_dropout_forward()
         test_dropout_backward()
         test_dropout_integration()
-        print("🎉 All tests passed! You've mastered dropout!")
+        print("All tests passed!")
     except AssertionError as e:
-        print(f"❌ Test failed: {e}")
+        print(f"FAIL - Test failed: {e}")
     except Exception as e:
-        print(f"❌ Error: {e}")
+        print(f"FAIL - Error: {e}")
         import traceback
         traceback.print_exc()

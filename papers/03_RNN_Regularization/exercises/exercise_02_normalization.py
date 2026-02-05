@@ -16,7 +16,7 @@ Learning Objectives:
 4. Derive and implement the backward pass
 
 Time: 45-60 minutes
-Difficulty: Hard ⏱️⏱️⏱️
+Difficulty: Hard
 
 Key Equation:
     y = gamma * (x - mean) / sqrt(variance + epsilon) + beta
@@ -150,7 +150,7 @@ def test_layer_norm_forward():
     assert np.abs(np.mean(out)) < 1e-6, f"Mean should be ~0, got {np.mean(out)}"
     # Check std is ~1
     assert np.abs(np.std(out) - 1) < 1e-6, f"Std should be ~1, got {np.std(out)}"
-    print("  ✓ Test 1: Basic normalization works (mean=0, std=1)")
+    print("  [ok] Test 1: Basic normalization works (mean=0, std=1)")
     
     # Test 2: Batch normalization (2D)
     x = np.array([[1.0, 2.0, 3.0],
@@ -165,7 +165,7 @@ def test_layer_norm_forward():
         row_std = np.std(out[i])
         assert np.abs(row_mean) < 1e-6, f"Row {i} mean should be ~0, got {row_mean}"
         assert np.abs(row_std - 1) < 0.1, f"Row {i} std should be ~1, got {row_std}"
-    print("  ✓ Test 2: Batch normalization works (each row normalized)")
+    print("  [ok] Test 2: Batch normalization works (each row normalized)")
     
     # Test 3: Scale and shift
     x = np.array([1.0, 2.0, 3.0, 4.0, 5.0])
@@ -178,7 +178,7 @@ def test_layer_norm_forward():
     # After shift by 3: mean=3, std=2
     assert np.abs(np.mean(out) - 3.0) < 1e-6, f"Mean should be ~3, got {np.mean(out)}"
     assert np.abs(np.std(out) - 2.0) < 0.1, f"Std should be ~2, got {np.std(out)}"
-    print("  ✓ Test 3: Scale and shift work correctly")
+    print("  [ok] Test 3: Scale and shift work correctly")
     
     # Test 4: Constant input
     x = np.ones(5) * 5.0
@@ -189,9 +189,9 @@ def test_layer_norm_forward():
     # Constant input has variance 0, so output should be all zeros (before scale/shift)
     # With eps, this should not produce NaN
     assert not np.any(np.isnan(out)), "Should not produce NaN for constant input"
-    print("  ✓ Test 4: Constant input handled (no NaN)")
+    print("  [ok] Test 4: Constant input handled (no NaN)")
     
-    print("✓ All layer_norm_forward tests passed!\n")
+    print("[ok] All layer_norm_forward tests passed!\n")
 
 
 def test_layer_norm_backward():
@@ -215,7 +215,7 @@ def test_layer_norm_backward():
     assert dx.shape == x.shape, f"dx shape mismatch: {dx.shape} vs {x.shape}"
     assert dgamma.shape == gamma.shape, f"dgamma shape mismatch: {dgamma.shape} vs {gamma.shape}"
     assert dbeta.shape == beta.shape, f"dbeta shape mismatch: {dbeta.shape} vs {beta.shape}"
-    print("  ✓ Test 1: Gradient shapes are correct")
+    print("  [ok] Test 1: Gradient shapes are correct")
     
     # Test 2: Numerical gradient check for dbeta
     eps_num = 1e-5
@@ -233,7 +233,7 @@ def test_layer_norm_backward():
     
     dbeta_error = np.max(np.abs(dbeta - dbeta_num))
     assert dbeta_error < 1e-4, f"dbeta error too large: {dbeta_error}"
-    print(f"  ✓ Test 2: dbeta numerical gradient check passed (error={dbeta_error:.2e})")
+    print(f"  [ok] Test 2: dbeta numerical gradient check passed (error={dbeta_error:.2e})")
     
     # Test 3: Numerical gradient check for dgamma
     dgamma_num = np.zeros_like(gamma)
@@ -250,9 +250,9 @@ def test_layer_norm_backward():
     
     dgamma_error = np.max(np.abs(dgamma - dgamma_num))
     assert dgamma_error < 1e-4, f"dgamma error too large: {dgamma_error}"
-    print(f"  ✓ Test 3: dgamma numerical gradient check passed (error={dgamma_error:.2e})")
+    print(f"  [ok] Test 3: dgamma numerical gradient check passed (error={dgamma_error:.2e})")
     
-    print("✓ All layer_norm_backward tests passed!\n")
+    print("[ok] All layer_norm_backward tests passed!\n")
 
 
 if __name__ == "__main__":
@@ -263,10 +263,10 @@ if __name__ == "__main__":
     try:
         test_layer_norm_forward()
         test_layer_norm_backward()
-        print("🎉 All tests passed! You've mastered layer normalization!")
+        print("All tests passed!")
     except AssertionError as e:
-        print(f"❌ Test failed: {e}")
+        print(f"FAIL - Test failed: {e}")
     except Exception as e:
-        print(f"❌ Error: {e}")
+        print(f"FAIL - Error: {e}")
         import traceback
         traceback.print_exc()

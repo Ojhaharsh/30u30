@@ -16,7 +16,7 @@ Learning Objectives:
 4. Understand the gradient contribution from weight decay
 
 Time: 20-30 minutes
-Difficulty: Easy ⏱️
+Difficulty: Easy
 
 Key Equation:
     L_total = L_model + (λ/2) * Σ(w²)
@@ -167,7 +167,7 @@ def test_compute_l2_penalty():
     penalty = compute_l2_penalty([W1], weight_decay=0.1)
     expected = 0.1 / 2 * 30  # = 1.5
     assert np.abs(penalty - expected) < 1e-6, f"Expected {expected}, got {penalty}"
-    print(f"  ✓ Test 1: Simple case works (penalty={penalty:.2f})")
+    print(f"  PASS: Test 1 - Simple case works (penalty={penalty:.2f})")
     
     # Test 2: Multiple weight matrices
     W1 = np.ones((2, 2))  # Sum = 4
@@ -175,20 +175,20 @@ def test_compute_l2_penalty():
     penalty = compute_l2_penalty([W1, W2], weight_decay=0.01)
     expected = 0.01 / 2 * (4 + 9)  # = 0.065
     assert np.abs(penalty - expected) < 1e-6, f"Expected {expected}, got {penalty}"
-    print(f"  ✓ Test 2: Multiple matrices work (penalty={penalty:.4f})")
+    print(f"  PASS: Test 2 - Multiple matrices work (penalty={penalty:.4f})")
     
     # Test 3: Zero weight decay
     W1 = np.random.randn(10, 10)
     penalty = compute_l2_penalty([W1], weight_decay=0.0)
     assert penalty == 0.0, f"Zero weight decay should give zero penalty"
-    print("  ✓ Test 3: Zero weight decay works")
+    print("  PASS: Test 3 - Zero weight decay works")
     
     # Test 4: Empty weights list
     penalty = compute_l2_penalty([], weight_decay=0.1)
     assert penalty == 0.0, f"Empty list should give zero penalty"
-    print("  ✓ Test 4: Empty list works")
+    print("  PASS: Test 4 - Empty list works")
     
-    print("✓ All compute_l2_penalty tests passed!\n")
+    print("All compute_l2_penalty tests passed!\n")
 
 
 def test_compute_l2_gradient():
@@ -201,21 +201,21 @@ def test_compute_l2_gradient():
     dW_reg = compute_l2_gradient(W, weight_decay)
     expected = weight_decay * W
     assert np.allclose(dW_reg, expected), f"Gradient mismatch"
-    print("  ✓ Test 1: Gradient = λ * W")
+    print("  PASS: Test 1 - Gradient = lambda * W")
     
     # Test 2: Zero weight decay
     W = np.random.randn(5, 5)
     dW_reg = compute_l2_gradient(W, weight_decay=0.0)
     assert np.allclose(dW_reg, np.zeros_like(W)), "Zero decay should give zero gradient"
-    print("  ✓ Test 2: Zero weight decay works")
+    print("  PASS: Test 2 - Zero weight decay works")
     
     # Test 3: Shape preservation
     W = np.random.randn(10, 20)
     dW_reg = compute_l2_gradient(W, weight_decay=0.01)
     assert dW_reg.shape == W.shape, f"Shape mismatch: {dW_reg.shape} vs {W.shape}"
-    print("  ✓ Test 3: Shape preserved")
+    print("  PASS: Test 3 - Shape preserved")
     
-    print("✓ All compute_l2_gradient tests passed!\n")
+    print("All compute_l2_gradient tests passed!\n")
 
 
 def test_regularized_loss():
@@ -228,16 +228,16 @@ def test_regularized_loss():
     total = regularized_loss(model_loss, [W], weight_decay=0.1)
     expected = 2.5 + 0.1 / 2 * 16  # = 2.5 + 0.8 = 3.3
     assert np.abs(total - expected) < 1e-6, f"Expected {expected}, got {total}"
-    print(f"  ✓ Test 1: Basic case works (total={total:.2f})")
+    print(f"  PASS: Test 1 - Basic case works (total={total:.2f})")
     
     # Test 2: Zero weight decay should return model loss
     model_loss = 5.0
     W = np.random.randn(10, 10)
     total = regularized_loss(model_loss, [W], weight_decay=0.0)
     assert total == model_loss, f"Zero decay should return model loss"
-    print("  ✓ Test 2: Zero weight decay works")
+    print("  PASS: Test 2 - Zero weight decay works")
     
-    print("✓ All regularized_loss tests passed!\n")
+    print("All regularized_loss tests passed!\n")
 
 
 def test_apply_weight_decay_to_gradient():
@@ -251,16 +251,16 @@ def test_apply_weight_decay_to_gradient():
     dW_total = apply_weight_decay_to_gradient(dW, W, weight_decay)
     expected = dW + weight_decay * W
     assert np.allclose(dW_total, expected), f"Gradient mismatch"
-    print("  ✓ Test 1: Basic case works")
+    print("  PASS: Test 1 - Basic case works")
     
     # Test 2: Zero weight decay should return original gradient
     dW = np.random.randn(5, 5)
     W = np.random.randn(5, 5)
     dW_total = apply_weight_decay_to_gradient(dW, W, weight_decay=0.0)
     assert np.allclose(dW_total, dW), "Zero decay should return original gradient"
-    print("  ✓ Test 2: Zero weight decay works")
+    print("  PASS: Test 2 - Zero weight decay works")
     
-    print("✓ All apply_weight_decay_to_gradient tests passed!\n")
+    print("All apply_weight_decay_to_gradient tests passed!\n")
 
 
 if __name__ == "__main__":
@@ -273,10 +273,10 @@ if __name__ == "__main__":
         test_compute_l2_gradient()
         test_regularized_loss()
         test_apply_weight_decay_to_gradient()
-        print("🎉 All tests passed! You've mastered weight decay!")
+        print("All tests passed!")
     except AssertionError as e:
-        print(f"❌ Test failed: {e}")
+        print(f"FAIL - Test failed: {e}")
     except Exception as e:
-        print(f"❌ Error: {e}")
+        print(f"FAIL - Error: {e}")
         import traceback
         traceback.print_exc()
