@@ -16,7 +16,7 @@ Learning Objectives:
 4. Monte Carlo approximation
 
 Time: 20-30 minutes
-Difficulty: Medium ⏱️⏱️
+Difficulty: Medium
 """
 
 import numpy as np
@@ -91,7 +91,7 @@ def test_gaussian_sampling():
     # sample_std = np.std(samples)
     # assert abs(sample_std - sigma) < 0.05, f"Std mismatch: {sample_std} vs {sigma}"
     
-    print("✓ Basic sampling test passed")
+    print("[ok] Basic sampling test passed")
     
     # Test 2: Different rho values
     print("\nTesting different rho values:")
@@ -106,7 +106,7 @@ def test_gaussian_sampling():
     
     # Test 3: Visualization
     # TODO 10: Create a visualization showing different distributions
-    print("\n✓ All tests passed!")
+    print("\n[ok] All tests passed.")
 
 
 if __name__ == "__main__":
