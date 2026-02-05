@@ -1,329 +1,261 @@
 # Paper Notes: The Unreasonable Effectiveness of RNNs
 
-## 🍼 ELI5 (Explain Like I'm 5)
+## ELI5 (Explain Like I'm 5)
 
 ### The Story
 
-Imagine you're learning to write by copying books, one letter at a time. At first, you just copy random letters. But after copying millions of letters, something magical happens:
+Imagine you're learning to write by copying books, one letter at a time. At first, you just copy random letters. But after copying millions of letters, you start picking up patterns:
 
-You start to understand:
+You begin to understand:
 - Which letters usually come after others ('q' is followed by 'u')
 - How to spell words correctly
 - How sentences are structured
-- Even the writing style of different authors!
+- Even the writing style of different authors
 
-**That's what RNNs do.** They learn to predict the next character by seeing tons of examples. And in learning to predict, they learn to write.
+**That's the core idea behind character-level RNNs.** They learn to predict the next character by seeing tons of examples. And in learning to predict, they learn the structure of whatever text you feed them.
+
+Note: This analogy is ours, not Karpathy's. But it captures his main point — that prediction forces understanding of structure.
 
 ---
 
-## 🎯 The Core Concept
+## What the Post Actually Covers
+
+Karpathy's blog post (May 2015) isn't a research paper — it's a practitioner's demo. He trains character-level language models on several datasets and shows that a surprisingly simple setup (predict the next character) learns rich structural patterns.
+
+**Important detail he states upfront:** All experiments use **LSTMs**, not vanilla RNNs. He presents the vanilla RNN equations for simplicity, then says "I will use the terms RNN/LSTM interchangeably but all experiments in this post use an LSTM." Our implementation uses vanilla RNN for pedagogical reasons, but his results come from LSTMs.
+
+---
+
+## The Core Idea (From the Post)
 
 **The Task:** Given a sequence of characters, predict the next one.
 
-**Example:**
+Karpathy uses the example of training on the string "hello" with vocabulary "h, e, l, o":
+
 ```
-Input:  "The cat sat on th"
-Predict: "e" (most likely next character)
+Feed 'h' → model should predict 'e'
+Feed 'e' → model should predict 'l'
+Feed 'l' → model should predict 'l'
+Feed 'l' → model should predict 'o'
 ```
 
-**Why it's powerful:** To predict well, you must understand:
-- Grammar (subjects need verbs)
-- Context (on the mat, not on the sky)
-- Style (formal vs casual)
+He explains that this is trained using one-hot encoding, softmax output, and cross-entropy loss. The RNN processes one character at a time, using its hidden state to remember what came before.
+
+**His key observation:** To predict the next character well, the model must implicitly learn spelling, grammar, formatting, and domain structure. Nobody programs these rules in — they emerge from the prediction task.
+
+He also links to his [min-char-rnn.py](https://gist.github.com/karpathy/d4dee566867f8291f086) — about 100 lines of Python/NumPy that implements the core idea. Our implementation is based on this.
 
 ---
 
-## 🧮 The Math (Simplified)
+## The Experiments (All Six)
 
-### What's Happening Inside
+Karpathy trains on six different datasets. This is the heart of the post.
 
-At each time step, the RNN does 3 things:
+### 1. Paul Graham Essays (~1MB)
 
-1. **Look at current input:** "What character am I seeing now?"
-2. **Remember the past:** "What did I see before?"
-3. **Make a prediction:** "What's next?"
+**Setup:** 2-layer LSTM, 512 hidden nodes, dropout 0.5.
 
-```python
-# Pseudocode
-memory = mix(current_input, previous_memory)
-prediction = guess_next_character(memory)
+The model generates text that sounds like Paul Graham writing about startups — sentence structure, vocabulary, even the habit of citing numbered references like [2]. It's not coherent, but it captures the *style*.
+
+**Temperature demo (from this section):** He shows what happens at different temperatures:
+- Low temperature: "is that they were all the same thing that was a startup is that they were all the same thing that was a startup" — gets stuck in a loop, always picking the highest-probability next character.
+- Higher temperature: More variety but more spelling mistakes.
+
+This is the only place in the post where he discusses temperature in detail.
+
+### 2. Shakespeare (4.4MB)
+
+**Setup:** 3-layer RNN, 512 hidden nodes per layer.
+
+Generated output:
+```
+PANDARUS:
+Alas, I think he shall be come approached and the day
+When little srain would be attain'd into being never fed,
+And who is but a chain and subjects of his death,
+I should not sleep.
 ```
 
-### The Memory Trick
+What it learned (without being told):
+- Character names in ALL CAPS followed by colons
+- Dialogue indentation
+- Period-appropriate vocabulary
+- Rough iambic rhythm
 
-Unlike regular neural networks that forget everything between inputs, RNNs have a "memory" (hidden state) that carries information forward:
+What it gets wrong: "srain" isn't a word, the meaning is incoherent. It learned the **form** of Shakespeare, not the **content**. Karpathy notes: "I can barely recognize these samples from actual Shakespeare."
 
-```
-'t' → [memory] → predict 'h'
-'h' → [memory] → predict 'e'
-'e' → [memory] → predict ' '
-```
+He also explicitly verifies the samples are NOT memorized by computing nearest-neighbor on the training set.
 
-The memory lets it remember that we're spelling "the" not "tea" or "ten".
+### 3. Wikipedia (100MB, Hutter Prize dataset)
 
----
+**Setup:** Following Graves et al., trained overnight.
 
-## 🎨 Real Examples That Blew Minds
+The model learns:
+- Markdown formatting (headings, bullet lists, `[[wiki links]]`)
+- XML structure (proper tag opening/closing, nesting)
+- Plausible-looking URLs (that don't actually exist — Karpathy notes the model "hallucinated" a yahoo URL)
+- Cite journal templates
 
-### Shakespeare
+It switches between generating prose, structured markdown, and raw XML — each with correct formatting conventions.
 
-**Input:** 4.4 MB of Shakespeare plays
+### 4. Algebraic Geometry LaTeX (16MB)
 
-**After training, it generates:**
-```
-ROMEO:
-O, if I wake, shall I not then be stifled in the vault,
-To whose foul mouth no healthsome air breathes in,
-And there die strangled ere my Romeo comes?
-```
+**Setup:** Trained with his labmate Justin Johnson.
 
-**What it learned:**
-- Character names are in CAPS
-- Colons follow character names
-- Shakespearean vocabulary
-- Iambic-ish rhythm
-- Dramatic themes
+The generated LaTeX "almost compiles." After manual fixes, it produces plausible-looking math with proper equation environments, theorem/lemma structures, and mathematical notation. Common error: opening `\begin{proof}` but closing with `\end{lemma}` — the dependency is too long-term for the model to track.
 
-**Mind-blowing part:** Nobody taught it these rules. It figured them out by predicting characters.
+### 5. Linux Source Code (474MB)
 
-### Linux Source Code
+**Setup:** All source and header files from the Linux GitHub repo. 3-layer LSTM, ~10 million parameters, trained over several days.
 
-**Input:** 474 MB of Linux kernel
-
-**Output:** Valid C code that compiles!
-
+Generated output:
 ```c
 /*
- * If this error is set, we will need anything right after that BSD.
+ * Increment the size file of the new incorrect UI_FILTER group information
+ * of the size generatively.
  */
-static void action_new_function(struct s_stat_info *wb)
+static int indicate_policy(void)
 {
-    unsigned long flags;
-    int lel_idx_bit = e->edd, *sys & ~((unsigned long) *FIRST_COMPAT);
-    buf[0] = 0xFFFFFFFF & (bit << 4);
-    min(inc, slist->bytes);
-    printk(KERN_WARNING "Memory allocated %02x/%02x, "
-           "original MLL instead\n"),
-           min(min(multi_run - s->len, max) * num_data_in),
-           frame_pos, sz + first_seg);
-    div_u64_w(val, inb_p);
-    spin_unlock(&disk->queue_lock);
+  int error;
+  if (fd == MARN_EPT) {
+    /*
+     * The kernel blank will coeld it to userspace.
+     */
+    if (ss->segment < mem_total)
+      unblock_graph_and_set_blocked();
+    else
+      ret = 1;
+    goto bail;
+  }
+  ...
 }
 ```
 
-**What's remarkable:**
-- Proper C syntax
-- Realistic variable names
-- Plausible function logic
-- Correct use of kernel macros
-- Comments that make sense
+What it gets right: brackets, indentation, semicolons, pointer notation, kernel macros, comments, `#include` statements, even the GPL license header character by character.
+
+What it gets wrong: Uses undefined variables, declares variables it never uses, returns values from `void` functions, compares `tty == tty` (vacuously true). Karpathy says explicitly: "I don't think it compiles."
+
+He also notes the model sometimes "decides it's time to sample a new file" and generates a full GPL header, includes, macros, then dives into code.
+
+### 6. Baby Names (8000 names)
+
+A fun small experiment. The model generates plausible new names: "Rudi", "Levette", "Berice", "Lussa". About 90% of generated names don't exist in the training data. Karpathy jokes it could be "useful inspiration when naming a new startup."
 
 ---
 
-## 🔬 The Three Key Insights
+## Understanding What's Going On
 
-### 1. Prediction ≈ Compression ≈ Understanding
+This section of the post is often overlooked but is genuinely interesting.
 
-To predict well, you must compress information efficiently. To compress well, you must understand structure.
+### Training Evolution (War and Peace)
 
-**Example:**
-- Bad prediction: Treat each character as random → Can't compress
-- Good prediction: Understand that 'q' → 'u' 99% of time → Compress well
+Karpathy shows how samples evolve during training:
 
-### 2. Emergence is Real
+- **Iteration 100:** Random jumbles, but starts learning that words are separated by spaces
+- **Iteration 300:** Gets the idea about quotes and periods
+- **Iteration 500:** Spells short common words ("we", "He", "His", "and")
+- **Iteration 700:** More English-like, but still many misspellings
+- **Iteration 1200:** Quotation marks, question marks, longer words
+- **Iteration 2000:** Properly spelled words, names, quotations
 
-Nobody programmed the RNN to understand:
-- Grammar
-- Syntax
-- Structure
+**His observation:** "First the model discovers the general word-space structure, then starts to learn words (short ones first, then longer). Topics and themes that span multiple words start to emerge only much later."
 
-It emerged from the simple task of prediction.
+This progression is worth understanding — it shows how the model builds up structure hierarchically.
 
-**This is profound:** Intelligence might emerge from prediction at scale.
+### Hidden State Visualization
 
-### 3. Scale Unlocks Capabilities
+He visualizes individual neurons in the LSTM's hidden state while processing Wikipedia text. Most neurons aren't interpretable, but about 5% learn specific, interesting functions:
 
-- **Small data:** Learns simple patterns (letters → words)
-- **Medium data:** Learns grammar and structure
-- **Large data:** Learns style, context, and meaning
+1. **URL detector neuron** — activates inside URLs, turns off outside them
+2. **Wiki link detector** — activates inside `[[ ]]` markup, but notably waits for the *second* `[` before activating (the first `[` alone isn't enough)
+3. **Position tracker** — varies linearly across `[[ ]]` scope, giving the model a sense of how far through the link text it is
+4. **"www" counter** — turns off after the first "w" in "www", likely helping the model know when to stop emitting "w"s
 
-This foreshadowed GPT-3, GPT-4, and modern LLMs.
+He also found a **quote detection cell** that tracks whether the model is inside or outside quotation marks.
+
+His key point: "We didn't have to hardcode at any point that if you're trying to predict the next character it might be useful to keep track of whether or not you are currently inside or outside of a quote. We just trained the LSTM on raw data and it decided that this is a useful quantity to keep track of."
 
 ---
 
-## 💡 Key Formulas
+## The Math
 
-### The Hidden State Update
+At each timestep, the vanilla RNN does:
 
+### Hidden State Update
 ```
-hₜ = tanh(Wₓₕ·xₜ + Wₕₕ·hₜ₋₁ + bₕ)
-```
-
-**Translation:**
-- `hₜ`: New memory at time t
-- `xₜ`: Current input
-- `hₜ₋₁`: Previous memory
-- `Wₓₕ, Wₕₕ`: Weight matrices (learned parameters)
-- `tanh`: Activation function (squashes values between -1 and 1)
-
-**In words:** "New memory = tanh(Current input + Previous memory)"
-
-### The Output
-
-```
-yₜ = Wₕᵧ·hₜ + bᵧ
-pₜ = softmax(yₜ)
+h_t = tanh(W_xh * x_t + W_hh * h_{t-1} + b_h)
 ```
 
-**Translation:**
-- `yₜ`: Raw scores for each possible next character
-- `pₜ`: Probabilities (which character is most likely?)
+- `h_t`: New hidden state at time t
+- `x_t`: Current input (one-hot encoded character)
+- `h_{t-1}`: Previous hidden state
+- `W_xh, W_hh`: Weight matrices (learned)
+- `tanh`: Squashes values to [-1, 1]
 
----
-
-## 🌊 The Flow of Information
-
+### Output
 ```
-Input Sequence: "hello"
-
-h → [RNN] → predict 'e'
-          ↓ (memory flows forward)
-e → [RNN] → predict 'l'
-          ↓
-l → [RNN] → predict 'l'
-          ↓
-l → [RNN] → predict 'o'
-          ↓
-o → [RNN] → predict ' ' (space)
+y_t = W_hy * h_t + b_y
+p_t = softmax(y_t)
 ```
 
-Each step:
-1. Takes current character
-2. Combines with memory of previous characters
-3. Predicts next character
-4. Updates memory for next step
+- `y_t`: Raw scores for each possible next character
+- `p_t`: Probability distribution over next character
+
+Karpathy presents these same equations in the post. Note: his actual experiments use the LSTM update equations, which are more complex (four gates instead of one tanh). We use vanilla RNN because it's easier to implement from scratch and the core principle is the same.
 
 ---
 
-## 🎭 Why "Unreasonable" Effectiveness?
+## The Title
 
-The title references Eugene Wigner's famous essay "The Unreasonable Effectiveness of Mathematics in the Natural Sciences."
+The title references Eugene Wigner's 1960 essay "The Unreasonable Effectiveness of Mathematics in the Natural Sciences." Wigner's point: math works suspiciously well for describing physics.
 
-**Wigner's idea:** Math works way better for physics than it should.
-
-**Karpathy's parallel:** Character prediction works way better for learning language than it should.
-
-**Why it's unreasonable:**
-- The task is simple (predict next character)
-- But the learning is profound (understanding language structure)
-
-Nobody expected such a simple objective to teach so much.
+Karpathy's parallel: character-level prediction works suspiciously well for learning language structure. The task is dead-simple (predict one character), but the model ends up learning spelling, grammar, formatting, and domain conventions.
 
 ---
 
-## 🧠 Intuitions
+## What the Post Gets Right
 
-### Intuition 1: The Autocomplete Analogy
+- The demo-driven approach is effective: showing Shakespeare, Linux, LaTeX output is more convincing than abstract claims
+- Honest about limitations: he checks for memorization, notes the code doesn't compile, acknowledges the meaning is incoherent
+- The hidden state visualization section is genuine research insight, not just a demo
+- Temperature explanation is practical and grounded
 
-Your phone's autocomplete is a mini version of this:
-- It sees what you've typed
-- Predicts what comes next
-- Gets better with more data
+## What the Post Doesn't Cover
 
-RNNs are autocomplete on steroids.
-
-### Intuition 2: The Chain of Thought
-
-Imagine reading "The cat sat on the m..."
-
-Your brain:
-1. Remembers "cat" (subject)
-2. Remembers "sat on" (action)
-3. Predicts "mat" or "moon" (likely completions)
-
-RNNs do the same with their hidden state carrying context forward.
-
-### Intuition 3: The Baby Learning Language
-
-Babies learn language by:
-1. Hearing sounds
-2. Predicting what comes next
-3. Getting feedback (does it make sense?)
-4. Slowly building understanding
-
-RNNs learn the same way, just with text instead of sound.
+- Why LSTMs work better than vanilla RNNs (he just says they do — that's covered in Colah's post, Day 2)
+- Formal analysis of what the hidden states are computing
+- Quantitative evaluation (no perplexity numbers, no benchmarks)
+- Comparison to n-gram baselines (Yoav Goldberg later did this comparison and showed n-grams can match some of the results)
+- How this connects to word-level models (he briefly mentions "word-level models work better but this is surely a temporary thing")
+- Scaling laws or predictions about future models
 
 ---
 
-## 🎓 What You Should Remember
+## Looking Back (Our Retrospective, Not in the Post)
 
-1. **Core Task:** Predict next character in a sequence
-2. **Key Innovation:** Hidden state (memory) that persists across time steps
-3. **Emergent Behavior:** Structure, grammar, and style emerge from prediction
-4. **Foundation:** This simple idea evolved into GPT and modern LLMs
-5. **Philosophy:** Intelligence might be compression/prediction at scale
+With 10 years of hindsight, the line from char-RNN to modern LLMs is clear:
 
----
+| Karpathy's Setup (2015) | Modern LLMs (2024) |
+|--------------------------|---------------------|
+| Character-level | Subword tokens (BPE) |
+| LSTM | Transformer |
+| Hidden states | Attention + KV cache |
+| ~10M parameters | ~100B+ parameters |
+| Single GPU, days | Thousands of GPUs, weeks |
+| Generates form, not meaning | Generates both (mostly) |
 
-## 🚀 Why This Paper Matters
-
-This blog post (2015) changed how people thought about neural networks:
-
-**Before:** "Neural networks are good for classification"
-
-**After:** "Neural networks can generate creative content"
-
-It democratized RNNs by:
-- Making them accessible (simple code)
-- Showing surprising results (Shakespeare!)
-- Inspiring a generation of researchers
-
-**Legacy:**
-- OpenAI's GPT (2018)
-- BERT (2018)
-- GPT-3 (2020)
-- ChatGPT (2022)
-
-All descendants of this simple idea: **predict the next token**.
+The core idea — **learn by predicting the next token** — hasn't changed. But this connection is retrospective. Karpathy wasn't predicting GPT; he was showing that RNNs could do surprising things with character prediction.
 
 ---
 
-## 🎯 Connection to Modern AI
+## Questions Worth Thinking About
 
-### From Character-Level RNNs to ChatGPT
+These come from the post itself or directly from the experiments:
 
-| Then (2015) | Now (2025) |
-|-------------|-----------|
-| Character-level | Token-level (subwords) |
-| Simple RNN | Transformer architecture |
-| Hidden states | Attention mechanisms |
-| Millions of parameters | Billions of parameters |
-| Single machine | Data centers |
-| Text generation | Text, code, images, reasoning |
-
-**But the core idea remains:** Predict the next token.
-
----
-
-## 🤔 Questions to Ponder
-
-1. If intelligence emerges from prediction, what does this say about human intelligence?
-2. Why does predicting characters teach grammar without explicit rules?
-3. How far can we scale this? Is there a limit?
-4. What are the ethical implications of machines that generate human-like text?
-
----
-
-## 📝 Personal Reflection Space
-
-**What surprised you most?**
-
-
-**What's still confusing?**
-
-
-**How would you explain this to a friend?**
-
+1. Why does the model learn to open and close brackets correctly but can't track which *type* of bracket it opened? (LaTeX `\begin{proof}` → `\end{lemma}` error)
+2. The hidden state visualization shows ~5% of neurons learn interpretable functions. What are the other 95% doing?
+3. Karpathy trained on War and Peace and showed the model learns short words first, then long words, then themes. What does this tell us about how sequential structure is encoded?
+4. Yoav Goldberg showed that n-gram models can produce similar-looking outputs for some of these tasks. What does the RNN actually learn that n-grams don't?
 
 ---
 
