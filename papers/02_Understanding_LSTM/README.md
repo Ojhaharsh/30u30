@@ -2,114 +2,64 @@
 
 > *"Understanding LSTM Networks"* - Christopher Olah (2015)
 
-**📖 Original Post:** http://colah.github.io/posts/2015-08-Understanding-LSTMs/
+**Original Post:** http://colah.github.io/posts/2015-08-Understanding-LSTMs/
 
-**⏱️ Time to Complete:** 3-5 hours
-
-**🎯 What You'll Learn:**
-- Why vanilla RNNs fail on long sequences
-- How memory cells work
-- The three gates: forget, input, output
-- Why LSTMs conquered sequence modeling (before transformers)
+**Time:** 3-5 hours
+**Prerequisites:** Day 1 (vanilla RNN), basic calculus
+**Code:** Pure NumPy (no PyTorch needed)
 
 ---
 
-## 🧠 The Big Idea
+## What This Post Is Actually About
 
-**In one sentence:** LSTMs add a "memory cell" with gates that control what to remember, what to forget, and what to output—solving the vanishing gradient problem that plagued vanilla RNNs.
+Colah's blog post is a visual architecture explainer. He walks through how LSTMs work step by step with diagrams that became the standard reference. If you've seen an LSTM diagram anywhere on the internet, it probably traces back to this post.
 
-### The Problem with Vanilla RNNs
+The post doesn't cover training, benchmarks, or practical tips — it's purely about understanding the architecture and why it solves the vanishing gradient problem. Those diagrams made LSTMs accessible to everyone.
 
-Remember Day 1? Character-level RNNs work great for short-term patterns. But they have a critical flaw:
-
-**Vanishing Gradients** = The further back in time, the weaker the learning signal becomes.
-
-Imagine trying to learn this sentence:
-```
-"The cat, which was very fluffy and had been sleeping all day, was hungry."
-```
-
-A vanilla RNN struggles to connect "cat" with "was hungry" because there are 12 words in between. The gradient has to flow backward through all those steps, getting weaker each time (multiplied by values < 1).
-
-### The LSTM Solution
-
-LSTMs add a **cell state** (C) that runs parallel to the hidden state (h). Think of it as a **conveyor belt** that information can ride on unchanged, unless the LSTM explicitly decides to modify it.
-
-```
-Regular RNN: h → h → h → h → h (gradient weakens)
-     LSTM:   C →→→→→→→→→→→→→→ C (gradient flows easily)
-             h → h → h → h → h
-```
-
-The cell state can preserve information across many time steps without degradation!
+This matters because LSTMs were the dominant sequence model from ~2015-2017 and understanding their gates is prerequisite for understanding attention mechanisms (Day 13+).
 
 ---
 
-## 🤔 Why "Understanding" LSTMs?
+## The Core Idea
 
-This isn't just another architecture—it's a **fundamental insight** about machine learning:
+**Problem:** Vanilla RNNs can't learn long-range dependencies because gradients vanish during backpropagation through time.
 
-**You can design neural networks that learn WHEN to remember and WHEN to forget.**
+**Solution:** Add a **cell state** — a separate path where information flows via addition, not multiplication. Three gates control what gets written, kept, and exposed.
 
-Before LSTMs:
-- ❌ RNNs couldn't learn long-range dependencies
-- ❌ Gradients vanished after ~10 steps
-- ❌ Simple tasks like "remember the first word" were impossible
+Colah's running example throughout the post: a language model tracking subject gender. When processing "I grew up in France... I speak fluent ___", the cell state preserves "France" across the intervening words so the model can predict "French."
 
-After LSTMs:
-- ✅ Machine translation became viable
-- ✅ Speech recognition improved dramatically
-- ✅ Text generation got coherent over long passages
-- ✅ Opened the door to seq2seq models
-
-Christopher Olah's blog post made LSTMs accessible to everyone. His visualizations became the standard way people understand this architecture.
+For the full gate-by-gate walkthrough with Colah's own examples, quoted metaphors, and variant discussion, see [paper_notes.md](paper_notes.md).
 
 ---
 
-## 🌍 Real-World Analogy
+## What Colah Actually Covers
 
-### The Todo List Analogy
+Brief highlights — the detailed treatment is in paper_notes.md:
 
-Imagine you're managing a todo list throughout your day:
+### The Long-Term Dependency Problem
+Two examples: "the clouds are in the ___" (easy, short range) vs. "I grew up in France... I speak fluent ___" (hard, long range). References Hochreiter (1991) and Bengio et al. (1994) on why this is fundamentally difficult.
 
-**Forget Gate** = Crossing items off
-- Morning: "buy milk" ✓ (done, forget it)
-- Afternoon: Still remember "pick up kids at 3pm"
+### The Cell State as "Conveyor Belt"
+His central metaphor. The cell state runs parallel to the hidden state with only "minor linear interactions." Information rides along it unchanged unless explicitly modified by gates.
 
-**Input Gate** = Adding new items
-- Boss calls: "New task: send report by 5pm" (add to list)
-- Friend texts: "Want to grab coffee?" (maybe ignore)
+### Three Gates
+- **Forget gate**: what to throw away from cell state (sigmoid, 0-1)
+- **Input gate + cell candidate**: what new information to write (sigmoid + tanh)
+- **Output gate**: what to expose from cell state (sigmoid)
 
-**Output Gate** = Deciding what's relevant NOW
-- At 2:55pm: "Pick up kids" becomes the ONLY thing you think about
-- Everything else is still on the list, but not active
+Each explained with the gender-tracking example.
 
-That's exactly how LSTM gates work:
-- **Forget gate**: What old memories can we discard?
-- **Input gate**: What new information should we store?
-- **Output gate**: What should we focus on right now?
+### Variants
+Peephole connections (Gers & Schmidhuber 2000), coupled forget/input gates, and GRU (Cho et al. 2014). References Greff et al. (2015) finding variants perform "about the same" and Jozefowicz et al. (2015) testing 10,000+ architectures.
 
-### The Water Pipeline Analogy
-
-Think of the cell state as a **water pipeline**:
-
-```
-Input → [Valve 1: Forget] → Pipeline → [Valve 2: Input] → → → [Valve 3: Output] → Output
-                                ↓
-                          Memory flows
-```
-
-- **Valve 1 (Forget)**: Opens to drain old water (forget old info)
-- **Valve 2 (Input)**: Opens to add fresh water (add new info)
-- **Valve 3 (Output)**: Controls how much water goes to output (what to use now)
-
-The pipeline itself can carry water for miles unchanged—that's the cell state!
+### Conclusion
+Attention is the "next step" — written in 2015, two years before Transformers proved him right.
 
 ---
 
-## 📊 The Architecture
+## The Architecture
 
-### The Four Components
+### The LSTM Cell
 
 ```
          ┌─────────────────────────────────┐
@@ -117,142 +67,94 @@ The pipeline itself can carry water for miles unchanged—that's the cell state!
          │                                 │
     x_t ──┬──► Forget Gate (f_t)          │
          ││                                │
-    h_{t-1}┼──► Input Gate (i_t)          │
-         ││    Cell Candidate (~C_t)      │
+  h_{t-1}─┼──► Input Gate (i_t)           │
+         ││    Cell Candidate (~C_t)       │
          ││                                │
-    C_{t-1}┼──► Cell State Update         │──► C_t
-         ││    C_t = f_t ⊙ C_{t-1}       │
-         ││         + i_t ⊙ ~C_t          │
+  C_{t-1}─┼──► Cell State Update          │──► C_t
+         ││    C_t = f_t ⊙ C_{t-1}        │
+         ││         + i_t ⊙ ~C_t           │
          ││                                │
-         │└──► Output Gate (o_t)          │
+         │└──► Output Gate (o_t)           │
          │     h_t = o_t ⊙ tanh(C_t)      │──► h_t
          └─────────────────────────────────┘
 ```
 
 ### Step-by-Step: What Happens in One Time Step
 
-**Input:** 
-- `x_t` = current input (e.g., word embedding)
+**Inputs:**
+- `x_t` = current input (one-hot encoded character)
 - `h_{t-1}` = previous hidden state
 - `C_{t-1}` = previous cell state
 
-**Step 1: Forget Gate** (What to forget?)
+**Step 1: Forget Gate** — What to forget?
 $$f_t = \sigma(W_f \cdot [h_{t-1}, x_t] + b_f)$$
 
-- Outputs values between 0 and 1 (sigmoid)
-- 0 = "completely forget"
-- 1 = "completely keep"
-- Example: Forget the subject when a new sentence starts
+Outputs values between 0 and 1. A 0 means "completely forget this dimension," 1 means "completely keep."
 
-**Step 2: Input Gate** (What new info to store?)
+**Step 2: Input Gate + Cell Candidate** — What new info to store?
 $$i_t = \sigma(W_i \cdot [h_{t-1}, x_t] + b_i)$$
 $$\tilde{C}_t = \tanh(W_C \cdot [h_{t-1}, x_t] + b_C)$$
 
-- `i_t` = how much to let in (0 to 1)
-- `~C_t` = candidate values to add (-1 to 1)
-- Example: Store new subject "The dog"
+`i_t` controls how much to let in (0 to 1). `C̃_t` contains candidate values (-1 to 1).
 
-**Step 3: Cell State Update** (Update long-term memory)
+**Step 3: Cell State Update** — Update long-term memory
 $$C_t = f_t \odot C_{t-1} + i_t \odot \tilde{C}_t$$
 
-- `⊙` = element-wise multiplication
-- Forget old info, add new info
-- This is the **key**: direct connection from `C_{t-1}` to `C_t`!
+This is the key equation. Forget old info (multiply by f_t), add new info (multiply candidate by i_t). The additive connection from `C_{t-1}` to `C_t` is why gradients don't vanish.
 
-**Step 4: Output Gate** (What to output?)
+**Step 4: Output Gate** — What to output?
 $$o_t = \sigma(W_o \cdot [h_{t-1}, x_t] + b_o)$$
 $$h_t = o_t \odot \tanh(C_t)$$
 
-- Decides which parts of cell state to expose
-- Example: Output "dog" when predicting verb for "The dog..."
-
----
-
-## 💡 The Vanishing Gradient Solution
-
-### Why Vanilla RNNs Fail
-
-In backpropagation through time (BPTT), gradients flow like this:
-
-$$\frac{\partial L}{\partial h_0} = \frac{\partial L}{\partial h_T} \cdot \prod_{t=1}^{T} \frac{\partial h_t}{\partial h_{t-1}}$$
-
-Each term $\frac{\partial h_t}{\partial h_{t-1}}$ involves the weight matrix $W_{hh}$.
-
-If eigenvalues of $W_{hh}$ are:
-- **< 1**: Gradients shrink exponentially → **vanishing**
-- **> 1**: Gradients explode exponentially → **explosion**
-
-After just 10 steps with factor 0.9: $0.9^{10} = 0.35$ (gradient is 1/3 original)
-
-### Why LSTMs Work
-
-The cell state update has a **direct path**:
-
-$$C_t = f_t \odot C_{t-1} + i_t \odot \tilde{C}_t$$
-
-When we backpropagate:
-
-$$\frac{\partial C_t}{\partial C_{t-1}} = f_t$$
-
-Since $f_t$ is learned (not a fixed matrix), the LSTM can:
-- **Preserve gradients** by learning $f_t \approx 1$ when needed
-- **Block gradients** by learning $f_t \approx 0$ when not needed
-
-This is like having a **highway** for gradients that bypasses the multiplication bottleneck!
-
----
-
-## 🎨 Visualizing LSTM Behavior
-
-### Example: Learning Name Gender
-
-Input: "Sarah went to the store. She bought..."
-
-**Time step 1:** "Sarah"
-- **Input gate**: OPEN (store "Sarah" + "female")
-- **Forget gate**: OPEN (forget previous context)
-- **Cell state**: [female, singular, subject=Sarah]
-
-**Time steps 2-6:** "went to the store"
-- **Input gate**: mostly CLOSED (nothing important to store)
-- **Forget gate**: mostly OPEN (keep "Sarah" info)
-- **Cell state**: [female, singular, subject=Sarah] (preserved!)
-
-**Time step 7:** "She"
-- **Output gate**: OPEN (output "female" to predict "She")
-- Model correctly uses "She" instead of "He"!
-
-The cell state remembered "Sarah = female" for 6 steps!
-
----
-
-## 🔧 Implementation Guide
+Decides which parts of the cell state to expose as output.
 
 ### Weight Matrices
 
 For vocabulary size V, hidden size H:
 
 ```python
-# Input to gates (4 sets of weights, one per gate)
+# 4 sets of weights, one per gate (each takes concatenated [h, x])
 W_f = np.random.randn(H, V + H) * 0.01  # Forget gate
 W_i = np.random.randn(H, V + H) * 0.01  # Input gate
 W_C = np.random.randn(H, V + H) * 0.01  # Cell candidate
 W_o = np.random.randn(H, V + H) * 0.01  # Output gate
 
 # Biases
-b_f = np.ones((H, 1))   # Bias toward remembering (forget gate = 1)
+b_f = np.ones((H, 1))   # Initialize to 1! (remember by default)
 b_i = np.zeros((H, 1))
 b_C = np.zeros((H, 1))
 b_o = np.zeros((H, 1))
 ```
 
-**Note:** `b_f` initialized to 1 (forget gate bias) encourages remembering by default!
+That's 4x the parameters of a vanilla RNN. Each weight matrix is (H, V+H) because the input is the concatenation of h_{t-1} and x_t.
+
+The `b_f = 1` initialization is important — it makes the forget gate default to "keep everything" until the model learns otherwise. From Jozefowicz et al. (2015).
+
+### The Vanishing Gradient Solution
+
+**Why Vanilla RNNs fail:**
+
+In BPTT, gradients flow backward:
+$$\frac{\partial L}{\partial h_0} = \frac{\partial L}{\partial h_T} \cdot \prod_{t=1}^{T} \frac{\partial h_t}{\partial h_{t-1}}$$
+
+Each term involves the weight matrix $W_{hh}$. If eigenvalues of $W_{hh}$ are < 1, gradients shrink exponentially. After 10 steps with factor 0.9: $0.9^{10} = 0.35$. After 50 steps: $0.9^{50} = 0.005$.
+
+**Why LSTMs work:**
+
+The cell state update gives a direct path:
+$$\frac{\partial C_t}{\partial C_{t-1}} = f_t$$
+
+Since $f_t$ is a learned scalar (not a fixed matrix), the LSTM can preserve gradients by learning $f_t \approx 1$ when needed. No matrix multiplication bottleneck.
+
+---
+
+## Implementation Guide
 
 ### Forward Pass (One Time Step)
 
 ```python
 def lstm_step_forward(x, h_prev, C_prev, Wf, Wi, WC, Wo, bf, bi, bC, bo):
-    """One LSTM time step"""
+    """One LSTM time step."""
     
     # Concatenate input and previous hidden state
     combined = np.vstack([h_prev, x])  # Shape: (H+V, 1)
@@ -277,25 +179,20 @@ def lstm_step_forward(x, h_prev, C_prev, Wf, Wi, WC, Wo, bf, bi, bC, bo):
     return h, C, cache
 ```
 
-### Backward Pass (BPTT)
-
-The beauty of LSTMs: gradients flow through the cell state with minimal degradation!
+### Backward Pass (One Time Step)
 
 ```python
 def lstm_step_backward(dh_next, dC_next, cache):
-    """Backward pass through one LSTM step"""
+    """Backward pass through one LSTM step."""
     
     x, h_prev, C_prev, f, i, C_cand, o, C, combined = cache
     
-    # Gradient flowing into this step
-    dh = dh_next
-    
     # Output gate gradients
-    do = dh * np.tanh(C)
-    do_raw = do * o * (1 - o)  # Sigmoid derivative
+    do = dh_next * np.tanh(C)
+    do_raw = do * o * (1 - o)  # sigmoid derivative
     
     # Cell state gradient (from output + from future)
-    dC = dh * o * (1 - np.tanh(C)**2) + dC_next
+    dC = dh_next * o * (1 - np.tanh(C)**2) + dC_next
     
     # Forget gate gradients
     df = dC * C_prev
@@ -309,17 +206,14 @@ def lstm_step_backward(dh_next, dC_next, cache):
     dC_cand = dC * i
     dC_cand_raw = dC_cand * (1 - C_cand**2)
     
-    # Weight gradients (all gates)
+    # Weight gradients
     dW_f = df_raw @ combined.T
     dW_i = di_raw @ combined.T
     dW_C = dC_cand_raw @ combined.T
     dW_o = do_raw @ combined.T
     
     # Bias gradients
-    db_f = df_raw
-    db_i = di_raw
-    db_C = dC_cand_raw
-    db_o = do_raw
+    db_f, db_i, db_C, db_o = df_raw, di_raw, dC_cand_raw, do_raw
     
     # Gradients to pass backward
     dcombined = (Wf.T @ df_raw + Wi.T @ di_raw + 
@@ -327,18 +221,36 @@ def lstm_step_backward(dh_next, dC_next, cache):
     
     dh_prev = dcombined[:H]
     dx = dcombined[H:]
-    dC_prev = dC * f  # Cell state gradient to previous step
+    dC_prev = dC * f  # Cell state gradient flows through forget gate
     
     return dx, dh_prev, dC_prev, dW_f, dW_i, dW_C, dW_o, db_f, db_i, db_C, db_o
 ```
 
-**Key insight:** `dC_prev = dC * f` means the gradient flows through with minimal attenuation!
+The key line: `dC_prev = dC * f` — the gradient through the cell state is just multiplied by the forget gate, not by a weight matrix. This is why LSTMs preserve gradients.
 
 ---
 
-## 🎯 Training Tips
+## Implementation Notes
 
-### 1. **Initialization Matters**
+The implementation in `implementation.py` is a from-scratch LSTM in pure NumPy, analogous to Day 1's vanilla RNN.
+
+Key differences from Day 1:
+- **4 gate weight matrices** instead of 1 (forget, input, cell candidate, output)
+- **Cell state** carried alongside hidden state
+- **Forget gate bias = 1** (not 0) for stable training
+- **4x more parameters** — LSTMs are slower but handle longer sequences
+
+Things that will bite you:
+- **Forgetting the cell state** — you need to pass both `h` and `C` between steps. Easy to forget `C` and wonder why it doesn't learn.
+- **Gate ordering** — the equations look similar. Common bug: using the wrong weight matrix for the wrong gate.
+- **Gradient clipping still needed** — LSTMs fix vanishing gradients but can still explode. Clip to [-5, 5].
+- **Numerical stability** — same softmax trick as Day 1 (subtract max before exp).
+
+---
+
+## Training Tips
+
+### 1. Initialization Matters
 
 ```python
 # Forget gate bias = 1 (Jozefowicz et al., 2015)
@@ -348,44 +260,42 @@ b_f = np.ones((hidden_size, 1))
 W_f = np.random.randn(H, V+H) * np.sqrt(2.0 / (V+H))
 ```
 
-**Why?** Starting with forget gate ≈ 1 means "remember by default" until the model learns otherwise.
+Starting with forget gate near 1 means "remember by default" until the model learns otherwise.
 
-### 2. **Gradient Clipping Still Needed**
+### 2. Gradient Clipping Still Needed
 
 ```python
-# Clip gradients to prevent explosion
 for grad in [dW_f, dW_i, dW_C, dW_o]:
     np.clip(grad, -5, 5, out=grad)
 ```
 
-LSTMs reduce vanishing, but can still explode!
+LSTMs reduce vanishing but can still explode.
 
-### 3. **Learning Rate**
+### 3. Learning Rate
 
 ```python
 learning_rate = 0.001  # Start lower than vanilla RNN
 ```
 
-LSTMs have 4× the parameters, so they're more sensitive.
+LSTMs have 4x the parameters, so they're more sensitive to learning rate.
 
-### 4. **Sequence Length**
+### 4. Sequence Length
 
 ```python
-seq_length = 50  # LSTMs can handle longer sequences!
+seq_length = 50  # LSTMs can handle longer sequences
 ```
 
-Unlike vanilla RNNs (seq_length ≈ 20), LSTMs work well with 50-100 steps.
+Unlike vanilla RNNs (seq_length ~20), LSTMs work well with 50-100 steps.
 
 ---
 
-## 📈 Visualizations
+## Visualizations
 
 ### 1. Gate Activation Patterns
 
-Plot forget/input/output gate values over a sequence to see what the LSTM learns:
+Plot forget/input/output gate values over a sequence to see what the LSTM actually learns:
 
 ```python
-# After training, run forward pass and collect gates
 gates = {'forget': [], 'input': [], 'output': []}
 
 for t in range(seq_len):
@@ -395,135 +305,120 @@ for t in range(seq_len):
     gates['input'].append(i)
     gates['output'].append(o)
 
-# Plot
-plt.figure(figsize=(15, 4))
-plt.subplot(1, 3, 1)
 plt.imshow(np.array(gates['forget']).T, cmap='RdYlGn', aspect='auto')
 plt.title('Forget Gate (0=forget, 1=keep)')
-plt.xlabel('Time step')
 ```
 
 ### 2. Cell State Evolution
 
 ```python
-# Visualize cell state over time
 cell_states = np.array(all_cell_states).T  # (hidden_size, seq_len)
-
-plt.figure(figsize=(12, 6))
 plt.imshow(cell_states, cmap='RdBu', aspect='auto')
 plt.colorbar(label='Cell state value')
-plt.xlabel('Time step')
-plt.ylabel('Hidden unit')
 plt.title('LSTM Cell State Evolution')
 ```
 
 ### 3. Gradient Flow Comparison
 
 ```python
-# Compare gradient norms: LSTM vs vanilla RNN
-lstm_grads = []  # Collect during LSTM backprop
-rnn_grads = []   # Collect during RNN backprop
-
-plt.figure(figsize=(10, 6))
 plt.plot(lstm_grads, label='LSTM', linewidth=2)
 plt.plot(rnn_grads, label='Vanilla RNN', linewidth=2, alpha=0.7)
 plt.yscale('log')
 plt.xlabel('Time step (backward)')
 plt.ylabel('Gradient norm')
 plt.title('Gradient Flow: LSTM vs RNN')
-plt.legend()
 ```
 
 ---
 
-## 🏋️ Exercises
+## What to Build
 
-### Exercise 1: Build LSTM from Scratch (⏱️⏱️⏱️)
-Implement a complete LSTM in NumPy. Compare training curves with Day 1's vanilla RNN on the same data.
+### Quick Start
 
-### Exercise 2: Gate Analysis (⏱️⏱️)
-Train an LSTM on text, then visualize gate activations. Can you see patterns? (e.g., forget gate activating at sentence boundaries?)
+```bash
+python train_minimal.py --data data/input.txt --epochs 50 --hidden-size 128
+```
 
-### Exercise 3: Ablation Study (⏱️⏱️)
-Remove one gate at a time:
-- No forget gate (always remember everything)
-- No input gate (always add new info)
-- No output gate (always output everything)
+### Exercises (in `exercises/`)
 
-Which one hurts performance most?
+| # | Task | What You'll Get Out of It |
+|---|------|--------------------------|
+| 1 | Build LSTM from scratch | Understand the 4-gate forward pass and BPTT |
+| 2 | Gate analysis | Visualize what forget/input/output gates learn |
+| 3 | Ablation study | Remove gates one at a time — which matters most? |
+| 4 | Long-range dependencies | Synthetic task: LSTM succeeds where vanilla RNN fails |
+| 5 | GRU comparison | Implement GRU (2 gates), compare with LSTM |
 
-### Exercise 4: Long-Range Dependencies (⏱️⏱️)
-Create a synthetic task: "Remember the first character of the sequence and output it at the end." Show that LSTM succeeds where vanilla RNN fails.
-
-### Exercise 5: GRU Comparison (⏱️⏱️⏱️)
-Implement a GRU (Gated Recurrent Unit) - LSTM's simpler cousin with only 2 gates. Compare performance and training speed.
+Solutions are in `exercises/solutions/`. Try to get stuck first.
 
 ---
 
-## 🚀 Going Further
+## Going Further
 
 ### LSTM Variants
 
 1. **Peephole Connections** (Gers & Schmidhuber, 2000)
-   - Gates can "peek" at cell state
-   - Slightly better on some tasks
+   - Gates can look at the cell state directly
+   - Slightly better on some tasks, not universally adopted
 
 2. **GRU** (Cho et al., 2014)
-   - 2 gates instead of 3
-   - Faster, often comparable performance
-   - Simpler = less parameters
+   - Merges forget and input into a single "update gate"
+   - Merges cell state and hidden state
+   - 2 gates instead of 3 — fewer parameters, often comparable performance
+   - Exercise 5 implements this
 
 3. **Bidirectional LSTM**
    - Process sequence forward AND backward
    - Used in BERT, ELMo
 
-### When to Use LSTMs Today?
+### When to Use LSTMs vs Alternatives
 
-**Still useful for:**
-- ✅ Time series with < 500 steps
-- ✅ Streaming data (online learning)
-- ✅ Resource-constrained environments
-- ✅ When you need interpretability (gate analysis)
+| Model | Best For | Strengths | Weaknesses |
+|-------|----------|-----------|------------|
+| **Vanilla RNN** | Very short sequences (<10 steps) | Simple, fast | Vanishing gradients |
+| **LSTM** | Medium sequences (10-100 steps) | Solves vanishing gradients, interpretable gates | Slower than GRU, sequential |
+| **GRU** | Similar to LSTM | Faster (fewer parameters) | Slightly less expressive |
+| **Transformer** | Long sequences (100+ steps) | Parallel training, attention | Needs more data, memory intensive |
 
-**Transformers better for:**
-- ❌ Very long sequences (1000+ tokens)
-- ❌ Parallelizable training
-- ❌ Large-scale language models
-- ❌ Attention to specific positions
+Rule of thumb: short sequences → RNN, medium → LSTM/GRU, long → Transformer.
 
 ---
 
-## 📚 Resources
+## Key Takeaways
 
-### Must-Read
-- 📖 [Original blog post](http://colah.github.io/posts/2015-08-Understanding-LSTMs/) - Christopher Olah
-- 📄 [LSTM paper](https://www.bioinf.jku.at/publications/older/2604.pdf) - Hochreiter & Schmidhuber (1997)
-- 📄 [Learning to Forget](https://ieeexplore.ieee.org/document/818041) - Gers et al. (2000)
+1. **The cell state is the key innovation.** It provides an additive path for gradients to flow backward through time without vanishing.
 
-### Visualizations
-- 🎥 [LSTM visualization](https://github.com/HariWu1995/LSTM-Visualizer) - Interactive gates
-- 📊 [Distill.pub on attention](https://distill.pub/2016/augmented-rnns/) - Advanced LSTM variants
+2. **Gates are learned, not hand-crafted.** The network discovers when to remember and when to forget through training.
 
-### Implementations
-- 💻 [Karpathy's char-rnn](https://github.com/karpathy/char-rnn) - Lua/Torch (historical)
-- 💻 [PyTorch LSTM](https://pytorch.org/docs/stable/generated/torch.nn.LSTM.html) - Production use
+3. **Variants don't matter much.** Greff et al. (2015) compared popular LSTM variants and found them roughly equivalent. The core design (additive cell state + learned gates) is what matters.
+
+4. **This is the bridge to attention.** Colah correctly predicted attention was the "next step" — it was originally added on top of LSTMs before replacing them entirely (Transformers, Day 13+).
 
 ---
 
-## 🎓 Key Takeaways
+## Files in This Directory
 
-1. **LSTMs solve vanishing gradients** through a separate cell state with gated connections
-2. **Three gates control information flow**: forget, input, output
-3. **The cell state is a "highway"** for gradients to flow backward through time
-4. **Gates are learned**, not hand-crafted - the network decides what to remember
-5. **Still relevant today** despite transformers, especially for specific use cases
-
----
-
-**Completed Day 2?** Move on to **[Day 3: Neural Machine Translation](../03_Neural_Machine_Translation/)** where we'll use LSTMs for translation!
-
-**Questions?** Open an issue or check the [exercises](exercises/) for hands-on practice.
+| File | What It Is |
+|------|-----------|
+| `implementation.py` | Complete LSTM in NumPy, heavily commented |
+| `train_minimal.py` | Training script with CLI args |
+| `visualization.py` | Gate activation heatmaps, cell state plots, gradient flow comparison |
+| `notebook.ipynb` | Interactive walkthrough — build, train, visualize |
+| `exercises/` | 5 exercises with solutions |
+| `paper_notes.md` | Detailed notes on Colah's post with ELI5 |
+| `CHEATSHEET.md` | Quick reference for hyperparameters and debugging |
 
 ---
 
-*"The key thing to understand about LSTMs is that the cell state is a conveyor belt. It runs straight down the entire chain, with only some minor linear interactions."* - Christopher Olah
+## Further Reading
+
+- [Colah's Blog Post](http://colah.github.io/posts/2015-08-Understanding-LSTMs/) — read this first, the diagrams are essential
+- [LSTM Paper](https://www.bioinf.jku.at/publications/older/2604.pdf) — Hochreiter & Schmidhuber (1997), the original
+- [Learning to Forget](https://ieeexplore.ieee.org/document/818041) — Gers et al. (2000), added the forget gate
+- [LSTM: A Search Space Odyssey](http://arxiv.org/pdf/1503.04069.pdf) — Greff et al. (2015), comparison of variants
+- [Jozefowicz et al. (2015)](http://jmlr.org/proceedings/papers/v37/jozefowicz15.pdf) — tested 10,000+ RNN architectures
+- [PyTorch LSTM](https://pytorch.org/docs/stable/generated/torch.nn.LSTM.html) — production implementation
+
+---
+
+**Next:** [Day 3 — RNN Regularization](../03_RNN_Regularization/)
