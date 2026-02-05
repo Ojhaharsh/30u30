@@ -4,6 +4,12 @@ Quick reference for training and using your RNN.
 
 ---
 
+## The Big Idea (30 seconds)
+
+A single-layer RNN with one hidden state can learn surprisingly complex structure — Shakespeare-like text, LaTeX, C code — just from character-level prediction. Karpathy's point: RNNs are Turing-complete in theory, and in practice they discover real patterns (matching quotes, balanced brackets, indentation) without being told any rules.
+
+---
+
 ## Quick Start
 
 ```bash
