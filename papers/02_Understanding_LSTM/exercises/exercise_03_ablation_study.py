@@ -17,7 +17,7 @@ Learning Objectives:
 4. Gain intuition for LSTM design choices
 
 Time: 1-2 hours
-Difficulty: Medium ⏱️⏱️
+Difficulty: Medium
 """
 
 import numpy as np
@@ -217,5 +217,5 @@ if __name__ == "__main__":
     # Conclusions
     write_conclusions()
     
-    print("\n✅ Exercise 3 complete!")
+    print("\nExercise 3 complete.")
     print("Compare with solutions/solution_03_ablation_study.py")

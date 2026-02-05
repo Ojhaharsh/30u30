@@ -17,7 +17,7 @@ Learning Objectives:
 4. Learn how gates coordinate to solve tasks
 
 Time: 1-2 hours
-Difficulty: Medium ⏱️⏱️
+Difficulty: Medium
 """
 
 import numpy as np
@@ -176,5 +176,5 @@ if __name__ == "__main__":
     # Write report
     write_report(gates_dict, sequence)
     
-    print("\n✅ Exercise 2 complete!")
+    print("\nExercise 2 complete.")
     print("Compare your results with solutions/solution_02_gate_analysis.py")

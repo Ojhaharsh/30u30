@@ -16,7 +16,7 @@ Learning Objectives:
 4. Appreciate why LSTMs solve vanishing gradients
 
 Time: 2-3 hours
-Difficulty: Hard ⏱️⏱️⏱️
+Difficulty: Hard
 """
 
 import numpy as np
@@ -126,7 +126,7 @@ class LSTMFromScratch:
             
             # TODO 10: Update cell state
             # C_t = f_t ⊙ C_{t-1} + i_t ⊙ C̃_t
-            # This is the KEY equation that solves vanishing gradients!
+            # This is the key equation — the additive update that prevents vanishing gradients.
             C_t = None  # TODO: Implement
             self.C_states.append(C_t)
             
@@ -305,7 +305,7 @@ def test_lstm():
         if iteration % 20 == 0:
             print(f"Iteration {iteration}: Loss = {loss:.4f}")
     
-    print("\n✅ If loss is decreasing, your implementation is likely correct!")
+    print("\nIf loss is decreasing, your implementation is likely correct!")
     print("Compare with reference implementation in ../implementation.py")
 
 
