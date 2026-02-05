@@ -17,7 +17,7 @@ Learning Objectives:
 4. Handle edge cases properly
 
 Time: 25-35 minutes
-Difficulty: Medium ⏱️
+Difficulty: Medium
 
 Key Concept:
     Early stopping monitors validation loss during training.
@@ -231,13 +231,13 @@ def test_early_stopping_basic():
     should_stop = es(2.2)
     assert should_stop, "Should stop now (patience=3 reached)"
     
-    print("  ✓ Test 1: Stops after patience epochs")
+    print("  [ok] Test 1: Stops after patience epochs")
     
     # Test 2: Best loss tracking
     assert abs(es.get_best_loss() - 1.8) < 1e-6, f"Best loss should be 1.8, got {es.get_best_loss()}"
-    print("  ✓ Test 2: Best loss tracked correctly")
+    print("  [ok] Test 2: Best loss tracked correctly")
     
-    print("✓ All basic tests passed!\n")
+    print("[ok] All basic tests passed!\n")
 
 
 def test_min_delta():
@@ -258,8 +258,8 @@ def test_min_delta():
     assert es.wait == 0, "Should reset (1.89 is 0.1+ better than 2.0)"
     assert abs(es.get_best_loss() - 1.89) < 1e-6, "Best should update to 1.89"
     
-    print("  ✓ min_delta correctly requires minimum improvement")
-    print("✓ min_delta tests passed!\n")
+    print("  [ok] min_delta correctly requires minimum improvement")
+    print("[ok] min_delta tests passed!\n")
 
 
 def test_weight_saving():
@@ -289,9 +289,9 @@ def test_weight_saving():
     weights_1['W'][0, 0] = 999
     assert best['W'][0, 0] != 999, "Weights should be deep copied"
     
-    print("  ✓ Test 1: Best weights saved correctly")
-    print("  ✓ Test 2: Weights are deep copied")
-    print("✓ Weight saving tests passed!\n")
+    print("  [ok] Test 1: Best weights saved correctly")
+    print("  [ok] Test 2: Weights are deep copied")
+    print("[ok] Weight saving tests passed!\n")
 
 
 def test_reset():
@@ -313,8 +313,8 @@ def test_reset():
     assert es.wait == 0, "wait should reset to 0"
     assert es.best_weights is None, "best_weights should reset to None"
     
-    print("  ✓ Reset works correctly")
-    print("✓ Reset tests passed!\n")
+    print("  [ok] Reset works correctly")
+    print("[ok] Reset tests passed!\n")
 
 
 def test_simulation():
@@ -334,9 +334,9 @@ def test_simulation():
     assert result['stopped_epoch'] == 5, f"Should stop at epoch 5, got {result['stopped_epoch']}"
     assert abs(result['best_val_loss'] - 1.3) < 1e-6, f"Best val loss should be 1.3"
     
-    print(f"  ✓ Stopped at epoch {result['stopped_epoch']}")
-    print(f"  ✓ Best val loss: {result['best_val_loss']}")
-    print("✓ Simulation tests passed!\n")
+    print(f"  [ok] Stopped at epoch {result['stopped_epoch']}")
+    print(f"  [ok] Best val loss: {result['best_val_loss']}")
+    print("[ok] Simulation tests passed!\n")
 
 
 if __name__ == "__main__":
@@ -350,10 +350,10 @@ if __name__ == "__main__":
         test_weight_saving()
         test_reset()
         test_simulation()
-        print("🎉 All tests passed! You've mastered early stopping!")
+        print("All tests passed!")
     except AssertionError as e:
-        print(f"❌ Test failed: {e}")
+        print(f"FAIL - Test failed: {e}")
     except Exception as e:
-        print(f"❌ Error: {e}")
+        print(f"FAIL - Error: {e}")
         import traceback
         traceback.print_exc()

@@ -16,7 +16,7 @@ Learning Objectives:
 4. See the combined effect on overfitting
 
 Time: 40-50 minutes
-Difficulty: Hard ⏱️⏱️⏱️
+Difficulty: Hard
 
 The Four Regularization Techniques:
     1. DROPOUT: Randomly zero neurons (training only!)
@@ -309,8 +309,8 @@ def test_rnn_cell_initialization():
     assert cell.gamma.shape == (20,), f"gamma shape wrong: {cell.gamma.shape}"
     assert cell.beta.shape == (20,), f"beta shape wrong: {cell.beta.shape}"
     
-    print("  ✓ All shapes correct")
-    print("✓ Initialization tests passed!\n")
+    print("  [ok] All shapes correct")
+    print("[ok] Initialization tests passed!\n")
 
 
 def test_layer_norm():
@@ -331,8 +331,8 @@ def test_layer_norm():
     assert abs(mean) < 0.01, f"Mean should be ~0, got {mean}"
     assert abs(std - 1.0) < 0.01, f"Std should be ~1, got {std}"
     
-    print("  ✓ Normalization works correctly")
-    print("✓ Layer norm tests passed!\n")
+    print("  [ok] Normalization works correctly")
+    print("[ok] Layer norm tests passed!\n")
 
 
 def test_dropout():
@@ -353,9 +353,9 @@ def test_dropout():
     x_kept = cell.dropout(x, training=False)
     assert np.allclose(x_kept, x), "Inference mode should not drop"
     
-    print("  ✓ Training mode drops neurons")
-    print("  ✓ Inference mode keeps all neurons")
-    print("✓ Dropout tests passed!\n")
+    print("  [ok] Training mode drops neurons")
+    print("  [ok] Inference mode keeps all neurons")
+    print("[ok] Dropout tests passed!\n")
 
 
 def test_forward_pass():
@@ -372,8 +372,8 @@ def test_forward_pass():
     
     assert h.shape == (batch_size, 10), f"Output shape wrong: {h.shape}"
     
-    print("  ✓ Forward pass works")
-    print("✓ Forward pass tests passed!\n")
+    print("  [ok] Forward pass works")
+    print("[ok] Forward pass tests passed!\n")
 
 
 def test_l2_penalty():
@@ -391,8 +391,8 @@ def test_l2_penalty():
     
     assert abs(penalty - expected) < 1e-6, f"Expected {expected}, got {penalty}"
     
-    print("  ✓ L2 penalty computed correctly")
-    print("✓ L2 penalty tests passed!\n")
+    print("  [ok] L2 penalty computed correctly")
+    print("[ok] L2 penalty tests passed!\n")
 
 
 def test_weight_save_restore():
@@ -413,8 +413,8 @@ def test_weight_save_restore():
     
     assert np.allclose(cell.W_xh, original_W_xh), "Weights not restored correctly"
     
-    print("  ✓ Weights saved and restored correctly")
-    print("✓ Weight save/restore tests passed!\n")
+    print("  [ok] Weights saved and restored correctly")
+    print("[ok] Weight save/restore tests passed!\n")
 
 
 def test_full_pipeline():
@@ -453,9 +453,9 @@ def test_full_pipeline():
     assert 'val_loss' in history, "Missing val_loss in history"
     assert len(history['train_loss']) > 0, "No training history recorded"
     
-    print(f"  ✓ Trained for {history['epochs_trained']} epochs")
-    print(f"  ✓ Early stopped: {history['stopped_early']}")
-    print("✓ Full pipeline tests passed!\n")
+    print(f"  [ok] Trained for {history['epochs_trained']} epochs")
+    print(f"  [ok] Early stopped: {history['stopped_early']}")
+    print("[ok] Full pipeline tests passed!\n")
 
 
 if __name__ == "__main__":
@@ -471,10 +471,10 @@ if __name__ == "__main__":
         test_l2_penalty()
         test_weight_save_restore()
         test_full_pipeline()
-        print("🎉 All tests passed! You've mastered the full regularization pipeline!")
+        print("All tests passed!")
     except AssertionError as e:
-        print(f"❌ Test failed: {e}")
+        print(f"FAIL - Test failed: {e}")
     except Exception as e:
-        print(f"❌ Error: {e}")
+        print(f"FAIL - Error: {e}")
         import traceback
         traceback.print_exc()
