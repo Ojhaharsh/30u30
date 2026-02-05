@@ -4,7 +4,7 @@ Quick reference for training and using your RNN.
 
 ---
 
-## 🚀 Quick Start
+## Quick Start
 
 ```bash
 # Train on sample data
@@ -19,7 +19,7 @@ python train_minimal.py --generate --checkpoint model.pkl --length 500 --tempera
 
 ---
 
-## 📊 Key Hyperparameters
+## Key Hyperparameters
 
 | Parameter | Typical Range | What It Does | Tips |
 |-----------|--------------|--------------|------|
@@ -30,36 +30,36 @@ python train_minimal.py --generate --checkpoint model.pkl --length 500 --tempera
 
 ---
 
-## 🔧 Common Issues & Fixes
+## Common Issues & Fixes
 
 ### Loss explodes (NaN)
 ```python
-# ✅ Fix: Gradient clipping (already in code)
+# Fix: Gradient clipping (already in code)
 np.clip(grad, -5, 5, out=grad)
 # Or reduce learning rate
 ```
 
 ### Loss plateaus too high
 ```python
-# ✅ Fix: Increase hidden_size or train longer
+# Fix: Increase hidden_size or train longer
 python train_minimal.py --hidden-size 200 --epochs 1000
 ```
 
 ### Generated text is gibberish
 ```python
-# ✅ Fix: Train longer or use lower temperature
+# Fix: Train longer or use lower temperature
 python train_minimal.py --generate --temperature 0.5
 ```
 
 ### Training is too slow
 ```python
-# ✅ Fix: Reduce hidden_size or seq_length
+# Fix: Reduce hidden_size or seq_length
 python train_minimal.py --hidden-size 50 --seq-length 25
 ```
 
 ---
 
-## 📐 The Math (Copy-Paste Ready)
+## The Math (Copy-Paste Ready)
 
 ### Forward Pass
 ```python
@@ -88,7 +88,7 @@ np.clip(grad, -5, 5, out=grad)
 
 ---
 
-## 🎨 Visualization Examples
+## Visualization Examples
 
 ```python
 from visualization import *
@@ -106,7 +106,7 @@ plot_temperature_comparison(samples, save_path='temps.png')
 
 ---
 
-## 🧪 Experiment Ideas
+## Experiment Ideas
 
 ### Easy
 - Train on different texts (songs, code, tweets)
@@ -125,7 +125,7 @@ plot_temperature_comparison(samples, save_path='temps.png')
 
 ---
 
-## 📚 File Reference
+## File Reference
 
 | File | Use It For |
 |------|-----------|
@@ -139,7 +139,7 @@ plot_temperature_comparison(samples, save_path='temps.png')
 
 ---
 
-## 🐛 Debugging Checklist
+## Debugging Checklist
 
 - [ ] Data file exists and is readable?
 - [ ] Vocabulary size < 100? (more = harder)
@@ -151,7 +151,7 @@ plot_temperature_comparison(samples, save_path='temps.png')
 
 ---
 
-## 💡 Pro Tips
+## Pro Tips
 
 1. **Start small**: Test on tiny data first
 2. **Monitor loss**: Should decrease smoothly
@@ -164,18 +164,18 @@ plot_temperature_comparison(samples, save_path='temps.png')
 
 ---
 
-## 🎯 Success Criteria
+## Success Criteria
 
 After training, you should see:
-- ✅ Loss < 1.5 (depends on data)
-- ✅ Generated words are real
-- ✅ Basic grammar/structure
-- ✅ Style matches training data
-- ✅ No repetitive loops
+- Loss < 1.5 (depends on data)
+- Generated words are real
+- Basic grammar/structure
+- Style matches training data
+- No repetitive loops
 
 ---
 
-## ⏭️ Next: Day 2
+## Next: Day 2
 
 Once you understand RNNs, move to **LSTMs**:
 - Solve vanishing gradient problem
