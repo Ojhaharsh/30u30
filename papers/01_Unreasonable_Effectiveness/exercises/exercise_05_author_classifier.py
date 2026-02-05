@@ -17,7 +17,7 @@ Learning Objectives:
 4. Understanding what makes writing styles unique
 
 Time: 1-3 hours
-Difficulty: Project ⏱️⏱️⏱️
+Difficulty: Project
 """
 
 import numpy as np
@@ -319,5 +319,5 @@ if __name__ == "__main__":
     # Bonus challenges
     # bonus_challenges()
     
-    print("\n✅ Exercise 5 (Project) complete!")
+    print("\nExercise 5 (Project) complete!")
     print("Check solutions/project_shakespeare_hemingway/ for reference")

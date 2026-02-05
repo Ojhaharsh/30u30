@@ -17,7 +17,7 @@ Learning Objectives:
 4. Debugging techniques
 
 Time: 15-30 minutes
-Difficulty: Quick ⏱️
+Difficulty: Quick
 """
 
 import numpy as np
@@ -156,9 +156,9 @@ def diagnose_problems(losses):
     print("\n1. Gradient explosion:")
     # spikes = count_spikes(losses)
     # if spikes > threshold:
-    #     print("   ⚠️ DETECTED!")
+    #     print("   DETECTED!")
     # else:
-    #     print("   ✅ OK")
+    #     print("   OK")
     
     # TODO: Check for other issues
     print("   TODO: Add your diagnosis")
@@ -266,5 +266,5 @@ if __name__ == "__main__":
     # Bonus: Diagnostic dashboard
     # create_diagnostic_dashboard(losses)
     
-    print("\n✅ Exercise 4 complete!")
+    print("\nExercise 4 complete!")
     print("Compare with solutions/exercise_04_solution.py")
