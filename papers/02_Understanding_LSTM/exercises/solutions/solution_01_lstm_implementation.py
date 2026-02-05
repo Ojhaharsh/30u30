@@ -96,7 +96,7 @@ class LSTMFromScratch:
             self.C_tilde_cache.append(C_tilde)
             
             # SOLUTION 10: Update cell state
-            # This is THE KEY EQUATION that solves vanishing gradients!
+            # This is the key equation — the additive cell state update.
             # Notice: it's ADDITIVE, not multiplicative
             # C_t = (what to keep from old) + (what to add from new)
             C_t = f_t * self.C_states[t] + i_t * C_tilde
@@ -310,16 +310,16 @@ def test_lstm():
             print(f"Iteration {iteration:3d}: Loss = {smooth_loss:.4f}")
     
     print("\n" + "=" * 60)
-    print("✅ Training complete!")
+    print("Training complete!")
     print(f"Initial loss: {losses[0]:.4f}")
     print(f"Final loss: {losses[-1]:.4f}")
     print(f"Improvement: {(losses[0] - losses[-1]) / losses[0] * 100:.1f}%")
     
     if losses[-1] < losses[0] * 0.5:
-        print("\n🎉 Success! Loss decreased significantly.")
-        print("Your LSTM is learning!")
+        print("\nLoss decreased significantly.")
+        print("Your LSTM is learning.")
     else:
-        print("\n⚠️ Loss didn't decrease much. Check your implementation.")
+        print("\nLoss didn't decrease much. Check your implementation.")
 
 
 if __name__ == "__main__":
