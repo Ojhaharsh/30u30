@@ -492,10 +492,10 @@ def create_regularization_summary_figure(results: Dict,
     REGULARIZATION SUMMARY
     ═══════════════════════
     
-    ✓ Dropout:       Randomly disables neurons to prevent co-adaptation
-    ✓ Layer Norm:    Standardizes activations for stable training  
-    ✓ Weight Decay:  Penalizes large weights to encourage simplicity
-    ✓ Early Stopping: Stops training before memorization occurs
+    - Dropout:       Randomly disables neurons to prevent co-adaptation
+    - Layer Norm:    Standardizes activations for stable training  
+    - Weight Decay:  Penalizes large weights to encourage simplicity
+    - Early Stopping: Stops training before memorization occurs
     
     Use ALL FOUR techniques together for best results!
     """
@@ -531,7 +531,7 @@ def demo_visualizations():
     
     fig1 = plot_learning_curves(train_losses.tolist(), val_losses.tolist(),
                                 title="Example Learning Curves")
-    print("  ✓ Learning curves")
+    print("  [ok] Learning curves")
     
     # 2. Dropout effect
     activations_no_dropout = np.random.randn(20, 10)
@@ -539,7 +539,7 @@ def demo_visualizations():
     activations_with_dropout = activations_no_dropout * dropout_mask
     
     fig2 = plot_dropout_effect(activations_no_dropout, activations_with_dropout)
-    print("  ✓ Dropout effect")
+    print("  [ok] Dropout effect")
     
     # 3. Weight distributions
     weights_initial = np.random.randn(100, 100) * 0.1
@@ -547,12 +547,12 @@ def demo_visualizations():
     weights_regularized = np.random.randn(100, 100) * 0.2
     
     fig3 = plot_weight_distributions(weights_initial, weights_trained, weights_regularized)
-    print("  ✓ Weight distributions")
+    print("  [ok] Weight distributions")
     
     # 4. Early stopping
     fig4 = plot_early_stopping_analysis(train_losses.tolist(), val_losses.tolist(),
                                         stopped_epoch=35, best_epoch=25)
-    print("  ✓ Early stopping analysis")
+    print("  [ok] Early stopping analysis")
     
     print("\nAll visualizations generated! Close windows to exit.")
     plt.show()
