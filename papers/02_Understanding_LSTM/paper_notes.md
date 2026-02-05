@@ -1,305 +1,173 @@
-# Paper Notes: Understanding LSTM Networks (ELI5)
+# Paper Notes: Understanding LSTM Networks
 
-> Making LSTMs simple enough for anyone to understand
-
----
-
-## 🎈 The 5-Year-Old Explanation
-
-**You:** "Why can't the RNN from yesterday remember things for a long time?"
-
-**Me:** "Imagine playing a game of telephone with 20 friends. You whisper 'purple elephant' to friend #1. By friend #20, it becomes 'grumpy element' because the message got weaker each time."
-
-**You:** "So how does LSTM fix it?"
-
-**Me:** "Instead of whispering, we write it on a piece of paper and pass the paper along! The message stays perfect. But we have three special rules:
-
-1. **Eraser rule** (Forget gate): Can I erase old stuff on the paper?
-2. **Pencil rule** (Input gate): Should I write new stuff?
-3. **Show rule** (Output gate): Should I show what's on the paper right now?
-
-The paper keeps going forever, and everyone decides which rules to use!"
+> Christopher Olah's blog post (August 2015)
+> http://colah.github.io/posts/2015-08-Understanding-LSTMs/
 
 ---
 
-## 🧠 The Core Problem (No Math)
+## ELI5 (Explain Like I'm 5)
 
-### Vanilla RNN Issue
+Imagine you're reading a really long story, and someone asks you "who was the main character?" If you only remember the last sentence, you're stuck. You need a way to keep important notes while you read — like writing key facts on a sticky note.
 
-Picture a bucket brigade fighting a fire:
+That's what an LSTM does. A regular RNN is like reading without notes — you forget stuff fast. An LSTM carries a "sticky note" (the cell state) that it can write on, erase from, and read at each step. Three "rules" control the sticky note:
 
-```
-Person 1 → Person 2 → Person 3 → ... → Person 20
-  🪣💧      🪣💦        🪣💦              🪣💧(half empty)
-```
+1. **Erase rule** (forget gate): scratch out old notes that aren't relevant anymore
+2. **Write rule** (input gate): add new important facts
+3. **Read rule** (output gate): decide which notes are relevant right now
 
-Each person spills a little water. By person #20, the bucket is almost empty!
+The sticky note travels alongside the reading, and information on it doesn't degrade — unlike a regular RNN where everything gets fuzzier over time.
 
-That's what happens to gradients in RNN backpropagation. After 20 steps, the "learning signal" is too weak to do anything.
-
-### LSTM Solution
-
-Now imagine a **pipeline** running alongside the bucket brigade:
-
-```
-Person 1 → Person 2 → Person 3 → ... → Person 20
-  🪣💧      🪣💦        🪣💦              🪣💧
-   ║         ║          ║                 ║
-   ╠════════╬══════════╬═════════════════╣
-        Pipeline (water flows perfectly!)
-```
-
-The pipeline carries water without loss. People can:
-- **Add water** to the pipeline (input gate)
-- **Drain water** from the pipeline (forget gate)
-- **Take water out** to use (output gate)
-
-But the pipeline itself keeps flowing!
+Note: This analogy is ours, not Colah's. His metaphor is the "conveyor belt" — see below.
 
 ---
 
-## 🎯 The Three Gates (Simple Version)
+## What This Post Actually Is
 
-### 1. Forget Gate: The Bouncer
+This isn't a research paper — it's a visual explainer. Colah walks through how LSTMs work step by step, using diagrams that became the de facto reference for understanding LSTMs. If you've seen an LSTM diagram anywhere on the internet, it probably traces back to this post.
 
-Think of a nightclub bouncer deciding who gets kicked out:
-
-```
-Old memories line up at the door...
-Bouncer checks each one:
-  - "First word of sentence" → 👍 Keep (relevant)
-  - "Character from 5 sentences ago" → 👎 Forget (outdated)
-```
-
-**Forget gate = 0.1** means "kick out 90% of this memory"
-**Forget gate = 0.9** means "keep 90% of this memory"
-
-### 2. Input Gate: The Security Guard
-
-Someone wants to add new information. The guard checks:
-
-```
-New info: "The dog is brown"
-Guard asks:
-  - "Is this important?" 
-  - "Do we have room?"
-  
-If YES → Let it in
-If NO → Ignore it
-```
-
-**Input gate = 0.8** means "let in 80% of this new info"
-
-### 3. Output Gate: The Librarian
-
-You ask: "What should I think about RIGHT NOW?"
-
-```
-Librarian looks at all the stored memories...
-Picks the relevant ones:
-  - If predicting verb → Focus on subject
-  - If predicting pronoun → Focus on gender
-```
-
-**Output gate = 0.7** means "show 70% of what's stored"
+The post covers: RNN recap, the long-term dependency problem, the LSTM cell state and gates, and LSTM variants (including GRUs).
 
 ---
 
-## 🎨 Real Example: Understanding "Sarah"
+## The Long-Term Dependency Problem
 
-Let's watch an LSTM process: **"Sarah went to the store. She..."**
+Colah's key examples:
 
-### Time 1: "Sarah"
-```
-🧠 Brain says: "Aha! A name. Probably female. Subject of sentence."
+**Short-term (easy):** "the clouds are in the ___" — predicting "sky" only needs recent context. RNNs handle this fine.
 
-Forget gate: 🔓 OPEN (forget previous context, new sentence)
-Input gate:  🔓 OPEN (store: female, singular, name=Sarah)
-Output gate: 😴 Mostly CLOSED (not relevant for next word yet)
+**Long-term (hard):** "I grew up in France... I speak fluent ___" — predicting "French" requires remembering "France" from much earlier. The relevant information and where it's needed are far apart. RNNs struggle here.
 
-📝 Paper says: [SUBJECT=Sarah, GENDER=female, NUMBER=singular]
-```
-
-### Time 2-6: "went to the store"
-```
-🧠 Brain says: "These are actions, not important for long-term"
-
-Forget gate: 🔒 CLOSED (keep Sarah info!)
-Input gate:  😴 Mostly CLOSED (don't store "went", "to", "the"...)
-Output gate: 🔓 OPEN (use current word for predictions)
-
-📝 Paper STILL says: [SUBJECT=Sarah, GENDER=female, NUMBER=singular]
-```
-
-**This is the magic!** The information about Sarah survived 5 words unchanged!
-
-### Time 7: "She"
-```
-🧠 Brain says: "Need pronoun! What gender was the subject?"
-
-Forget gate: 🔒 CLOSED (still need Sarah info)
-Input gate:  🔒 CLOSED (no new info to add)
-Output gate: 🔓 WIDE OPEN (read the paper: female!)
-
-📝 Paper says: [SUBJECT=Sarah, GENDER=female ← USE THIS!]
-
-✅ Correctly predicts "She" instead of "He"!
-```
+He references Hochreiter (1991) and Bengio et al. (1994) as the work that identified fundamental reasons why this is hard — gradients either vanish or explode when backpropagating through many time steps.
 
 ---
 
-## 🔬 Why It Works (Non-Technical)
+## The Cell State: Colah's "Conveyor Belt"
 
-### The Highway Metaphor
+This is the central metaphor of the post, in Colah's own words:
 
-**Vanilla RNN** = Country road with stop signs every mile
-```
-Signal → 🛑 → 🛑 → 🛑 → 🛑 → 🛑 → (very slow)
-```
-Gradient has to slow down at each step. After 20 stop signs, it's barely moving!
+> "The cell state is kind of like a conveyor belt. It runs straight down the entire chain, with only some minor linear interactions. It's very easy for information to just flow along it unchanged."
 
-**LSTM** = Highway with direct exit ramps
-```
-Signal ══════════════════════════════> (fast lane!)
-       ↕    ↕    ↕    ↕    ↕    ↕
-     Exits when needed
-```
-Gradient flows on the highway (cell state) unobstructed. It only "exits" when gates decide!
+The cell state is a separate path that runs parallel to the hidden state. Information can ride along it without degradation, unless the LSTM explicitly modifies it through gates.
+
+Standard RNN: just a hidden state, passed through a tanh at each step.
+LSTM: hidden state + cell state, where the cell state has a direct additive connection across time steps.
 
 ---
 
-## 💡 Key Insights
+## The Three Gates (Step by Step from the Post)
 
-### 1. Memory is Additive, Not Multiplicative
+Gates are sigmoid layers followed by pointwise multiplication. Sigmoid outputs values between 0 ("let nothing through") and 1 ("let everything through").
 
-**RNN:** 
-```
-h_t = tanh(W_h * h_{t-1} + ...)
-```
-Multiply by W_h every step → exponential decay
+### 1. Forget Gate
 
-**LSTM:**
-```
-C_t = f_t * C_{t-1} + i_t * C_candidate
-```
-Add/subtract from cell state → stable memory!
+> "The first step in our LSTM is to decide what information we're going to throw away from the cell state."
 
-### 2. The Network Learns What to Remember
+Looks at h_{t-1} and x_t, outputs a value between 0 and 1 for each element in the cell state.
 
-You don't tell the LSTM "remember names" or "forget articles."
+**Colah's example:** In a language model tracking subject gender, when we encounter a new subject, we want to forget the old one's gender.
 
-It **discovers** through training:
-- Names are important → keep them
-- "The", "a", "an" → forget them
-- Sentence boundaries → reset memory
+$$f_t = \sigma(W_f \cdot [h_{t-1}, x_t] + b_f)$$
 
-This happens automatically from data!
+### 2. Input Gate + Cell Candidate
 
-### 3. Gates are Soft, Not Hard
+Two parts:
+- **Input gate** (sigmoid): decides which values to update
+- **Cell candidate** (tanh): creates a vector of new candidate values
 
-Gates output values between 0 and 1 (sigmoid), not binary on/off.
+**Colah's example:** We want to add the new subject's gender to the cell state, replacing the one we're forgetting.
 
-```
-Forget gate = 0.7
-  → Keep 70% of old memory
-  → Discard 30%
-```
+$$i_t = \sigma(W_i \cdot [h_{t-1}, x_t] + b_i)$$
+$$\tilde{C}_t = \tanh(W_C \cdot [h_{t-1}, x_t] + b_C)$$
 
-This smoothness makes training stable.
+### 3. Cell State Update
 
----
+This is where the actual memory update happens:
 
-## 🎓 When You'll See LSTMs
+$$C_t = f_t \odot C_{t-1} + i_t \odot \tilde{C}_t$$
 
-### Before 2017: Everywhere!
+Forget gate scales old memory, input gate scales new candidates, then they're added. This additive update is why gradients flow well — the derivative of C_t with respect to C_{t-1} is just f_t, not a matrix multiplication.
 
-- 📱 **Phone keyboards** - Text prediction
-- 🗣️ **Voice assistants** - Speech recognition
-- 🌍 **Google Translate** - Machine translation
-- 📺 **YouTube** - Caption generation
+### 4. Output Gate
 
-### After 2017: Still Common
+> "Finally, we need to decide what we're going to output."
 
-- 📈 **Stock prediction** - Time series forecasting
-- 🎵 **Music generation** - Sequence modeling
-- 🔊 **Speech synthesis** - Audio generation
-- 💬 **Chatbots** (small ones) - Dialogue systems
+Sigmoid decides which parts of the cell state to expose. The cell state is pushed through tanh (to get values between -1 and 1), then multiplied by the output gate.
 
-### Why Less Common Now?
+**Colah's example:** If we just saw a subject, we might want to output information relevant to a verb — like whether the subject is singular or plural, for verb conjugation.
 
-**Transformers** (Day 13+) are better for:
-- Very long sequences
-- Parallel training (faster)
-- Attention to specific positions
-
-But LSTMs are:
-- Simpler to understand
-- Faster for short sequences
-- Better for streaming data
-- Foundation for understanding transformers!
+$$o_t = \sigma(W_o \cdot [h_{t-1}, x_t] + b_o)$$
+$$h_t = o_t \odot \tanh(C_t)$$
 
 ---
 
-## 🌉 Connection to Modern AI
+## Variants Covered in the Post
 
-### The Family Tree
+### Peephole Connections (Gers & Schmidhuber, 2000)
+Gates can look at the cell state directly, not just h_{t-1} and x_t. Some papers use peepholes on all gates, some on just a few.
 
-```
-1997: LSTM invented
-  ↓
-2014: Seq2Seq models (LSTM encoder + decoder)
-  ↓
-2015: Attention mechanism (still with LSTMs)
-  ↓
-2017: Transformers ("Attention is All You Need")
-  ↓
-2018: BERT (transformer encoder)
-  ↓
-2019: GPT-2 (transformer decoder)
-  ↓
-2023: ChatGPT (transformer + RLHF)
-```
+### Coupled Forget and Input Gates
+Instead of deciding separately what to forget and what to add, make those decisions together: only forget when something new is coming in, only add when making room.
 
-**LSTMs are the parent of transformers!**
+### GRU (Cho et al., 2014)
+Merges forget and input gates into a single "update gate." Also merges cell state and hidden state. Simpler than LSTM, increasingly popular at the time of writing.
 
-The "attention" in transformers was originally added ON TOP of LSTMs. Then they realized: "Wait, we don't need the LSTM part anymore!"
-
-But understanding LSTMs helps you understand:
-- Why attention was needed
-- What problems it solved
-- Why transformers work
+### Do Variants Matter?
+Colah references two key studies:
+- **Greff et al. (2015)** compared popular variants and found "they're all about the same"
+- **Jozefowicz et al. (2015)** tested over 10,000 RNN architectures and found some that beat LSTMs on certain tasks
 
 ---
 
-## 🎯 The One Thing to Remember
+## The Post's Conclusion
 
-If you only remember one thing about LSTMs:
+Colah ends with: attention is the "next step." He references Xu et al. (2015) for attention-based image captioning and mentions Grid LSTMs (Kalchbrenner et al. 2015) and generative models (Gregor et al. 2015, Chung et al. 2015) as other exciting directions.
 
-> **"LSTMs have a separate memory lane (cell state) where information can flow without degradation. Gates control what goes in, what stays, and what comes out."**
-
-The cell state is like a **river** flowing through time:
-- You can add water (input gate)
-- You can drain water (forget gate)  
-- You can take water out (output gate)
-- But the river keeps flowing!
+Note that this post was written in August 2015 — two years before "Attention Is All You Need" (2017). The post correctly predicted attention's importance but couldn't have known it would eventually replace LSTMs entirely in most NLP tasks.
 
 ---
 
-## 📚 Next Steps
+## What the Post Doesn't Cover
 
-**Understood this?** You're ready for:
-1. ✅ The detailed [README](README.md) with math
-2. ✅ The [implementation](implementation.py) in NumPy
-3. ✅ The [exercises](exercises/) to build your own
+- Vanishing gradient math in detail (it references Hochreiter and Bengio but doesn't derive it)
+- Training procedures, hyperparameters, or practical implementation advice
+- Benchmarks or performance numbers
+- The forget gate bias initialization trick (b_f = 1, from Jozefowicz et al. 2015)
+- Bidirectional LSTMs, stacked LSTMs, or attention mechanisms in detail
+- Any comparison of LSTM vs vanilla RNN on actual tasks
 
-**Still confused?** That's okay! Watch this sequence:
-1. Read this page again
-2. Watch [Colah's blog](http://colah.github.io/posts/2015-08-Understanding-LSTMs/) with animations
-3. Try implementing just the forget gate first
-4. Build up gate by gate
-
-LSTMs are complex. Take your time! 🚀
+This is an architecture explainer, not a benchmarking paper.
 
 ---
 
-*"The key thing that makes LSTMs tick is that the cell state runs straight through the whole chain, with only minor interactions. Information can flow along it unchanged."* - From Colah's blog
+## Our Additions (Not from the Post)
+
+### Why the Additive Update Matters for Gradients
+
+The cell state update C_t = f_t * C_{t-1} + i_t * C_tilde means the gradient of C_t with respect to C_{t-1} is just f_t (a scalar gate value near 1), rather than a weight matrix multiplication. This is why gradients don't vanish — they take a direct path through the cell state.
+
+In a vanilla RNN, gradients must pass through h_t = tanh(W_hh * h_{t-1} + ...), meaning they get multiplied by W_hh at every step. If eigenvalues of W_hh are below 1, gradients shrink exponentially.
+
+### Practical Initialization Note
+
+Initializing the forget gate bias to 1 (so forget gates start near 1, meaning "remember by default") is now standard practice. This comes from Jozefowicz et al. (2015), one of the papers Colah references.
+
+### Where LSTMs Stand Now (Our Retrospective)
+
+| Aspect | 2015 (when post was written) | Now |
+|--------|------|-----|
+| Dominant architecture | LSTMs ruled NLP, speech, translation | Transformers dominate most tasks |
+| Attention | Emerging add-on to LSTMs | Replaced LSTMs in "Attention Is All You Need" |
+| Where LSTMs still appear | Everywhere | Time series, streaming, edge devices, smaller models |
+| Colah's prediction about attention | "There is a next step and it's attention!" | Exactly right |
+
+---
+
+## Questions Worth Thinking About
+
+1. Colah says the cell state carries information "with only some minor linear interactions." What are those "minor linear interactions" specifically? (Answer: the forget gate multiplication and the input gate addition.)
+
+2. The post mentions coupled forget/input gates as a variant. What's the tradeoff? (You can only add new information by forgetting old information, which might be too restrictive.)
+
+3. Greff et al. found LSTM variants perform "about the same." Why might that be? (Maybe the core design — additive cell state with learned gates — is what matters, not the specific gate configuration.)
+
+4. Colah correctly predicted attention's importance. But he framed it as an add-on to RNNs, not a replacement. What changed? (Vaswani et al. 2017 showed self-attention alone, without any recurrence, was sufficient and more parallelizable.)
