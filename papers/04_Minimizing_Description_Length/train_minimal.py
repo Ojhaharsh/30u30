@@ -144,7 +144,7 @@ def train(args):
                   f"Error (NLL): {nll:.4f} | "
                   f"Complexity (KL): {kl_term:.4f}")
 
-    print(f"\n✅ Training Complete!")
+    print(f"\nTraining complete.")
     print(f"Final Error: {history['nll'][-1]:.4f}")
     
     # 4. Save Model
