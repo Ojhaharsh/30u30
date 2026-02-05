@@ -1,233 +1,166 @@
-# 🏋️ Day 4 Exercises: Mastering Bayesian Networks
+# Exercises: MDL / Bayesian Neural Networks
 
-Welcome to the dojo! Today you'll implement the core concepts of Minimum Description Length and understand why **uncertainty is a feature, not a bug**.
+5 hands-on exercises building on Hinton & van Camp (1993). All exercises are our pedagogical additions — the paper itself is theoretical with a minimal experiment. Exercises 3 and 5 are most directly connected to the paper's core ideas (the complexity-accuracy trade-off and the MDL principle).
 
----
-
-## 📋 How to Use These Exercises
-
-1. **Read the exercise** (goal, learning objectives, time estimate)
-2. **Open the exercise file** (e.g., `exercise_01_*.py`)
-3. **Complete each TODO** with hints provided (don't peek at solutions!)
-4. **Run your code** to verify it works
-5. **Check `solutions.py`** if you get stuck
-6. **Move to next exercise**
-
-**Each exercise is independent** - you can do them in any order, but #2 and #3 build on #1.
+**Time estimates:**
+- Medium (20-30 min)
+- Hard (30-40 min)
 
 ---
 
-## 🎯 The 5 Exercises
+## Exercise 1: The Reparameterization Trick [Medium]
 
-### **Exercise 1: The "Reparameterization" Trick** ⏱️ 20-30 min | Difficulty: Medium ⏱️⏱️
+**Our addition** — the reparameterization trick is from Kingma & Welling (2014), not the 1993 paper. We use it because it's how you actually train Bayesian NNs with gradient descent.
+
 **File:** `exercise_01_reparameterization.py`
 
-**What you'll implement:**
-- The `softplus` activation function
-- Gaussian sampling using the reparameterization trick
-- Statistical verification (mean/std checks)
+**What you'll learn:**
+- How to sample weights differentiably: $w = \mu + \sigma \cdot \epsilon$
+- Why softplus ensures $\sigma > 0$
+- How to verify sampling with statistical tests
 
-**Why it matters:**
-The reparameterization trick is the **core innovation** that makes Bayesian neural networks differentiable. Without it, you can't backprop through randomness. This exercise implements the foundation.
+**Tasks:**
+1. Implement `softplus(x)` = $\log(1 + e^x)$
+2. Implement `sample_gaussian(mu, rho, n_samples)` using the reparameterization trick
+3. Verify: sampled mean should be close to $\mu$, sampled std close to $\sigma$
+4. Check: when $\rho = 0$, $\sigma \approx 0.693$ (= $\log 2$)
 
-**Learning objectives:**
-1. How to make randomness differentiable
-2. The formula: $w = \mu + \sigma \cdot \epsilon$ where $\epsilon \sim N(0,1)$
-3. Why Softplus instead of ReLU for $\sigma$
-4. How to verify sampling with statistical tests
-
-**What to look for:**
-- Your sampled weights should have mean ≈ $\mu$ and std ≈ $\sigma$
-- When $\rho = 0$, $\sigma \approx 0.693$ (verify this!)
-- Different $\rho$ values should produce different uncertainty levels
+**Success criteria:**
+- Statistical tests pass (mean within 0.05 of $\mu$, std within 0.05 of $\sigma$)
+- Different $\rho$ values produce different uncertainty levels
 
 ---
 
-### **Exercise 2: The "Gap Experiment"** ⏱️ 25-35 min | Difficulty: Hard ⏱️⏱️⏱️
+## Exercise 2: The Gap Experiment [Hard]
+
+**Our addition** — demonstrates epistemic uncertainty, which is the practical payoff of the paper's ideas.
+
 **File:** `exercise_02_gap_experiment.py`
 
-**What you'll implement:**
-- Create a dataset with missing regions (gaps)
-- Train a Bayesian network on gappy data
-- Visualize uncertainty using Monte Carlo sampling
-- Compare with what you'd expect from a regular network
+**What you'll learn:**
+- Training on data with missing regions reveals what the network doesn't know
+- Monte Carlo forward passes produce uncertainty estimates
+- Epistemic uncertainty (model doesn't know) vs. aleatoric uncertainty (data is noisy)
 
-**Why it matters:**
-This is the **most important visualization** in Bayesian deep learning. It proves that the network knows what it doesn't know.
-
-**Learning objectives:**
-1. Epistemic uncertainty: "I haven't seen data here"
-2. Why uncertainty spikes exactly at gaps
-3. How Monte Carlo sampling reveals uncertainty
-4. The difference between **aleatoric** (noise) and **epistemic** (ignorance) uncertainty
+**Tasks:**
+1. Generate sine wave data with a gap in the middle ($|x| < 1$)
+2. Train the Bayesian network on gappy data
+3. Run 100 forward passes on full range including the gap
+4. Plot mean prediction with uncertainty band
 
 **What to look for:**
-- Narrow prediction band where data exists
-- **Wide confidence band in the gap** (this is the magic!)
-- Uncertainty should be symmetric around the gap (good generalization)
-- Regular networks either overfit (narrow everywhere) or underfit (wide everywhere)
+- Tight prediction band where data exists
+- Wide uncertainty band in the gap
+- A standard NN would be confidently wrong in the gap; this shows honest uncertainty
 
 ---
 
-### **Exercise 3: Breaking the Model (Beta Parameter)** ⏱️ 30-40 min | Difficulty: Medium ⏱️⏱️
+## Exercise 3: Beta Parameter Study [Medium]
+
+**Our addition** — but directly explores the paper's core equation ($\mathcal{L} = \text{error} + \beta \cdot KL$).
+
 **File:** `exercise_03_beta_parameter.py`
 
-**What you'll implement:**
-- Train models with different `kl_weight` values
-- Measure test MSE, prediction uncertainty, and calibration
-- Plot the tradeoff between fit quality and model simplicity
-- Find the "sweet spot"
+**What you'll learn:**
+- $\beta$ (kl_weight) controls the complexity-accuracy trade-off from the paper
+- Low $\beta$: overfits (confident but wrong outside training data)
+- High $\beta$: underfits (uncertain but safe)
+- How to measure calibration
 
-**Why it matters:**
-`kl_weight` is the **most important hyperparameter** in Bayesian deep learning. It controls how much you trust the data vs. the prior.
-
-**Learning objectives:**
-1. What does `kl_weight` (β) do physically?
-2. Low β → Overfit (confident but wrong)
-3. High β → Underfit (uncertain but safe)
-4. How to measure calibration (% of points in σ bands)
-
-**What to look for:**
-- MSE should **increase** as β increases (less data-fitting)
-- Uncertainty should **increase** with β
-- Calibration error should **decrease** with higher β
-- Optimal β ≈ somewhere in the middle
+**Tasks:**
+1. Train models with different $\beta$ values (0.001, 0.01, 0.1, 0.5, 1.0)
+2. Measure test MSE and prediction uncertainty for each
+3. Find the "sweet spot" where both are reasonable
 
 **Tuning guide:**
-| Symptom | Solution |
-|---------|----------|
-| Model ignores data (y ≈ 0) | ↓ Reduce β |
-| Uncertainty too small | ↑ Increase β |
-| Too wiggly (overfits) | ↑ Increase β |
+
+| Symptom | Cause | Fix |
+|---------|-------|-----|
+| Model predicts flat line | $\beta$ too high | Reduce $\beta$ |
+| No uncertainty in gaps | $\beta$ too low | Increase $\beta$ |
+| Wiggly, overfitting | $\beta$ too low | Increase $\beta$ |
 
 ---
 
-### **Exercise 4: Monte Carlo Predictions** ⏱️ 20-30 min | Difficulty: Medium ⏱️⏱️
+## Exercise 4: Monte Carlo Predictions [Medium]
+
+**Our addition** — standard practice for using Bayesian NNs, not discussed in the 1993 paper.
+
 **File:** `exercise_04_monte_carlo.py`
 
-**What you'll implement:**
-- Run the network multiple times with different weight samples
-- Aggregate predictions into mean and uncertainty
-- Study how many samples are "enough"
-- Verify the Law of Large Numbers
+**What you'll learn:**
+- In production, you run the network many times and aggregate
+- Uncertainty estimates converge with more samples
+- The Law of Large Numbers in action
 
-**Why it matters:**
-In production, you can't predict once. You predict 50-100 times and aggregate. This exercise shows why.
-
-**Learning objectives:**
-1. Monte Carlo approximation of Bayesian inference
-2. How uncertainty estimates stabilize with more samples
-3. The Law of Large Numbers in action
-4. Computational cost vs. accuracy tradeoff
+**Tasks:**
+1. Run the network N times with different weight samples
+2. Track how mean and std change as N increases (1, 5, 10, 50, 100)
+3. Visualize convergence
 
 **What to look for:**
-- 1 sample: Noisy, jagged predictions
-- 10 samples: Clearer but still wiggly
-- 100 samples: Smooth, stable, boring (good!)
-- Uncertainty estimates should **converge** to a stable value
-
-**Production rule of thumb:** Use 50-100 MC samples. More is slower, less is unreliable.
+- 1 sample: noisy, jagged
+- 10 samples: clearer but still wobbly
+- 100 samples: smooth and stable
+- Rule of thumb: 50-100 samples is usually enough
 
 ---
 
-### **Exercise 5: Advanced MDL (Pareto Frontier)** ⏱️ 30-40 min | Difficulty: Hard ⏱️⏱️⏱️
+## Exercise 5: Pareto Frontier [Hard]
+
+**Our addition** — but directly visualizes the MDL principle from the paper.
+
 **File:** `exercise_05_advanced_mdl.py`
 
-**What you'll implement:**
-- Decompose loss into reconstruction vs. regularization
-- Train models across the compression spectrum
-- Plot the Pareto frontier
-- Understand the fundamental tradeoff
+**What you'll learn:**
+- MDL loss = reconstruction loss + KL divergence
+- The Pareto frontier shows you can't improve both simultaneously
+- Compression ratio changes with $\beta$
 
-**Why it matters:**
-This is the **visual proof** of the MDL principle. You'll see the exact tradeoff curve.
-
-**Learning objectives:**
-1. MDL Loss = Reconstruction Loss + KL Divergence
-2. Pareto efficiency (can't improve both objectives)
-3. How compression ratio changes with β
-4. Real-world compression (edge devices, mobile)
+**Tasks:**
+1. Train models across a range of $\beta$ values
+2. For each, record reconstruction error (MSE) and complexity cost (KL)
+3. Plot the Pareto frontier: x-axis = KL (complexity), y-axis = MSE (error)
+4. Find the "elbow" — often the best practical choice
 
 **What to look for:**
-- The frontier should be a **smooth curve** from upper-left to lower-right
-- Points lie **on or below** the frontier (that's optimal!)
-- As β increases, you move left (simpler model) and up (worse fit)
-- The "elbow" is often the best practical choice
+- The frontier is a smooth curve from upper-left (simple, high error) to lower-right (complex, low error)
+- Points below the frontier are Pareto-optimal
+- The elbow represents the paper's insight: maximum compression with acceptable error
 
 ---
 
-## 📊 Summary Table
+## Summary
 
-| Exercise | Topic | File | Time | Difficulty | Output |
-|----------|-------|------|------|------------|--------|
-| 1 | Reparameterization | `exercise_01_*.py` | 20-30 | ⏱️⏱️ | Stats printout |
-| 2 | Gap visualization | `exercise_02_*.py` | 25-35 | ⏱️⏱️⏱️ | `gap_experiment.png` |
-| 3 | Beta tuning | `exercise_03_*.py` | 30-40 | ⏱️⏱️ | `beta_study.png` |
-| 4 | MC convergence | `exercise_04_*.py` | 20-30 | ⏱️⏱️ | `mc_convergence.png` |
-| 5 | Pareto frontier | `exercise_05_*.py` | 30-40 | ⏱️⏱️⏱️ | `pareto_frontier.png` |
+| # | Topic | File | Time | Difficulty | Paper Connection |
+|---|-------|------|------|------------|------------------|
+| 1 | Reparameterization | `exercise_01_*.py` | 20-30 min | Medium | Kingma 2014 technique |
+| 2 | Gap experiment | `exercise_02_*.py` | 30-40 min | Hard | Epistemic uncertainty |
+| 3 | Beta parameter | `exercise_03_*.py` | 20-30 min | Medium | Core equation from paper |
+| 4 | MC predictions | `exercise_04_*.py` | 20-30 min | Medium | Modern practice |
+| 5 | Pareto frontier | `exercise_05_*.py` | 30-40 min | Hard | MDL principle visualization |
 
-**Total time:** 2-3 hours (if you do all 5)
-
----
-
-## 💡 Getting Help
-
-1. **Stuck on a TODO?**
-   - Re-read the hint (don't look at the solution yet)
-   - Google the function you need
-   - Ask: "What does this TODO need to compute?"
-
-2. **Code runs but gives wrong results?**
-   - Check intermediate values with `print()` statements
-   - Visualize what you're computing (plot histograms, etc.)
-   - Check dimensions: shapes of X, y, weights, etc.
-
-3. **Still stuck?**
-   - Look at the corresponding solution in `solutions.py`
-   - Understand the solution, then implement your own version
-   - Run both and check they give same results
+**Total time:** 2-3 hours
 
 ---
 
-## 🎓 Progressive Difficulty
+## Running
 
-**Beginner-friendly** → Go do Exercise 1 first
+```bash
+cd Exercises
+python exercise_01_reparameterization.py
+python exercise_02_gap_experiment.py
+# etc.
+```
 
-**Medium difficulty** → Then try Exercises 3 & 4
-
-**Challenge mode** → Save Exercises 2 & 5 for last
-
----
-
-## 🏆 What You'll Learn
-
-After these 5 exercises, you'll understand:
-- ✅ How Bayesian networks work (probabilistic thinking)
-- ✅ Why uncertainty matters (gap experiment)
-- ✅ How to tune them (beta parameter)
-- ✅ How to use them in production (MC sampling)
-- ✅ The compression principle behind all of this (Pareto frontier)
-
-**You're not just implementing code. You're building intuition.**
+Solutions are in `solutions.py` and `solutions_extra.py`. Try the exercises first.
 
 ---
 
-## 📚 Related Files
+## Related Files
 
-- **`solutions.py`** - Reference solutions with implementation summaries
-- **`README.md`** (parent) - Conceptual overview of MDL
-- **`CHEATSHEET.md`** (parent) - Quick API reference
-- **`implementation.py`** (parent) - Full Bayesian NN implementation
-- **`notebook.ipynb`** (parent) - Interactive notebook walkthrough
-
----
-
-## 🚀 Next Steps
-
-After completing these exercises:
-1. Read the paper/blog posts linked in the main README
-2. Explore other Bayesian networks (Variational Inference, etc.)
-3. Try on your own dataset (not sine waves!)
-4. Compare with other uncertainty methods (ensembles, dropout)
-
-**Happy learning!** 🎯
+- `solutions.py` — Reference solutions with explanations
+- `solutions_extra.py` — Additional solution implementations
+- `../implementation.py` — Full Bayesian NN implementation
+- `../paper_notes.md` — Detailed paper notes
+- `../CHEATSHEET.md` — Quick reference

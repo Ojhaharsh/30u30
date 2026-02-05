@@ -39,9 +39,9 @@ def exercise_1_reparameterization():
     print(f"Target Std:  {expected_sigma:.4f}, Measured Std:  {np.std(samples):.4f}")
     
     if np.abs(np.mean(samples) - mu_target) < 0.1:
-        print("✅ Mean check passed")
+        print("[OK] Mean check passed")
     if np.abs(np.std(samples) - expected_sigma) < 0.1:
-        print("✅ Sigma check passed")
+        print("[OK] Sigma check passed")
 
 def exercise_2_gap_experiment():
     print("\n--- Exercise 2: The Gap Experiment ---")
@@ -84,7 +84,7 @@ def exercise_2_gap_experiment():
     plt.title("Exercise 2: Cubic Function with Gap")
     plt.legend()
     plt.show()
-    print("✅ Check the plot: Uncertainty should explode in [-2, 2]")
+    print("[OK] Check the plot: Uncertainty should expand in [-2, 2]")
 
 def exercise_3_beta_sensitivity():
     print("\n--- Exercise 3: Beta (KL Weight) Sensitivity ---")
@@ -112,7 +112,7 @@ def exercise_4_monte_carlo():
     preds = [net.forward(x).item() for _ in range(10)]
     print(f"Individual Predictions: {[round(p, 3) for p in preds]}")
     print(f"Variance: {np.var(preds):.5f}")
-    print("✅ Notice how single predictions jitter? That's why we average!")
+    print("[OK] Notice how single predictions jitter? That's why we average.")
 
 def exercise_5_pruning():
     print("\n--- Exercise 5: The Free Lunch (Pruning) ---")
@@ -137,7 +137,7 @@ def exercise_5_pruning():
     print(f"Total Weights: {total}")
     print(f"Pruned Weights (SNR < {threshold}): {n_pruned}")
     print(f"Compression Rate: {n_pruned/total*100:.1f}%")
-    print("✅ These pruned weights can be set to 0 without affecting the output mean significantly.")
+    print("[OK] These pruned weights can be set to 0 without affecting the output mean significantly.")
 
 if __name__ == "__main__":
     # Uncomment to run
