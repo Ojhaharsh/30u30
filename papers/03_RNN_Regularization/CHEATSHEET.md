@@ -1,77 +1,74 @@
-# RNN Regularization Cheatsheet 📋
+# RNN Regularization Cheatsheet
 
-Quick reference for RNN Regularization techniques
-
----
-
-## The Big Idea (30 seconds)
-
-Regularization prevents overfitting by:
-- **Dropout** = Random amnesia during training (forces redundancy)
-- **Layer Norm** = Keep everything on the same scale
-- **Weight Decay** = Prefer small weights (simpler models)
-- **Early Stopping** = Stop before memorizing
+Quick reference for Zaremba et al. (2014) and the regularization techniques we implement.
 
 ---
 
-## The Four Techniques
+## The Paper's Contribution (30 seconds)
 
-### 1. Dropout
+**Problem:** Dropout doesn't work with RNNs — it disrupts temporal memory.
+**Solution:** Apply dropout ONLY to non-recurrent (vertical) connections. Leave recurrent (horizontal) connections alone.
+**Result:** PTB perplexity 114.5 -> 78.4. Previous SOTA was 107.5.
+
+---
+
+## Where to Apply Dropout in an LSTM
 
 ```
-Forward:  out = (x * mask) / keep_prob    # Scale to maintain mean
-Backward: dx = (dout * mask)              # Gradient flows through active neurons
-
-Test time: NO dropout (use all neurons)
+Dropout ON:                     Dropout OFF:
+- Input embedding: D(x_t)      - Recurrent hidden state: h_{t-1}^l
+- Between layers: D(h_t^{l-1}) - Cell state: c_{t-1}^l
+- Before softmax: D(h_t^L)
 ```
 
-**Code:**
+Rule of thumb: if the connection goes **between layers** (vertical), apply dropout. If it goes **across time** (horizontal), don't.
+
+---
+
+## The Four Techniques (Paper + Our Additions)
+
+### 1. Dropout (From the paper)
+
 ```python
-def dropout_forward(x, keep_prob=0.8, training=True):
-    if not training:
-        return x, None
-    mask = np.random.binomial(1, keep_prob, x.shape) / keep_prob
-    return x * mask, mask
+# Forward (training only)
+mask = np.random.binomial(1, keep_prob, x.shape) / keep_prob
+out = x * mask
+
+# Forward (testing)
+out = x  # No change!
+
+# Backward
+dx = dout * mask
 ```
 
-### 2. Layer Normalization
+Key points:
+- Scale by `1/keep_prob` during training (inverted dropout)
+- NEVER apply at test time
+- For RNNs: only on non-recurrent connections
 
-```
-Forward:  μ = mean(x)
-          σ² = var(x)
-          x̂ = (x - μ) / sqrt(σ² + ε)
-          out = γ * x̂ + β
+### 2. Layer Normalization (Our addition — Ba et al. 2016)
 
-Backward: Complex chain rule (see implementation.py)
-```
-
-**Code:**
 ```python
-def layer_norm(x, gamma, beta, eps=1e-5):
-    mean = np.mean(x, axis=-1, keepdims=True)
-    var = np.var(x, axis=-1, keepdims=True)
-    x_hat = (x - mean) / np.sqrt(var + eps)
-    return gamma * x_hat + beta
+mean = np.mean(x, axis=-1, keepdims=True)
+var = np.var(x, axis=-1, keepdims=True)
+x_hat = (x - mean) / np.sqrt(var + eps)
+out = gamma * x_hat + beta
 ```
 
-### 3. Weight Decay (L2 Regularization)
+Normalizes per-sample (not per-batch), works with any batch size.
 
-```
-Loss = ModelLoss + (λ/2) * Σ(w²)
-Gradient: dW += λ * W
-```
+### 3. Weight Decay / L2 (Our addition)
 
-**Code:**
 ```python
-def l2_penalty(weights, weight_decay):
-    return 0.5 * weight_decay * sum(np.sum(w**2) for w in weights)
-
-total_loss = model_loss + l2_penalty(weights, 0.0001)
+L_total = L_model + (lambda/2) * sum(w**2)
+# Gradient: dW += lambda * W
 ```
 
-### 4. Early Stopping
+Penalizes large weights, encourages simpler models.
 
-```
+### 4. Early Stopping (Our addition)
+
+```python
 if val_loss < best_val_loss:
     best_val_loss = val_loss
     counter = 0
@@ -82,169 +79,96 @@ else:
         STOP and load best model
 ```
 
-**Code:**
+---
+
+## Paper's Hyperparameters
+
+### Medium PTB Model
 ```python
-class EarlyStopping:
-    def __init__(self, patience=5):
-        self.patience = patience
-        self.best_loss = float('inf')
-        self.counter = 0
-    
-    def check(self, val_loss):
-        if val_loss < self.best_loss:
-            self.best_loss = val_loss
-            self.counter = 0
-            return True  # Continue
-        self.counter += 1
-        return self.counter < self.patience
+layers = 2
+hidden = 650
+dropout = 0.5         # 50% dropout
+lr = 1.0              # SGD
+lr_decay = 1/1.2      # After epoch 6
+grad_clip = 5
+bptt = 35
+batch_size = 20
+epochs = 39
 ```
+
+### Large PTB Model
+```python
+layers = 2
+hidden = 1500
+dropout = 0.65        # 65% dropout
+lr = 1.0
+lr_decay = 1/1.15     # After epoch 14
+grad_clip = 10
+bptt = 35
+batch_size = 20
+epochs = 55
+```
+
+### Machine Translation
+```python
+layers = 4
+hidden = 1000
+dropout = 0.2         # Much less — more training data
+```
+
+---
+
+## Hyperparameter Guide (Our Recommendations)
+
+| Parameter | Typical Range | Notes |
+|-----------|--------------|-------|
+| `keep_prob` | 0.5-0.9 | Paper uses 0.35-0.8 depending on model/task size |
+| `weight_decay` | 0.00001-0.01 | Not in the paper; standard practice |
+| `patience` | 3-10 | Not in the paper; standard practice |
+| `grad_clip` | 5-10 | Paper uses 5 (medium) and 10 (large) |
+
+### Starting Point
+```python
+keep_prob = 0.8        # Conservative — increase dropout if overfitting
+weight_decay = 0.0001  # Light L2 penalty
+patience = 5           # Early stopping
+grad_clip = 5.0        # From the paper
+```
+
+---
+
+## Common Issues
+
+### Still Overfitting (val loss >> train loss)
+- More aggressive dropout: `keep_prob = 0.5`
+- Add weight decay: `weight_decay = 0.001`
+- Reduce patience: `patience = 3`
+
+### Underfitting (both losses stay high)
+- Less dropout: `keep_prob = 0.9`
+- Less weight decay: `weight_decay = 0.00001`
+- More patience: `patience = 10`
+
+### NaN Loss
+- Add gradient clipping: `np.clip(grad, -5, 5)`
+- Check learning rate (may be too high)
+- Add layer normalization
 
 ---
 
 ## Quick Start
 
-### Training with Regularization
 ```bash
-python train_minimal.py --dropout 0.2 --weight-decay 0.0001 --patience 5
-```
+# Train with default regularization
+python train_minimal.py --dropout 0.8 --weight-decay 0.0001 --patience 5
 
-### In Python
-```python
-from implementation import RegularizedLSTM, EarlyStoppingMonitor
-
-# Create model with dropout and layer norm
-model = RegularizedLSTM(
-    vocab_size=vocab_size,
-    hidden_size=128,
-    dropout_keep_prob=0.8,
-    use_layer_norm=True
-)
-
-# Training loop with early stopping
-monitor = EarlyStoppingMonitor(patience=5)
-for epoch in range(100):
-    train_loss = train_epoch(model, train_data, weight_decay=0.0001)
-    val_loss = validate(model, val_data)
-    
-    if not monitor.check(val_loss, epoch):
-        print(f"Stopping at epoch {epoch}")
-        break
+# More aggressive
+python train_minimal.py --dropout 0.5 --weight-decay 0.001 --patience 3
 ```
 
 ---
 
-## Hyperparameter Guide
-
-| Parameter | Typical Range | Description | Too Low | Too High |
-|-----------|--------------|-------------|---------|----------|
-| `keep_prob` | 0.5-0.9 | Dropout keep probability | Too much dropout | No regularization |
-| `weight_decay` | 0.00001-0.01 | L2 penalty coefficient | No regularization | Weights can't grow |
-| `patience` | 3-10 | Early stopping patience | Stops too early | Trains too long |
-| `eps` | 1e-5 | Layer norm epsilon | Numerical issues | (rarely a problem) |
-
-### Good Starting Point
-```python
-keep_prob = 0.8        # 20% dropout
-weight_decay = 0.0001  # Light L2
-patience = 5           # Wait 5 epochs
-use_layer_norm = True  # Always for RNNs
-```
-
----
-
-## Common Issues & Fixes
-
-### 1. Still Overfitting
-**Symptom**: Val loss >> train loss
-
-**Fixes:**
-```python
-# More aggressive dropout
-keep_prob = 0.5  # 50% dropout
-
-# Stronger weight decay
-weight_decay = 0.001
-
-# More impatient early stopping
-patience = 3
-```
-
-### 2. Underfitting
-**Symptom**: Both losses stay high
-
-**Fixes:**
-```python
-# Less dropout
-keep_prob = 0.9
-
-# Less weight decay
-weight_decay = 0.00001
-
-# More patience
-patience = 10
-```
-
-### 3. Training Unstable (NaN loss)
-**Symptom**: Loss explodes to NaN
-
-**Fixes:**
-```python
-# Add layer normalization
-use_layer_norm = True
-
-# Also try gradient clipping
-np.clip(gradient, -5, 5)
-```
-
-### 4. Slow Convergence
-**Symptom**: Takes forever to train
-
-**Fixes:**
-```python
-# Layer norm often speeds things up
-use_layer_norm = True
-
-# Maybe reduce regularization
-keep_prob = 0.9
-```
-
----
-
-## Diagnosing Overfitting
-
-### The Gap Rule
-```
-Gap = train_loss - val_loss
-
-Gap < 0.1:  Great! Keep going
-Gap > 0.5:  Warning, starting to overfit
-Gap > 1.0:  Overfitting! Increase regularization
-```
-
-### Training Curves
-
-**Healthy:**
-```
-      ↑loss
-      │
-train │ ──────────____
-val   │ ──────────────
-      └──────────────→ epochs
-```
-
-**Overfitting:**
-```
-      ↑loss
-      │          ↗ val going UP
-val   │ ────────/
-train │ ──────────────→ train still DOWN
-      └──────────────→ epochs
-              ↑ STOP HERE!
-```
-
----
-
-## Formulas Quick Reference
+## Formulas
 
 ### Dropout
 $$y = \frac{x \odot m}{p}, \quad m_i \sim \text{Bernoulli}(p)$$
@@ -255,45 +179,17 @@ $$\hat{x} = \frac{x - \mu}{\sqrt{\sigma^2 + \epsilon}}, \quad y = \gamma \hat{x}
 ### Weight Decay
 $$\mathcal{L} = \mathcal{L}_{\text{task}} + \frac{\lambda}{2} \|W\|_2^2$$
 
-### Early Stopping
-$$\text{stop if } \text{val\_loss}_t > \text{best\_val\_loss} \text{ for } n \text{ consecutive epochs}$$
-
----
-
-## Recommended Settings by Scenario
-
-### Small Dataset (<10K samples)
-```python
-keep_prob = 0.5
-weight_decay = 0.001
-patience = 3
-```
-
-### Medium Dataset (10K-100K)
-```python
-keep_prob = 0.7
-weight_decay = 0.0001
-patience = 5
-```
-
-### Large Dataset (>100K)
-```python
-keep_prob = 0.9
-weight_decay = 0.00001
-patience = 10
-```
-
 ---
 
 ## Debugging Checklist
 
-- [ ] Are you applying dropout at test time? (Should NOT!)
-- [ ] Is dropout scaled by 1/keep_prob? (Should be!)
-- [ ] Is layer norm on the right axis? (axis=-1 usually)
-- [ ] Is weight decay applied only to weights? (Not biases!)
-- [ ] Are you saving the BEST model? (Not the last!)
-- [ ] Is training/validation mode set correctly?
+- [ ] Dropout OFF during evaluation? (Must be!)
+- [ ] Dropout scaled by 1/keep_prob? (Inverted dropout)
+- [ ] Dropout only on non-recurrent connections? (Paper's key insight)
+- [ ] Weight decay applied to weights only, not biases?
+- [ ] Saving best model, not just the last one?
+- [ ] Gradient clipping enabled?
 
 ---
 
-*For detailed explanations, see [README.md](README.md). For math derivations, see [paper_notes.md](paper_notes.md).*
+*For paper details, see [paper_notes.md](paper_notes.md). For implementation guide, see [README.md](README.md).*
