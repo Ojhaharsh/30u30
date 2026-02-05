@@ -4,7 +4,7 @@ This folder contains complete, working solutions to all exercises.
 
 ## How to Use These Solutions
 
-### ⚠️ Try First, Then Look
+### Try First, Then Look
 
 **The best way to learn:**
 1. Read the exercise description
@@ -13,7 +13,7 @@ This folder contains complete, working solutions to all exercises.
 4. Still stuck? Check hints in the exercise README
 5. **Only then** look at the solution
 
-### 📖 Learn from Solutions
+### Learn from Solutions
 
 When you do look at solutions:
 - Don't just copy-paste
@@ -21,7 +21,7 @@ When you do look at solutions:
 - Compare with your approach
 - Note differences in style/efficiency
 
-### ✅ Verify Your Solution
+### Verify Your Solution
 
 If you solved it differently, that's great! There are many ways to solve problems.
 
@@ -31,7 +31,7 @@ python your_solution.py
 python solutions/exercise_01_solution.py
 ```
 
-### 💡 Going Beyond
+### Going Beyond
 
 Use solutions as a starting point:
 - Can you make it faster?
@@ -51,4 +51,4 @@ Use solutions as a starting point:
 
 ---
 
-**Remember:** The struggle is part of the learning. Solutions are here when you need them, but the real growth happens when you're stuck and figure it out! 🚀
+**Remember:** The struggle is part of the learning. Solutions are here when you need them, but the real growth happens when you're stuck and figure it out!
