@@ -25,9 +25,9 @@ def check_python_version():
     print("Checking Python version...")
     version = sys.version_info
     if version.major < 3 or (version.major == 3 and version.minor < 7):
-        print(f"❌ Python 3.7+ required. You have {version.major}.{version.minor}")
+        print(f"FAIL: Python 3.7+ required. You have {version.major}.{version.minor}")
         return False
-    print(f"✅ Python {version.major}.{version.minor}.{version.micro}")
+    print(f"OK: Python {version.major}.{version.minor}.{version.micro}")
     return True
 
 
@@ -38,10 +38,10 @@ def install_requirements():
         subprocess.check_call([
             sys.executable, "-m", "pip", "install", "-r", "requirements.txt"
         ])
-        print("✅ Requirements installed")
+        print("OK: Requirements installed")
         return True
     except subprocess.CalledProcessError:
-        print("❌ Failed to install requirements")
+        print("FAIL: Failed to install requirements")
         return False
 
 
@@ -54,9 +54,9 @@ def verify_imports():
     for package in required:
         try:
             __import__(package)
-            print(f"✅ {package}")
+            print(f"OK: {package}")
         except ImportError:
-            print(f"❌ {package} - failed to import")
+            print(f"FAIL: {package} - failed to import")
             all_ok = False
     
     return all_ok
@@ -81,14 +81,14 @@ def run_quick_test():
         loss = lstm.forward(inputs, targets, h, C)
         
         if loss > 0:
-            print(f"✅ LSTM test passed (loss: {loss:.4f})")
+            print(f"OK: LSTM test passed (loss: {loss:.4f})")
             return True
         else:
-            print("❌ LSTM test failed")
+            print("FAIL: LSTM test failed")
             return False
             
     except Exception as e:
-        print(f"❌ LSTM test failed: {e}")
+        print(f"FAIL: LSTM test failed: {e}")
         return False
 
 
@@ -104,23 +104,23 @@ def main():
     
     # Install requirements
     if not install_requirements():
-        print("\n⚠️ Installation failed. Try manually:")
+        print("\nInstallation failed. Try manually:")
         print("    pip install -r requirements.txt")
         sys.exit(1)
     
     # Verify imports
     if not verify_imports():
-        print("\n⚠️ Some packages failed to import")
+        print("\nSome packages failed to import")
         sys.exit(1)
     
     # Run test
     if not run_quick_test():
-        print("\n⚠️ Test failed. Check implementation.py")
+        print("\nTest failed. Check implementation.py")
         sys.exit(1)
     
     # Success!
     print("\n" + "=" * 60)
-    print("✅ Setup complete!")
+    print("Setup complete.")
     print("=" * 60)
     print("\nNext steps:")
     print("  1. Read README.md for overview")
@@ -128,7 +128,6 @@ def main():
     print("  3. Try: python train_minimal.py --data data/input.txt")
     print("  4. Open notebook.ipynb in Jupyter")
     print("  5. Try exercises in exercises/ folder")
-    print("\nHappy learning! 🚀")
 
 
 if __name__ == "__main__":
