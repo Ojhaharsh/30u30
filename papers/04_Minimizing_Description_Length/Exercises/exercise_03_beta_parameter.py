@@ -17,7 +17,7 @@ Learning Objectives:
 4. How to find the optimal balance
 
 Time: 30-40 minutes
-Difficulty: Medium ⏱️⏱️
+Difficulty: Medium
 """
 
 import numpy as np
@@ -194,7 +194,7 @@ def study_kl_weights():
     print("  Saved to: beta_study.png")
     plt.close()
     
-    print("\n✓ Beta study completed!")
+    print("\n[ok] Beta study completed.")
     print("\nKey insights:")
     print("  - Low β: Model overfits (low MSE but bad uncertainty)")
     print("  - High β: Model underfits (high MSE but better calibration)")

@@ -17,7 +17,7 @@ Learning Objectives:
 4. Why Bayesian = better generalization
 
 Time: 25-35 minutes
-Difficulty: Hard ⏱️⏱️⏱️
+Difficulty: Hard
 """
 
 import numpy as np
@@ -151,7 +151,7 @@ def train_bayesian_model_on_gaps():
     print("  Saved to: gap_experiment.png")
     plt.close()
     
-    print("\n✓ Gap experiment completed!")
+    print("\n[ok] Gap experiment completed.")
     print("\nKey observation:")
     print("  - Uncertainty is HIGH in gap regions (good!)")
     print("  - Uncertainty is LOW where data exists (good!)")
