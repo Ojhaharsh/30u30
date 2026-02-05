@@ -112,7 +112,7 @@ def analyze_gate_patterns(activations, text):
     if corr_fi < -0.3:
         print("  ✓ Good! Gates are complementary (forget old when inputting new)")
     else:
-        print("  ⚠ Unexpected: Gates should be more anti-correlated")
+        print("  Unexpected: Gates should be more anti-correlated")
     
     # Input vs Output
     corr_io = np.corrcoef(input_gate, output)[0, 1]
