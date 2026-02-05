@@ -4,7 +4,7 @@
 
 ---
 
-## Exercise 1: Build LSTM from Scratch ⏱️⏱️⏱️
+## Exercise 1: Build LSTM from Scratch
 **Difficulty**: Hard  
 **Time**: 2-3 hours  
 **File**: `exercise_01_build_lstm.py`
@@ -42,7 +42,7 @@ Implement a complete LSTM cell from scratch in NumPy, including all 4 gates and 
 
 ---
 
-## Exercise 2: Gate Activation Analysis ⏱️⏱️
+## Exercise 2: Gate Activation Analysis
 **Difficulty**: Medium  
 **Time**: 1-2 hours  
 **File**: `exercise_02_gate_analysis.py`
@@ -80,7 +80,7 @@ Train an LSTM on a text dataset and analyze what each gate learns to do.
 
 ---
 
-## Exercise 3: Ablation Study ⏱️⏱️
+## Exercise 3: Ablation Study
 **Difficulty**: Medium  
 **Time**: 1-2 hours  
 **File**: `exercise_03_ablation_study.py`
@@ -119,7 +119,7 @@ Remove each gate one at a time and measure the impact on performance. Understand
 
 ---
 
-## Exercise 4: Long-Range Dependencies ⏱️⏱️
+## Exercise 4: Long-Range Dependencies
 **Difficulty**: Medium  
 **Time**: 1-2 hours  
 **File**: `exercise_04_long_range_deps.py`
@@ -157,7 +157,7 @@ Test LSTM's ability to remember information over different distances.
 
 ---
 
-## Exercise 5: LSTM vs GRU Comparison ⏱️⏱️⏱️
+## Exercise 5: LSTM vs GRU Comparison
 **Difficulty**: Hard  
 **Time**: 2-3 hours  
 **File**: `exercise_05_lstm_vs_gru.py`
@@ -200,7 +200,7 @@ Implement a GRU (Gated Recurrent Unit) and compare it to LSTM.
 
 ---
 
-## Bonus Challenges 🌟
+## Bonus Challenges
 
 ### Challenge 1: Bidirectional LSTM
 Implement a bidirectional LSTM that processes sequences forward AND backward. Combine the outputs.
@@ -295,11 +295,11 @@ Day 2 README → Day 2 Paper Notes → Day 2 Implementation → Day 2 Notebook
                                                           Exercise 5
                                                        (LSTM vs GRU)
                                                                ↓
-                                                          Day 3! 🚀
+                                                          Day 3!
 ```
 
 ---
 
-Good luck! Remember: **understanding comes from building**. Don't just read the code - type it out, break it, fix it, and make it your own! 💪
+Good luck! Remember: **understanding comes from building**. Don't just read the code - type it out, break it, fix it, and make it your own.
 
 **Questions?** Open an issue or discussion on GitHub.

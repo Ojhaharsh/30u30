@@ -4,9 +4,9 @@ Complete, well-commented solutions for all 5 exercises.
 
 ---
 
-## 📚 How to Use These Solutions
+## How to Use These Solutions
 
-### ⚠️ Try First, Check Later!
+### Try First, Check Later!
 
 These solutions are here to help you **learn**, not to copy-paste. Here's the recommended approach:
 
@@ -15,13 +15,13 @@ These solutions are here to help you **learn**, not to copy-paste. Here's the re
 3. **Still stuck?** Look at just the function you need help with
 4. **Compare your solution** with ours after completing the exercise
 
-**Remember:** Struggling is part of learning! 💪
+**Remember:** Struggling is part of learning.
 
 ---
 
-## 🗂️ Solutions Index
+## Solutions Index
 
-### Exercise 1: Build LSTM from Scratch ⏱️⏱️⏱️
+### Exercise 1: Build LSTM from Scratch
 **File:** `solution_01_lstm_implementation.py`  
 **Difficulty:** Hard  
 **What's included:**
@@ -42,7 +42,7 @@ These solutions are here to help you **learn**, not to copy-paste. Here's the re
 
 ---
 
-### Exercise 2: Gate Activation Analysis ⏱️⏱️
+### Exercise 2: Gate Activation Analysis
 **File:** `exercise_02_solution.py`  
 **Difficulty:** Medium  
 **What's included:**
@@ -62,7 +62,7 @@ These solutions are here to help you **learn**, not to copy-paste. Here's the re
 
 ---
 
-### Exercise 3: Ablation Study ⏱️⏱️
+### Exercise 3: Ablation Study
 **File:** `exercise_03_solution.py`  
 **Difficulty:** Medium  
 **What's included:**
@@ -85,7 +85,7 @@ These solutions are here to help you **learn**, not to copy-paste. Here's the re
 
 ---
 
-### Exercise 4: Long-Range Dependencies ⏱️⏱️
+### Exercise 4: Long-Range Dependencies
 **File:** `exercise_04_solution.py`  
 **Difficulty:** Medium  
 **What's included:**
@@ -108,7 +108,7 @@ These solutions are here to help you **learn**, not to copy-paste. Here's the re
 
 ---
 
-### Exercise 5: LSTM vs GRU Comparison ⏱️⏱️⏱️
+### Exercise 5: LSTM vs GRU Comparison
 **File:** `exercise_05_solution.py`  
 **Difficulty:** Hard  
 **What's included:**
@@ -130,21 +130,21 @@ These solutions are here to help you **learn**, not to copy-paste. Here's the re
 
 ---
 
-## 💡 Solution Features
+## Solution Features
 
 All solutions include:
 
-- ✅ **Detailed comments** explaining every step
-- ✅ **Type hints** in docstrings
-- ✅ **Error handling** for edge cases
-- ✅ **Test functions** to verify correctness
-- ✅ **Print statements** for debugging
-- ✅ **Clear variable names** (no single letters)
-- ✅ **Mathematical notation** in comments
+- **Detailed comments** explaining every step
+- **Type hints** in docstrings
+- **Error handling** for edge cases
+- **Test functions** to verify correctness
+- **Print statements** for debugging
+- **Clear variable names** (no single letters)
+- **Mathematical notation** in comments
 
 ---
 
-## 🎯 Learning Tips
+## Learning Tips
 
 ### If You're Comparing Your Solution
 
@@ -158,16 +158,16 @@ Look for these aspects:
 
 ### Common Mistakes to Check
 
-- ❌ Forget gate bias not initialized to 1
-- ❌ Mixing up cell state (C) and hidden state (h)
-- ❌ Not clipping gradients (causes explosion)
-- ❌ Using wrong activation (sigmoid vs tanh)
-- ❌ Shape mismatches in matrix operations
-- ❌ Not detaching states between sequences
+- Forget gate bias not initialized to 1
+- Mixing up cell state (C) and hidden state (h)
+- Not clipping gradients (causes explosion)
+- Using wrong activation (sigmoid vs tanh)
+- Shape mismatches in matrix operations
+- Not detaching states between sequences
 
 ---
 
-## 📊 Comparison with Your Implementation
+## Comparison with Your Implementation
 
 ### Use this checklist:
 
@@ -181,7 +181,7 @@ Look for these aspects:
 
 ---
 
-## 🚀 Going Further
+## Going Further
 
 After completing the exercises, try:
 
@@ -193,16 +193,16 @@ After completing the exercises, try:
 
 ---
 
-## 📖 Additional Resources
+## Additional Resources
 
 - **Original paper:** Hochreiter & Schmidhuber (1997)
-- **Colah's blog:** "Understanding LSTM Networks" (amazing visualizations!)
+- **Colah's blog:** "Understanding LSTM Networks" (well-known visualizations)
 - **Day 2 README:** Complete LSTM explanation
 - **Day 2 notebook:** Interactive walkthrough
 
 ---
 
-## ❓ Need Help?
+## Need Help?
 
 If you're stuck after reviewing the solution:
 
@@ -214,34 +214,34 @@ If you're stuck after reviewing the solution:
 
 ---
 
-## ✅ Solution Status
+## Solution Status
 
 | Exercise | Solution Available | Verified | Study Time |
 |----------|-------------------|----------|------------|
-| 1. Build LSTM | ✅ Available | ✅ Tested | 1-2 hours |
-| 2. Gate Analysis | ✅ Available | ✅ Tested | 1-2 hours |
-| 3. Ablation Study | ✅ Available | ✅ Tested | 2-3 hours |
-| 4. Long-Range Deps | ✅ Available | ✅ Tested | 2-3 hours |
-| 5. LSTM vs GRU | ✅ Available | ✅ Tested | 3-4 hours |
+| 1. Build LSTM | Available | Tested | 1-2 hours |
+| 2. Gate Analysis | Available | Tested | 1-2 hours |
+| 3. Ablation Study | Available | Tested | 2-3 hours |
+| 4. Long-Range Deps | Available | Tested | 2-3 hours |
+| 5. LSTM vs GRU | Available | Tested | 3-4 hours |
 
 **Total:** All 5 solutions are complete and ready for study!
 
 ---
 
-## 🎓 Certificate of Completion
+## Completion Checklist
 
-Once you've completed all 5 exercises, you'll have:
+Once you've completed all 5 exercises, you will have:
 
-- ✅ Built an LSTM from scratch with all 4 gates
-- ✅ Analyzed gate behavior and activation patterns
-- ✅ Tested component importance via ablation study
-- ✅ Measured memory capacity with synthetic tasks
-- ✅ Compared LSTM with GRU architectures
-- ✅ Understood mathematical foundations deeply
-- ✅ Debugged common training issues
-- ✅ Visualized internal states and gradients
+- Built an LSTM from scratch with all 4 gates
+- Analyzed gate behavior and activation patterns
+- Tested component importance via ablation study
+- Measured memory capacity with synthetic tasks
+- Compared LSTM with GRU architectures
+- Understood mathematical foundations deeply
+- Debugged common training issues
+- Visualized internal states and gradients
 
-**Congrats!** You now understand LSTMs at a fundamental level. You're ready for Day 3! 🚀
+You're ready for Day 3.
 
 ---
 
