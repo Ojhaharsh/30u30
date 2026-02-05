@@ -3,13 +3,13 @@
 Learn by building! These exercises progress from simple to challenging.
 
 **Time estimates:** 
-- ⏱️ Quick (15-30 min)
-- ⏱️⏱️ Medium (30-60 min)  
-- ⏱️⏱️⏱️ Project (1-3 hours)
+- Quick (15-30 min)
+- Medium (30-60 min)  
+- Project (1-3 hours)
 
 ---
 
-## Exercise 1: Build RNN from Scratch ⏱️⏱️⏱️
+## Exercise 1: Build RNN from Scratch [Project]
 
 **Goal:** Implement a character-level RNN using only NumPy. Understand every line.
 
@@ -55,15 +55,15 @@ Learn by building! These exercises progress from simple to challenging.
 - Use gradient clipping: `np.clip(grad, -5, 5)`
 
 **Success criteria:**
-- ✅ Loss decreases over time
-- ✅ Model generates recognizable patterns
-- ✅ You can explain each line of code
+- Loss decreases over time
+- Model generates recognizable patterns
+- You can explain each line of code
 
 **Solution:** `solutions/exercise_01_solution.py`
 
 ---
 
-## Exercise 2: Temperature Sampling ⏱️
+## Exercise 2: Temperature Sampling [Quick]
 
 **Goal:** Understand how temperature affects text generation.
 
@@ -110,7 +110,7 @@ Learn by building! These exercises progress from simple to challenging.
 
 ---
 
-## Exercise 3: Your Own Dataset ⏱️⏱️
+## Exercise 3: Your Own Dataset [Medium]
 
 **Goal:** Train on your own text and analyze what the model learns.
 
@@ -150,11 +150,11 @@ Learn by building! These exercises progress from simple to challenging.
    - Sequence length: 10, 25, 50
 
 **Fun datasets to try:**
-- 📚 **Books**: Shakespeare, Hemingway, Harry Potter
-- 💻 **Code**: Your GitHub repos, Linux kernel, React source
-- 🎵 **Lyrics**: Taylor Swift, Beatles, Hamilton
-- 📱 **Social media**: Your Twitter archive
-- 📰 **News**: News articles, Wikipedia
+- **Books**: Shakespeare, Hemingway, Harry Potter
+- **Code**: Your GitHub repos, Linux kernel, React source
+- **Lyrics**: Taylor Swift, Beatles, Hamilton
+- **Social media**: Your Twitter archive
+- **News**: News articles, Wikipedia
 
 **Deliverable:**
 - Trained model
@@ -166,7 +166,7 @@ Learn by building! These exercises progress from simple to challenging.
 
 ---
 
-## Exercise 4: Loss Visualization ⏱️
+## Exercise 4: Loss Visualization [Quick]
 
 **Goal:** Visualize training dynamics and identify problems.
 
@@ -234,7 +234,7 @@ Train loss ↓, Val loss ↑
 
 ---
 
-## Exercise 5: Shakespeare vs Hemingway Classifier ⏱️⏱️⏱️
+## Exercise 5: Shakespeare vs Hemingway Classifier [Project]
 
 **Goal:** Train two models and build a classifier to distinguish them.
 
@@ -291,9 +291,9 @@ accuracy = clf.score(test_features, test_labels)
 ```
 
 **Bonus challenges:**
-- 🌟 Add more authors (3-way classification)
-- 🌟 Use only vocabulary (no RNN features)
-- 🌟 Build a "style transfer" system
+- Add more authors (3-way classification)
+- Use only vocabulary (no RNN features)
+- Build a "style transfer" system
 
 **Deliverable:**
 - Two trained models
@@ -305,7 +305,7 @@ accuracy = clf.score(test_features, test_labels)
 
 ---
 
-## Bonus Exercise: Gradient Visualization ⏱️⏱️
+## Bonus Exercise: Gradient Visualization [Medium]
 
 **Goal:** Visualize how gradients flow through time.
 
@@ -351,20 +351,20 @@ accuracy = clf.score(test_features, test_labels)
 
 ## Common Pitfalls
 
-❌ **Forgetting to reset hidden state** between epochs  
-✅ Set `h = np.zeros(...)` at start of each epoch
+**Forgetting to reset hidden state** between epochs  
+Fix: Set `h = np.zeros(...)` at start of each epoch
 
-❌ **Not clipping gradients** → explosion  
-✅ Always use `np.clip(grad, -5, 5)`
+**Not clipping gradients** leads to explosion  
+Fix: Always use `np.clip(grad, -5, 5)`
 
-❌ **Wrong matrix dimensions**  
-✅ Print shapes: `print(W.shape, x.shape)`
+**Wrong matrix dimensions**  
+Fix: Print shapes: `print(W.shape, x.shape)`
 
-❌ **Dividing by zero in softmax**  
-✅ Add small epsilon: `p = exp(x) / (sum(exp(x)) + 1e-8)`
+**Dividing by zero in softmax**  
+Fix: Add small epsilon: `p = exp(x) / (sum(exp(x)) + 1e-8)`
 
-❌ **Learning rate too high** → oscillation  
-✅ Start with 0.01, increase gradually
+**Learning rate too high** causes oscillation  
+Fix: Start with 0.01, increase gradually
 
 ---
 
