@@ -177,7 +177,7 @@ def test_dropout_basic():
     # Inference mode
     y_test = dropout.forward(x, training=False)
     assert np.allclose(y_test, x), "Inference should return unchanged input"
-    print("  Inference: No dropout applied ✓")
+    print("  Inference: No dropout applied [ok]")
     
     # Test expected value
     np.random.seed(None)
@@ -191,7 +191,7 @@ def test_dropout_basic():
     print(f"  Expected sum: {expected_sum}, Actual mean: {actual_mean:.1f}")
     assert abs(actual_mean - expected_sum) / expected_sum < 0.1, "Scaling incorrect"
     
-    print("✓ Basic dropout tests passed!\n")
+    print("[ok] Basic dropout tests passed!\n")
 
 
 def test_rnn_dropout():
@@ -206,15 +206,15 @@ def test_rnn_dropout():
     # Training mode
     out_train, _ = rnn.forward(seq, training=True)
     assert out_train.shape == (2, 3), f"Wrong shape: {out_train.shape}"
-    print(f"  Training output shape: {out_train.shape} ✓")
+    print(f"  Training output shape: {out_train.shape} [ok]")
     
     # Inference mode - should be deterministic
     out1, _ = rnn.forward(seq, training=False)
     out2, _ = rnn.forward(seq, training=False)
     assert np.allclose(out1, out2), "Inference should be deterministic"
-    print("  Inference is deterministic ✓")
+    print("  Inference is deterministic [ok]")
     
-    print("✓ RNN dropout tests passed!\n")
+    print("[ok] RNN dropout tests passed!\n")
 
 
 if __name__ == "__main__":
@@ -225,4 +225,4 @@ if __name__ == "__main__":
     test_dropout_basic()
     test_rnn_dropout()
     
-    print("🎉 All tests passed!")
+    print("All tests passed!")

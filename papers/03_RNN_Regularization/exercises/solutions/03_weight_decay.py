@@ -171,7 +171,7 @@ def demonstrate_weight_decay_effect():
         W_strong = W_strong - learning_rate * dW_total
     print(f"After 100 steps (decay=0.1): {np.linalg.norm(W_strong):.4f}")
     
-    print("\n✓ Weight decay keeps weights smaller!")
+    print("\n[ok] Weight decay keeps weights smaller!")
 
 
 def test_compute_l2_penalty():
@@ -183,7 +183,7 @@ def test_compute_l2_penalty():
     penalty = compute_l2_penalty([W1], weight_decay=0.1)
     expected = 0.1 / 2 * 30  # = 1.5
     assert abs(penalty - expected) < 1e-6
-    print(f"  ✓ Simple case: {penalty}")
+    print(f"  [ok] Simple case: {penalty}")
     
     # Test 2: Multiple matrices
     W1 = np.ones((2, 2))  # Sum = 4
@@ -191,14 +191,14 @@ def test_compute_l2_penalty():
     penalty = compute_l2_penalty([W1, W2], weight_decay=0.01)
     expected = 0.01 / 2 * 13
     assert abs(penalty - expected) < 1e-6
-    print(f"  ✓ Multiple matrices: {penalty}")
+    print(f"  [ok] Multiple matrices: {penalty}")
     
     # Test 3: Zero decay
     penalty = compute_l2_penalty([np.random.randn(10, 10)], weight_decay=0.0)
     assert penalty == 0.0
-    print("  ✓ Zero weight decay")
+    print("  [ok] Zero weight decay")
     
-    print("✓ All penalty tests passed!")
+    print("[ok] All penalty tests passed!")
 
 
 def test_gradients():
@@ -212,16 +212,16 @@ def test_gradients():
     dW_reg = compute_l2_gradient(W, weight_decay)
     expected = 0.1 * W
     assert np.allclose(dW_reg, expected)
-    print("  ✓ L2 gradient correct")
+    print("  [ok] L2 gradient correct")
     
     # Test gradient addition
     dW = np.array([[0.1, 0.2], [0.3, 0.4]])
     dW_total = apply_weight_decay_to_gradient(dW, W, weight_decay)
     expected = dW + weight_decay * W
     assert np.allclose(dW_total, expected)
-    print("  ✓ Gradient augmentation correct")
+    print("  [ok] Gradient augmentation correct")
     
-    print("✓ All gradient tests passed!")
+    print("[ok] All gradient tests passed!")
 
 
 if __name__ == "__main__":
@@ -233,4 +233,4 @@ if __name__ == "__main__":
     test_compute_l2_penalty()
     test_gradients()
     
-    print("\n🎉 All tests passed!")
+    print("\nAll tests passed!")
