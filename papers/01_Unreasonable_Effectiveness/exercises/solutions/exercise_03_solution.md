@@ -154,11 +154,11 @@ Deny thy father and refuse thy name.
 ```
 
 **Analysis**:
-- ✅ Captures dialogue format
-- ✅ Elizabethan vocabulary
-- ✅ Poetic rhythm (sometimes)
-- ❌ Doesn't maintain character consistency
-- ❌ Invented lines (not from original)
+- Captures dialogue format
+- Elizabethan vocabulary
+- Poetic rhythm (sometimes)
+- Doesn't maintain character consistency
+- Invented lines (not from original)
 
 ### Python Code Model
 Generated sample (after 150 epochs, T=0.6):
@@ -175,12 +175,12 @@ def train_model(data, hidden_size=128):
 ```
 
 **Analysis**:
-- ✅ Valid Python syntax
-- ✅ Proper indentation
-- ✅ Realistic function names
-- ✅ Docstring format
-- ❌ Logic doesn't make sense
-- ❌ Missing important details
+- Valid Python syntax
+- Proper indentation
+- Realistic function names
+- Docstring format
+- Logic doesn't make sense
+- Missing important details
 
 ---
 
