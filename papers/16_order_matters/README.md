@@ -1,6 +1,6 @@
 # Day 16: Order Matters: Sequence to Sequence for Sets
 
-> Vinyals, Bengio, Kudlur (2015) — [Original Paper](https://arxiv.org/abs/1511.06391)
+> Vinyals, Bengio, Kudlur (2015) - [Original Paper](https://arxiv.org/abs/1511.06391)
 
 **Time:** 4-5 hours  
 **Prerequisites:** PyTorch, LSTM intuition, Linear Algebra, Attention mechanisms  
@@ -54,11 +54,49 @@ TSP is an NP-Hard combinatorial optimization problem. The Pointer Network learns
 
 ---
 
+## The Architecture
+
+### 1. READ (Order-Invariant Encoder)
+Each element $x_i$ is embedded and passed through a Self-Attention layer (Section 3). Since no positional signals are added, the final hidden state of the set is identical regardless of input order.
+- **Self-Attention**: Allows every element to communicate with every other element.
+- **No Positional Encodings**: This is the crucial difference from Transformers for sets.
+
+### 2. PROCESS (Search Mechanism)
+An LSTM performs $r$ "thought steps" (Section 3) before writing. In each step, it attends to the encoded set to update its own internal state.
+- **r steps**: Let's the model "search" or "reason" about the set.
+- **Query**: The LSTM's hidden state $q_t$.
+- **Key/Value**: The encoded input elements.
+
+### 3. WRITE (Pointer Network Decoder)
+The decoder is an LSTM that generates indices by selecting from input positions (Section 3.1):
+
+```
+u_i^t = v^T * tanh(W_1 * e_i + W_2 * d_t)
+p(y_t | y_1, ..., y_{t-1}, X) = softmax(u^t)
+```
+
+**Variables & Dimensions:**
+- `e_i` (hidden): The $i$-th encoded input element (key).
+- `d_t` (hidden): The decoder's current hidden state (query).
+- `W_1`, `W_2`: Weight matrices for the pointer attention.
+- `v`: Weight vector to project to scalar scores.
+
+---
+
 ## Implementation Notes
 
-1. **Masking:** After the pointer selects an index, that index must be "masked" (set to $-\infty$ in the attention scores) in subsequent steps to prevent the model from picking the same item twice (sampling without replacement).
-2. **Numerical Stability:** In the attention calculation, use `log_softmax` instead of raw softmax to prevent gradient overflow.
-3. **Curriculum Learning:** The authors suggest training on smaller sets first (e.g., length 5) before moving to larger ones (length 20). This helps the model learn the "selection rule" without being overwhelmed by search complexity initially.
+When implementing Pointer Networks, pay attention to these details:
+
+- **Handling Sets**: If you add positional encodings to the READ phase, you break the permutation invariance. The model should produce the same output regardless of how you shuffle the input.
+- **Sampling Without Replacement**: Once an index is selected, it should be **masked** (set to `-1e9` before softmax) so the model doesn't pick it again.
+- **Variable Lengths**: Pointer Networks naturally handle variable input sizes because the "vocabulary" is just the input set.
+
+**Things that will bite you:**
+- **The "Delimiter" Token**: In some tasks (like copy), you need a special token to signal the start of decoding.
+- **Teacher Forcing**: Even with pointing, teacher forcing during training is still standard for sequence generation.
+- **Infinite Loops**: Without proper end-of-sequence logic (or a fixed output length), the model might point forever.
+- **Numerical Stability**: In the attention calculation, use `log_softmax` instead of raw softmax to prevent gradient overflow.
+- **Curriculum Learning**: The authors suggest training on smaller sets first (e.g., length 5) before moving to larger ones (length 20). This helps the model learn the "selection rule" without being overwhelmed by search complexity initially.
 
 ---
 
@@ -120,10 +158,10 @@ Solutions are in `exercises/solutions/`. Try to get stuck first.
 
 ## Further Reading
 
-- [Original Paper — Order Matters (arXiv:1511.06391)](https://arxiv.org/abs/1511.06391)
-- [Pointer Networks (Vinyals et al., 2015)](https://arxiv.org/abs/1506.03134) — the predecessor that introduced the pointer mechanism
-- [Set Transformer (Lee et al., 2019)](https://arxiv.org/abs/1810.00825) — a later approach to permutation-invariant set encoding
+- [Original Paper - Order Matters (arXiv:1511.06391)](https://arxiv.org/abs/1511.06391)
+- [Pointer Networks (Vinyals et al., 2015)](https://arxiv.org/abs/1506.03134) - the predecessor that introduced the pointer mechanism
+- [Set Transformer (Lee et al., 2019)](https://arxiv.org/abs/1810.00825) - a later approach to permutation-invariant set encoding
 
 ---
 
-**Next:** [Day 17 — Neural Turing Machines](../17_neural_turing_machines/)
+**Next:** [Day 17 - Neural Turing Machines](../17_neural_turing_machines/)
