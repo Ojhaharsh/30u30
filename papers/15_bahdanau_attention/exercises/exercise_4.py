@@ -1,7 +1,7 @@
 """
 Exercise 4: Train on a Toy Dataset
 
-Time to put it all together! We'll train on a simple task:
+Time to put it all together. We train on a simple task:
 reversing a sequence of numbers.
 
     Input:  [5, 3, 8, 2, 1]
@@ -311,9 +311,9 @@ def main():
     print(f"\nFinal Accuracy: {final_acc:.2%}")
     
     if final_acc > 0.9:
-        print("🎉 Success! Model achieves >90% accuracy!")
+        print("Success: Model achieves >90% accuracy.")
     else:
-        print("Keep training or tune hyperparameters!")
+        print("Accuracy below 90%. Adjust hyperparameters and retrain.")
     
     # Show some examples
     print("\nExamples:")

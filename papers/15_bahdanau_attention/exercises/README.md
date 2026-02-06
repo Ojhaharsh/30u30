@@ -1,25 +1,25 @@
 # Exercises: Build Bahdanau Attention from Scratch
 
-Welcome to the hands-on exercises! You'll build the complete attention mechanism
-piece by piece, just like the original authors did.
+These exercises walk you through building the complete attention mechanism
+piece by piece, following the structure of the original paper.
 
 ## Overview
 
 | Exercise | Topic | Difficulty | Time |
 |----------|-------|------------|------|
-| 1 | Additive Attention | ⭐⭐ | 30 min |
-| 2 | Bidirectional Encoder | ⭐⭐ | 25 min |
-| 3 | Attention Decoder | ⭐⭐⭐ | 40 min |
-| 4 | Training Loop | ⭐⭐ | 30 min |
-| 5 | Visualization | ⭐ | 20 min |
+| 1 | Additive Attention | 2/5 | 30 min |
+| 2 | Bidirectional Encoder | 2/5 | 25 min |
+| 3 | Attention Decoder | 3/5 | 40 min |
+| 4 | Training Loop | 2/5 | 30 min |
+| 5 | Visualization | 1/5 | 20 min |
 
 ## Exercise 1: Additive Attention
 
-**The core innovation!**
+**The Core Mechanism**
 
 Implement the attention scoring function:
 ```
-score(s, h) = v^T · tanh(W_s · s + W_h · h)
+score(s, h) = v^T * tanh(W_s * s + W_h * h)
 ```
 
 You'll learn:
@@ -29,11 +29,11 @@ You'll learn:
 
 ## Exercise 2: Bidirectional Encoder
 
-**See the future AND the past.**
+**Bidirectional Encoding**
 
 Build an encoder that processes the source sequence in both directions:
-- Forward: left → right
-- Backward: right → left
+- Forward: left -> right
+- Backward: right -> left
 
 You'll learn:
 - Why bidirectional context helps attention
@@ -42,7 +42,7 @@ You'll learn:
 
 ## Exercise 3: Attention Decoder
 
-**The decoder that knows where to look.**
+**Attention-Based Decoder**
 
 Implement a decoder that:
 1. Computes attention over encoder outputs
@@ -56,20 +56,20 @@ You'll learn:
 
 ## Exercise 4: Training Loop
 
-**Put it all together!**
+**Full Pipeline**
 
 Complete the training loop for the reversal task:
 - Loss computation with masking
 - Gradient clipping
 - Validation and accuracy calculation
 
-Goal: **Achieve >90% accuracy** on sequence reversal!
+Goal: **Achieve >90% accuracy** on sequence reversal.
 
 ## Exercise 5: Visualization
 
-**See what the model learned.**
+**Attention Visualization**
 
-Create beautiful attention heatmaps:
+Create attention heatmaps:
 - Visualize the reversed diagonal pattern
 - Analyze attention entropy
 - Debug model behavior visually
@@ -97,7 +97,7 @@ python exercise_4.py
 - **Read the docstrings** - They contain hints
 - **Use the tests** - They verify your implementation
 - **Check shapes** - Print tensor shapes when debugging
-- **Compare with solutions** - But try first!
+- **Compare with solutions** - But try first.
 
 ## Common Issues
 
@@ -115,5 +115,4 @@ python exercise_4.py
 - Try smaller learning rate
 - Check that loss ignores padding
 
-Good luck! The attention mechanism is one of the most important concepts
-in modern deep learning. Once you understand it, you'll see it everywhere! 🎯
+The attention mechanism is a widely used concept in modern deep learning. Understanding it provides a foundation for many subsequent architectures.
