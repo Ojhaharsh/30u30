@@ -1,7 +1,7 @@
 """
 Solution 5: Visualize Attention Patterns
 
-Beautiful visualizations that show what the model learned.
+Utilities for analyzing and visualizing learned alignment patterns.
 """
 
 import torch
@@ -132,7 +132,7 @@ def attention_entropy(attention_weights):
     Low entropy = focused attention (the model knows where to look)
     High entropy = spread out attention (the model is confused)
     
-    Perfect attention (all weight on one position): entropy ≈ 0
+    Perfect attention (all weight on one position): entropy ~ 0
     Uniform attention: entropy = log(n)
     """
     if torch.is_tensor(attention_weights):
@@ -259,7 +259,7 @@ def visualize_model_attention(model, dataset, device, num_examples=3):
         target_tokens = [str(t) for t in pred_list]
         
         correct = pred_list == trg[1:-1].tolist()
-        status = "✓ Correct" if correct else "✗ Wrong"
+        status = "Correct" if correct else "Wrong"
         
         print(f"\n{'='*50}")
         print(f"Example {i+1}: {status}")
@@ -329,15 +329,15 @@ def demo_visualization():
         ent = attention_entropy(attention[i])
         peak = np.argmax(attention[i])
         expected = seq_len - 1 - i
-        correct = "✓" if peak == expected else "✗"
-        print(f"  Step {i+1}: Output '{target[i]}' → Input '{source[peak]}' "
+        correct = "Yes" if peak == expected else "No"
+        print(f"  Step {i+1}: Output '{target[i]}' -> Input '{source[peak]}' "
               f"(entropy: {ent:.3f}) {correct}")
     
     diag_acc = check_diagonal_pattern(attention)
     print(f"\n  Diagonal Accuracy: {diag_acc:.0%}")
     print(f"  Average Entropy: {np.mean([attention_entropy(attention[i]) for i in range(seq_len)]):.3f}")
-    print("\n  Low entropy = focused attention (good!)")
-    print("  High diagonal accuracy = correct pattern learned!")
+    print("\n  Low entropy indicates focused attention.")
+    print("  High diagonal accuracy indicates the correct pattern was learned.")
 
 
 def main():

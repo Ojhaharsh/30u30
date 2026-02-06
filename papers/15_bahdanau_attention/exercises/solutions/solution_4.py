@@ -307,11 +307,9 @@ def main():
     print(f"\nFinal Accuracy: {final_acc:.2%}")
     
     if final_acc > 0.9:
-        print("🎉 Success! Model achieves >90% accuracy!")
-    elif final_acc > 0.7:
-        print("Good progress! Try more epochs or tuning hyperparameters.")
+        print("Success: Model achieves >90% accuracy.")
     else:
-        print("Keep training or check your implementation!")
+        print("Accuracy below 90%. Adjust hyperparameters and retrain.")
     
     # Show some examples
     print("\n" + "=" * 50)
@@ -330,9 +328,9 @@ def main():
             pred = pred[:pred.index(2)]
         
         target = trg[1:-1].tolist()
-        correct = "✓" if pred == target else "✗"
+        correct = "Yes" if pred == target else "No"
         
-        print(f"\n{correct} Example {i+1}:")
+        print(f"\nExample {i+1} (Correct: {correct}):")
         print(f"   Input:  {src.tolist()}")
         print(f"   Pred:   {pred}")
         print(f"   Target: {target}")
