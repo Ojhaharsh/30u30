@@ -49,17 +49,30 @@ To predict well, the model learns an "alignment" function-a small neural network
 
 ## The Architecture
 
-### 1. Bidirectional Encoder
-The encoder reads the sentence twice-once forward and once backward. This ensures that every encoder hidden state $h_j$ knows the context of the entire sentence, not just what came before it.
+### 1. Bidirectional Encoder (Section 3.2)
+The encoder reads the sentence twice - once forward and once backward. This ensures that every encoder hidden state $h_j$ knows the context of the entire sentence, not just what came before it.
+- **Forward GRU**: Summarizes context from $x_1$ to $x_j$.
+- **Backward GRU**: Summarizes context from $x_T$ to $x_j$.
+- **Annotation ($h_j$)**: The concatenation of both directions.
 
-### 2. Additive Attention
+### 2. Additive Attention (Section 3.1)
 The model computes an alignment score between the current decoder state and every encoder state using a learned weight matrix:
-- **Score:** $e_{ij} = v_a^T \tanh(W_a s_{i-1} + U_a h_j)$
-- **Weights:** Softmax applied over scores to get probabilities.
-- **Context:** A weighted sum of all encoder states.
 
-### 3. Attention-Based Decoder
-The decoder is a GRU that receives the attention-weighted context vector as input at every step. This makes it much easier to translate long sequences because the model doesn't have to "remember" long-range dependencies-it just looks at them.
+```
+e_ij = v_a^T * tanh(W_a * s_{i-1} + U_a * h_j)
+```
+
+**Variables & Dimensions:**
+- `s_{i-1}` (hidden): The previous hidden state of the decoder.
+- `h_j` (encoder_dim): The $j$-th encoder annotation.
+- `W_a`, `U_a`: Weight matrices that project states into the "attention space."
+- `v_a`: A weight vector that collapses the attention space into a single scalar score.
+
+### 3. Attention-Based Decoder (Section 3.1)
+The decoder is a GRU that receives a unique context vector $c_i$ at every step:
+- **Weights ($\alpha_{ij}$)**: Softmax applied over scores $e_{ij}$ (Section 3.1, Eq 6).
+- **Context ($c_i$)**: A weighted sum $\sum \alpha_{ij} h_j$.
+- **Next State ($s_i$)**: Computed using $s_{i-1}$, the previous output $y_{i-1}$, and the new context $c_i$.
 
 ---
 
@@ -68,9 +81,14 @@ The decoder is a GRU that receives the attention-weighted context vector as inpu
 When implementing Bahdanau attention, pay attention to these details:
 
 - **The Alignment MLP**: The attention scores are computed by a small Feed-Forward network. This is different from the dot-product attention used in later papers (like Luong or Transformer).
-- **Masking**: You MUST mask the attention scores for padding tokens (set them to -inf before softmax). Otherwise, the model will waste attention on empty padding.
-- **Teacher Forcing**: During training, we feed the ground-truth target word into the next step of the decoder. During inference, we feed the model's own predicted word.
-- **Hidden State Initialization**: The decoder's initial hidden state is often a projection of the final encoder hidden state.
+- **Masking**: You MUST mask the attention scores for padding tokens. Set them to `-1e9` or `-inf` before the softmax so the model doesn't waste focus on empty padding.
+- **Batch Matrix Multiplication**: Use `torch.bmm` or `@` to compute the weighted sum of encoder states efficiently across the entire batch.
+- **Initial Hidden State**: The decoder's initial hidden state $s_0$ is traditionally computed by passing the final backward encoder state through a linear layer and a `tanh` activation (Section 3.2).
+
+**Things that will bite you:**
+- **Squeezing/Unsqueezing**: Attention involves many dimension changes (adding/removing the sequence dimension). If you get a "broadcast error," check your `unsqueeze(1)` calls.
+- **Softmax Dimension**: Ensure you apply `softmax` over the *source* sequence dimension, not the batch dimension.
+- **Vanishing Gradients**: While attention helps, the underlying RNNs can still suffer. Use gradient clipping (threshold of 1.0-5.0).
 
 ---
 
@@ -105,7 +123,7 @@ Solutions are in `exercises/solutions/`. Try to get stuck first.
 1.  **Fixed-length vectors are a bottleneck.** Compressing a sentence to a single vector is fundamentally limited.
 2.  **Attention allows dynamic focus.** The decoder "searches" the input for relevant information at each step.
 3.  **Alignments emerge automatically.** We don't need to tell the model that "cat" matches "chat"; it learns this by being forced to predict the next word correctly.
-4.  **[Our Retrospective] This is a direct ancestor of the Transformer.** The core idea — letting the decoder dynamically attend to encoder states — carried into the Transformer (Vaswani et al. 2017), though the mechanism evolved from additive scoring over RNNs to scaled dot-product self-attention.
+4.  **[Our Retrospective] This is a direct ancestor of the Transformer.** The core idea - letting the decoder dynamically attend to encoder states - carried into the Transformer (Vaswani et al. 2017), though the mechanism evolved from additive scoring over RNNs to scaled dot-product self-attention.
 
 ---
 
