@@ -43,7 +43,7 @@
         <div class="hero-content">
             <div class="hero-badge">
                 <span class="badge-dot"></span>
-                <span>16 Papers Live • Open Source</span>
+                <span>17 Papers Live • Open Source</span>
             </div>
             
             <h1 class="hero-title">
@@ -84,12 +84,12 @@
             
             <div class="hero-stats">
                 <div class="stat">
-                    <span class="stat-value" data-count="16">0</span>
+                    <span class="stat-value" data-count="17">0</span>
                     <span class="stat-label">Papers Live</span>
                 </div>
                 <div class="stat-divider"></div>
                 <div class="stat">
-                    <span class="stat-value" data-count="80">0</span>
+                    <span class="stat-value" data-count="85">0</span>
                     <span class="stat-label">Exercises</span>
                 </div>
                 <div class="stat-divider"></div>
@@ -135,7 +135,7 @@
         <div class="container">
             <div class="section-header">
                 <span class="section-tag">The Collection</span>
-                <h2 class="section-title">16 Papers, Fully Implemented</h2>
+                <h2 class="section-title">17 Papers, Fully Implemented</h2>
                 <p class="section-desc">Each paper comes with deep explanations, clean code, visualizations, and exercises. Click any card to explore.</p>
             </div>
             
@@ -145,6 +145,7 @@
                 <button class="filter-btn" data-filter="foundations">Foundations</button>
                 <button class="filter-btn" data-filter="vision">Vision</button>
                 <button class="filter-btn" data-filter="transformers">Transformers</button>
+                <button class="filter-btn" data-filter="specialized">Specialized</button>
             </div>
             
             <div class="papers-grid">
@@ -604,6 +605,37 @@
                         </svg>
                     </div>
                 </a>
+
+                <!-- Day 17: Neural Turing Machines -->
+                <a href="https://github.com/Ojhaharsh/30u30/tree/main/papers/17_neural_turing_machines" target="_blank" class="paper-card" data-day="17" data-unit="specialized">
+                    <div class="paper-symbol">
+                        <svg viewBox="0 0 80 80">
+                            <!-- Memory bank + controller visualization -->
+                            <rect x="10" y="20" width="60" height="25" rx="3" fill="none" stroke="currentColor" stroke-width="2"/>
+                            <line x1="22" y1="20" x2="22" y2="45" stroke="currentColor" stroke-width="1.5" opacity="0.3"/>
+                            <line x1="34" y1="20" x2="34" y2="45" stroke="currentColor" stroke-width="1.5" opacity="0.3"/>
+                            <line x1="46" y1="20" x2="46" y2="45" stroke="currentColor" stroke-width="1.5" opacity="0.3"/>
+                            <line x1="58" y1="20" x2="58" y2="45" stroke="currentColor" stroke-width="1.5" opacity="0.3"/>
+                            <circle cx="40" cy="60" r="10" fill="none" stroke="currentColor" stroke-width="2.5"/>
+                            <path d="M40 50 L40 45" stroke="currentColor" stroke-width="2" marker-end="url(#arrowhead)"/>
+                            <circle cx="28" cy="32" r="3" fill="currentColor" opacity="0.8"/>
+                        </svg>
+                    </div>
+                    <div class="paper-content">
+                        <span class="paper-day">Day 17</span>
+                        <h3>Neural Turing Machines</h3>
+                        <p>Differentiable external memory with content-based addressing</p>
+                        <div class="paper-meta">
+                            <span class="meta-item"><i class="fas fa-code"></i> PyTorch</span>
+                            <span class="meta-item"><i class="fas fa-dumbbell"></i> 5 exercises</span>
+                        </div>
+                    </div>
+                    <div class="paper-arrow">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M5 12h14M12 5l7 7-7 7"/>
+                        </svg>
+                    </div>
+                </a>
             </div>
             
             <!-- Coming Soon -->
@@ -611,15 +643,15 @@
                 <h3>Coming Next</h3>
                 <div class="coming-grid">
                     <div class="coming-card">
-                        <span class="coming-day">Day 17</span>
-                        <span class="coming-title">Neural Turing Machines</span>
+                        <span class="coming-day">Day 18</span>
+                        <span class="coming-title">Pointer Networks</span>
                     </div>
                     <div class="coming-card">
-                        <span class="coming-day">Day 18</span>
-                        <span class="coming-title">Memory Networks</span>
+                        <span class="coming-day">Day 19</span>
+                        <span class="coming-title">Relational Reasoning</span>
                     </div>
                     <div class="coming-card more">
-                        <span>+12 more</span>
+                        <span>+11 more</span>
                     </div>
                 </div>
             </div>
@@ -679,7 +711,7 @@
                     </div>
                 </div>
                 
-                <div class="timeline-unit active">
+                <div class="timeline-unit complete">
                     <div class="unit-marker">
                         <span class="unit-number">03</span>
                         <div class="unit-line"></div>
@@ -687,9 +719,9 @@
                     <div class="unit-content">
                         <div class="unit-header">
                             <h3>The Transformer Era</h3>
-                            <span class="unit-status active">In Progress</span>
+                            <span class="unit-status complete">Complete</span>
                         </div>
-                        <p>Days 13-17 · Attention mechanisms and sequence-to-sequence learning</p>
+                        <p>Days 13-16 · Attention mechanisms and sequence-to-sequence learning</p>
                         <div class="unit-papers">
                             <span>Attention</span>
                             <span>Annotated Transformer</span>
@@ -699,7 +731,7 @@
                     </div>
                 </div>
                 
-                <div class="timeline-unit upcoming">
+                <div class="timeline-unit active">
                     <div class="unit-marker">
                         <span class="unit-number">04</span>
                         <div class="unit-line"></div>
@@ -707,9 +739,12 @@
                     <div class="unit-content">
                         <div class="unit-header">
                             <h3>Specialized Architectures</h3>
-                            <span class="unit-status upcoming">Coming</span>
+                            <span class="unit-status active">In Progress</span>
                         </div>
                         <p>Days 17-21 · Memory networks, graphs, and reasoning</p>
+                        <div class="unit-papers">
+                            <span>Neural Turing Machines</span>
+                        </div>
                     </div>
                 </div>
                 
