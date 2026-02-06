@@ -1,15 +1,3 @@
-# Requirements for Day 15: Bahdanau Attention
-
-# Core dependencies
-torch>=1.9.0
-numpy>=1.19.0
-
-# Visualization (for exercise 5)
-matplotlib>=3.3.0
-
-# Optional: For training monitoring
-tqdm>=4.50.0
-
-# Optional: Jupyter notebook support
-jupyter>=1.0.0
-ipykernel>=6.0.0
+torch
+numpy
+matplotlib
