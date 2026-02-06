@@ -1,6 +1,6 @@
 # Day 17: Neural Turing Machines (NTM)
 
-> Alex Graves, Greg Wayne, Ivo Danihelka (2014) — [Original Paper](https://arxiv.org/abs/1410.5401)
+> Alex Graves, Greg Wayne, Ivo Danihelka (2014) - [Original Paper](https://arxiv.org/abs/1410.5401)
 
 **Time:** 3-5 hours  
 **Prerequisites:** PyTorch, LSTM intuition, Linear Algebra (matrix products)  
@@ -48,35 +48,44 @@ The model is shown a sequence of random bits, a delimiter, and is then asked to 
 ### 2. The Sorting Task (Section 4.5)
 The model is shown a list of vectors, each with a priority. It is then asked to output them in sorted order.
 
-- **Outcome:** The NTM learns to use its memory to store the vectors and its addressing mechanism to "scan" for the highest priority value. [Our Addition: Analogy] This behaves like a learned priority queue.
+- **Outcome:** The NTM learns to use its memory to store## The Architecture
 
----
+### 1. The Addressing Pipeline (Section 3.3.1)
+The NTM uses a four-stage process to decide where to focus its "blurry" pointer:
 
-## Architecture Overview
+1. **Content Addressing**: Emits a "search key" $k_t$. Looks for rows in memory similar to $k_t$ using cosine similarity (Eq 5).
+2. **Interpolation**: A gate $g_t$ decides whether to use the new search result or stick with the previous focus (Eq 7).
+3. **Convolutional Shift**: A shift weighting $s_t$ performs circular convolution, allowing the pointer to move (e.g., stay put, +1, -1) (Eq 8).
+4. **Sharpening**: A factor $\gamma_t$ "squeezes" the distribution to make the focus more precise (Eq 9).
 
-```mermaid
-graph LR
-    Input[Input x_t] --> Controller
-    Read_t_1[Prev Read r_{t-1}] --> Controller
-    Controller --> Heads[Read/Write Heads]
-    Heads <--> Memory[Memory Matrix M_t]
-    Controller --> Output[Output y_t]
-    Heads --> Read_t[New Read r_t]
-```
+### 2. Controller & Heads
+- **Memory Matrix ($N \times M$):** The "scratchpad" where data is stored.
+- **Read Head**: Computes a weighted average of memory: $r_t = \sum w_t(i) M_t(i)$ (Section 3.1).
+- **Write Head**: Performs an **Erase** followed by an **Add** (Section 3.2):
+  - `M_t(i) = M_{t-1}(i) * [1 - w_t(i) * e_t]` (Erase)
+  - `M_t(i) = M_t(i) + w_t(i) * a_t` (Add)
 
-### Key Components
-- **Memory Matrix ($N \times M$):** Usually $128 \times 20$.
-- **Write Head:** Performs an *Erase* (Eq 3) and an *Add* (Eq 4).
-- **Read Head:** Performs a *Weighted Sum* (Eq 2).
-- **Controller:** Usually a single-layer LSTM with ~100 hidden units.
+**Variables & Dimensions:**
+- `w_t` (N): The weighting vector (the pointer).
+- `e_t` (M): The erase vector (0 to 1).
+- `a_t` (M): The add vector (data to write).
+- `k_t` (M): The content search key.
 
 ---
 
 ## Implementation Notes
 
-1.  **Gradient Clipping (Section 4):** NTMs can be difficult to train. The authors use gradient clipping. In practice, a clip of 10.0 is needed to prevent divergence during the circular shift operation.
-2.  **Numerical Stability:** Operations like sharpening ($w^\gamma$) can generate extremely large or small numbers. We use `torch.clamp` and small epsilons ($1e-8$) to prevent `NaN` during backpropagation.
-3.  **Initialization:** The paper mentions that initial memory and weights are learned. In our implementation, we use learned buffers for `init_memory` and `init_w` to match this.
+When implementing an NTM, pay attention to these stability details:
+
+- **Gradient Clipping (Section 4)**: NTMs are notoriously hard to train. A clip of 10.0 is almost mandatory to prevent divergence during the circular shift operation.
+- **Numerical Stability**: Operations like sharpening ($w^\gamma$) can generate extremely large or small numbers. Use `torch.clamp` and small epsilons ($1e-8$) to prevent `NaN`.
+- **Initialization**: Initial memory and weights should be learned parameters (`nn.Parameter`), not just zeros.
+
+**Things that will bite you:**
+- **Circular Convolution**: Implementing Eq 8 correctly requires a specialized 1D convolution or a sequence of `torch.roll` operations.
+- **Softplus for Positivity**: Parameters like $\beta$ (key strength) and $\gamma$ (sharpening) must be positive. Use `1 + F.softplus(x)` to ensure stability.
+- **Memory Footprint**: A $128 \times 20$ memory bank is small, but the addressing logic (calculating scores for every slot) adds significant overhead per step.
+ry and weights are learned. In our implementation, we use learned buffers for `init_memory` and `init_w` to match this.
 
 ---
 
@@ -135,6 +144,10 @@ Solutions are in `exercises/solutions/`. Try to get stuck first.
 
 ## Further Reading
 
-- [Original Paper — Neural Turing Machines (arXiv:1410.5401)](https://arxiv.org/abs/1410.5401)
-- [Differentiable Neural Computers (Graves et al., 2016)](https://www.nature.com/articles/nature20101) — the successor to NTMs with improved memory addressing
-- [Learning to Transduce with Unbounded Memory (Grefenstette et al., 2015)](https://arxiv.org/abs/1506.02516) — alternative neural stack/queue architectures
+- [Original Paper - Neural Turing Machines (arXiv:1410.5401)](https://arxiv.org/abs/1410.5401)
+- [Differentiable Neural Computers (Graves et al., 2016)](https://www.nature.com/articles/nature20101) - the successor to NTMs with improved memory addressing
+- [Learning to Transduce with Unbounded Memory (Grefenstette et al., 2015)](https://arxiv.org/abs/1506.02516) - alternative neural stack/queue architectures
+
+---
+
+**Next:** [Day 18 - Pointer Networks](../18_pointer_networks/)

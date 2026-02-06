@@ -6,11 +6,11 @@ Weightings in NTM addressing often become 'blurry' due to the circular
 convolution (Eq 8). Sharpening refines the weighting to prevent focus leakage.
 
 Formula (Graves et al., 2014, Section 3.3.1, Eq 9):
-w_sharp[i] = w[i]^gamma / Σ w[j]^gamma
+w_sharp[i] = w[i]^gamma / sum w[j]^gamma
 
 Note:
-- gamma (γ) should be ≥ 1.
-- As γ increases, the weighting becomes more "peaked" or "sharp".
+- gamma (gamma) should be >= 1.
+- As gamma increases, the weighting becomes more "peaked" or "sharp".
 """
 
 import torch
