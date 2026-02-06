@@ -4,7 +4,7 @@ This directory contains datasets and data generation utilities for Pointer Netwo
 
 ---
 
-## 📊 Available Datasets
+## Available Datasets
 
 ### 1. Sorting Dataset
 
@@ -104,15 +104,15 @@ python train.py --task tsp --set-size 15 --train-samples 10000
 
 ---
 
-## 🔄 Dynamic Data Generation
+## Dynamic Data Generation
 
 All datasets are generated **on-the-fly** during training:
 
 **Advantages:**
-✅ No storage required (generates as needed)  
-✅ Infinite dataset - never repeats  
-✅ Easy to adjust difficulty (change set size)  
-✅ No download needed
+- No storage required (generates as needed)  
+- Infinite dataset - never repeats  
+- Easy to adjust difficulty (change set size)  
+- No download needed
 
 **How it works:**
 ```python
@@ -125,7 +125,7 @@ for epoch in range(num_epochs):
 
 ---
 
-## 📁 Pre-generated Datasets (Optional)
+## Pre-generated Datasets (Optional)
 
 For reproducibility, you can generate fixed datasets:
 
@@ -164,7 +164,7 @@ print(f"Loaded {len(samples)} samples for {config['task']}")
 
 ---
 
-## 🎯 Dataset Difficulty Levels
+## Dataset Difficulty Levels
 
 ### Easy (Good for Initial Training)
 - **Sorting:** 5-10 elements
@@ -183,7 +183,7 @@ print(f"Loaded {len(samples)} samples for {config['task']}")
 
 ---
 
-## 📊 Dataset Statistics
+## Dataset Statistics
 
 ### Sorting
 
@@ -212,7 +212,7 @@ print(f"Loaded {len(samples)} samples for {config['task']}")
 
 ---
 
-## 🔧 Custom Datasets
+## Custom Datasets
 
 Want to try your own set-to-sequence problem?
 
@@ -266,7 +266,7 @@ class AbsValueSortDataset(Dataset):
 
 ---
 
-## 📝 Data Augmentation
+## Data Augmentation
 
 ### For Better Generalization
 
@@ -284,7 +284,7 @@ values = values[:actual_size]
 
 ---
 
-## 🚀 Quick Start
+## Quick Start
 
 ```bash
 # Train on sorting (easiest)
@@ -299,7 +299,7 @@ python train.py --task tsp --set-size 15 --epochs 200
 
 ---
 
-## 📚 Resources
+## Resources
 
 - **Training script:** `../train.py`
 - **Dataset generators:** `../train.py` (SortingDataset, ConvexHullDataset, TSPDataset)
@@ -307,4 +307,4 @@ python train.py --task tsp --set-size 15 --epochs 200
 
 ---
 
-**Tip:** Start with small sets (5-10 elements) and gradually increase! 🚀
+**Tip:** Start with small sets (5-10 elements) and gradually increase.
