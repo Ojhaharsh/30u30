@@ -1,17 +1,8 @@
 """
 Exercise 2: Build the Bidirectional Encoder
 
-The encoder's job is to read the entire input sequence and produce
-a representation at each position that captures the FULL context
-(both what came before AND what comes after).
-
-Why bidirectional?
-- "The bank was steep" → 'bank' means riverbank (context: steep)
-- "I went to the bank" → 'bank' means financial (context: went)
-
-Without seeing the FULL sentence, we can't know which meaning!
-
-Your task: Implement a bidirectional GRU encoder.
+The encoder processes the source sequence in both directions to capture
+context from the entire sentence before translation begins.
 """
 
 import torch
@@ -154,7 +145,7 @@ def test_encoder():
     # Check that padding positions have some output (they get backward context)
     print(f"   Output norm at padded position: {outputs[0, 8].norm().item():.4f}")
     
-    print("✅ All tests passed!")
+    print("Test passed.")
     print(f"   Output shape: {outputs.shape}")
     print(f"   Hidden shape: {hidden.shape}")
 

@@ -1,6 +1,6 @@
 # Solutions
 
-Complete solutions for all exercises. **Try the exercises first!**
+Complete solutions for all exercises. **Try the exercises first.**
 
 ## Files
 
@@ -48,10 +48,10 @@ Epoch 30 | Train: 0.0567 | Val: 0.0678 | Acc: 96%
 ==================================================
 
 Final Accuracy: 96%
-🎉 Success! Model achieves >90% accuracy!
+Success: Model achieves >90% accuracy.
 
 Examples:
-✓ Input:  [5, 3, 8, 2, 1]
+  Input:  [5, 3, 8, 2, 1]
   Output: [1, 2, 8, 3, 5]
   Target: [1, 2, 8, 3, 5]
 ```
@@ -102,4 +102,4 @@ Once you've mastered Bahdanau attention:
 3. **Compare** - Implement Luong attention (dot-product)
 4. **Move forward** - Study the Transformer (self-attention)
 
-Congratulations on completing Day 15! 🎉
+That completes Day 15.
