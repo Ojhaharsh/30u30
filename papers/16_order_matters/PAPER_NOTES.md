@@ -3,7 +3,7 @@
 ## ELI5 (Explain Like I'm 5)
 
 ### The Grocery List Problem
-Imagine you give a friend a shopping list. Does it matter if "Milk" is at the top or the bottom? No—the ingredients for the cake are the same regardless of the list's order. This represents a **Set**. 
+Imagine you give a friend a shopping list. Does it matter if "Milk" is at the top or the bottom? No-the ingredients for the cake are the same regardless of the list's order. This represents a **Set**. 
 
 However, if you give them a recipe, the order matters immensely. You can't frost the cake before you bake it. This represents a **Sequence**.
 

@@ -62,7 +62,7 @@ python train.py --task convex_hull --set-size 20 --train-samples 5000
 
 **Dataset stats:**
 - **Default size:** 5,000 training samples, 500 validation
-- **Point distribution:** Uniform in [0, 1]²
+- **Point distribution:** Uniform in [0, 1]^2
 - **Hull size:** Variable (typically 30-40% of points)
 
 ---
@@ -99,7 +99,7 @@ python train.py --task tsp --set-size 15 --train-samples 10000
 
 **Dataset stats:**
 - **Default size:** 10,000 training samples, 1,000 validation
-- **City distribution:** Uniform in [0, 1]²
+- **City distribution:** Uniform in [0, 1]^2
 - **Tour quality:** Greedy heuristic (~1.25x optimal)
 
 ---
