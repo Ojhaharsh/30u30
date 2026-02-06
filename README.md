@@ -8,7 +8,7 @@
 
 > Complete implementations • Interactive notebooks • Beginner-friendly • 100% Free
 
-## 🚀 Units 1-2 Complete! Now Starting Unit 3: The Transformer Era
+## 🚀 Units 1-3 Complete! Now Starting Unit 4: The Transformer Era
 
 ### ✅ Unit 1: The Foundations (Days 1-7) - COMPLETE!
 
@@ -86,7 +86,7 @@
 - 5 exercises: implement dropout, rate sweep, spatial dropout, MC uncertainty  
 **[Start Day 12 →](papers/12_dropout/)**
 
-### 🧠 Unit 3: The Transformer Era - STARTING NOW!
+### ✅ Unit 3: The Transformer Era (Days 13-16) - COMPLETE!
 
 **Day 13: "Attention Is All You Need"**
 - The paper that revolutionized NLP and beyond - the Transformer
@@ -106,11 +106,19 @@
 - 5 exercises: attention from scratch, encoder-decoder, beam search, visualization  
 **[Start Day 15 →](papers/15_bahdanau_attention/)**
 
-**Day 16: "Order Matters: Sequence to Sequence for Sets"** 🆕
+**Day 16: "Order Matters: Sequence to Sequence for Sets"**
 - Pointer Networks - process sets, output sequences by pointing!
 - Order-invariant encoding, Read-Process-Write framework
 - 5 exercises: pointer attention, set encoder, sorting, convex hull, TSP  
 **[Start Day 16 →](papers/16_order_matters/)**
+
+### 🧠 Unit 4: Specialized Architectures - STARTING NOW!
+
+**Day 17: "Neural Turing Machines"** 🆕
+- Differentiable external memory for neural networks
+- Addressing mechanics: Content-based, Interpolation, Shift, Sharpening
+- 5 exercises: addressing logic, circular convolution, memory updates  
+**[Start Day 17 →](papers/17_neural_turing_machines/)**
 
 ---
 
@@ -155,7 +163,7 @@ Each paper gets the full treatment:
 | 11 | [Multi-Scale Context (Dilated Conv)](papers/11_dilated_convolutions/) | 🚀 **LIVE** | Dilated convolutions |
 | 12 | [Dropout (Srivastava et al.)](papers/12_dropout/) | 🚀 **LIVE** | Preventing overfitting |
 
-### Unit 3: The Transformer Era (Days 13-16) - 🔥 IN PROGRESS
+### Unit 3: The Transformer Era (Days 13-16) - ✅ COMPLETE
 *The architecture that ate the world*
 
 | Day | Paper | Status | Core Concept |
@@ -163,11 +171,14 @@ Each paper gets the full treatment:
 | 13 | [Attention Is All You Need](papers/13_attention/) | 🚀 **LIVE** | Self-attention, Transformer |
 | 14 | [The Annotated Transformer](papers/14_annotated_transformer/) | 🚀 **LIVE** | Code-level Transformer |
 | 15 | [Bahdanau Attention (NMT)](papers/15_bahdanau_attention/) | 🚀 **LIVE** | Original attention mechanism |
-| 16 | [Order Matters (Pointer Networks)](papers/16_order_matters/) | 🆕 **LIVE** | Set-to-sequence problems |
+| 16 | [Order Matters (Pointer Networks)](papers/16_order_matters/) | 🚀 **LIVE** | Set-to-sequence problems |
 
-### Unit 4: Specialized Architectures (Days 16-21)
+### Unit 4: Specialized Architectures (Days 17-21) - 🔥 IN PROGRESS
 *Memory, graphs, and reasoning*
-- Neural Turing Machines, memory networks, graph neural networks
+
+| Day | Paper | Status | Core Concept |
+|-----|-------|--------|-------------|
+| 17 | [Neural Turing Machines](papers/17_neural_turing_machines/) | 🚀 **LIVE** | Differentiable external memory |
 
 ### Unit 5: Generative Models & Scaling (Days 22-27)
 *From theory to massive models*
@@ -273,6 +284,7 @@ MIT License - Free to use, learn, and share.
 → **[Day 13: Attention Is All You Need](papers/13_attention/)**  
 → **[Day 14: The Annotated Transformer](papers/14_annotated_transformer/)**  
 → **[Day 15: Bahdanau Attention (NMT)](papers/15_bahdanau_attention/)**  
-→ **[Day 16: Order Matters (Pointer Networks)](papers/16_order_matters/)** 🆕 **← START HERE!**
+→ **[Day 16: Order Matters (Pointer Networks)](papers/16_order_matters/)**  
+→ **[Day 17: Neural Turing Machines](papers/17_neural_turing_machines/)** 🆕 **← START HERE!**
 
 Let's build something amazing together! 🚀
