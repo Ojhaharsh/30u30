@@ -114,11 +114,17 @@
 
 ### 🧠 Unit 4: Specialized Architectures - STARTING NOW!
 
-**Day 17: "Neural Turing Machines"** 🆕
+**Day 17: "Neural Turing Machines"**
 - Differentiable external memory for neural networks
 - Addressing mechanics: Content-based, Interpolation, Shift, Sharpening
 - 5 exercises: addressing logic, circular convolution, memory updates  
 **[Start Day 17 →](papers/17_neural_turing_machines/)**
+
+**Day 18: "Pointer Networks"** 🆕
+- Networks that can "point" to their input (essential for combinatorial problems)
+- Laser pointer attention, sampling without replacement, combinatorial optimization
+- 5 exercises: pointer attention, convex hull formatting, TSP cost analysis  
+**[Start Day 18 →](papers/18_pointer_networks/)**
 
 ---
 
@@ -179,6 +185,7 @@ Each paper gets the full treatment:
 | Day | Paper | Status | Core Concept |
 |-----|-------|--------|-------------|
 | 17 | [Neural Turing Machines](papers/17_neural_turing_machines/) | 🚀 **LIVE** | Differentiable external memory |
+| 18 | [Pointer Networks](papers/18_pointer_networks/) | 🚀 **LIVE** | Selecting input via attention |
 
 ### Unit 5: Generative Models & Scaling (Days 22-27)
 *From theory to massive models*
@@ -285,6 +292,7 @@ MIT License - Free to use, learn, and share.
 → **[Day 14: The Annotated Transformer](papers/14_annotated_transformer/)**  
 → **[Day 15: Bahdanau Attention (NMT)](papers/15_bahdanau_attention/)**  
 → **[Day 16: Order Matters (Pointer Networks)](papers/16_order_matters/)**  
-→ **[Day 17: Neural Turing Machines](papers/17_neural_turing_machines/)** 🆕 **← START HERE!**
+→ **[Day 17: Neural Turing Machines](papers/17_neural_turing_machines/)**
+→ **[Day 18: Pointer Networks](papers/18_pointer_networks/)** 🆕 **← START HERE!**
 
 Let's build something amazing together! 🚀
