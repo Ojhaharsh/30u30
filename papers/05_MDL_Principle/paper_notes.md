@@ -1,400 +1,253 @@
-# 📝 Day 5: Paper Notes (ELI5 Edition)
+# Paper Notes: A Tutorial Introduction to the Minimum Description Length Principle
 
-## Explain Like I'm 5: What is the MDL Principle?
+## ELI5 (Explain Like I'm 5)
 
----
+You have data and you want to find the pattern in it. MDL says: the best model is the one that lets you compress the data the most. Not the model with the best fit, and not the simplest model — the best *compressor*.
 
-### 👶 The 5-Year-Old Explanation
+The intuition: if your model captures real structure in the data, you can describe the data briefly ("here's the pattern, plus these small corrections"). If your model is wrong or too complex, the total description is longer.
 
-**Kid:** Why do scientists like simple explanations?
+This is formalized as: **Total cost = cost to describe the model + cost to describe the data given the model.** Minimize the sum.
 
-**Me:** Imagine you're telling me about your day at school. You could say:
-
-**Long version:** "I woke up, brushed teeth, ate cereal, put on shoes, walked outside, saw a dog, the dog was brown, it had spots, I counted the spots, there were 7 spots, then I walked more, then I saw a tree..."
-
-**Short version:** "I walked to school and saw a spotted dog!"
-
-**Kid:** The short one is easier!
-
-**Me:** Exactly! And here's the magic: **the short version tells me the IMPORTANT stuff**. The long version has too many details - I can't tell what matters!
-
-**Kid:** So short = good?
-
-**Me:** Short = good, BUT it must still be true. If you just said "I went to school" and skipped the dog, you're hiding something interesting!
-
-**The MDL Principle says:** Find the SHORTEST story that doesn't leave out anything important.
+Note: This sounds simple, but the paper's real contribution is making it rigorous — showing exactly how to measure "description length" for different model classes, and proving that different approaches (two-part codes, prequential codes, NML) are all valid and connected.
 
 ---
 
-## 🎭 The Detective Analogy
+## What This Paper Actually Is
 
-You're a detective. A crime happened. You have clues.
+**"A Tutorial Introduction to the Minimum Description Length Principle"** by Peter Grünwald (2004). Published in *Advances in Minimum Description Length: Theory and Applications*.
 
-### Three Theories:
+This is a **tutorial/survey paper** — roughly 80 pages covering the theory, philosophy, and practice of MDL. It is not a single-result paper. It systematizes decades of work by Rissanen, Wallace, and others into a coherent framework.
 
-**Theory 1: "Bob did it"**
-```
-Description: 5 words
-But... 15 clues don't match Bob. Need to explain each:
-  "Clue 1: wasn't Bob, coincidence"
-  "Clue 2: wasn't Bob, planted"
-  ... (lots of excuses)
-  
-Total explanation: VERY LONG
-```
+Grünwald later expanded this into a full textbook: *The Minimum Description Length Principle* (MIT Press, 2007).
 
-**Theory 2: "Alice did it with 3 accomplices on Tuesday"**
-```
-Description: 15 words
-All 20 clues match perfectly!
-Exceptions: 0
+### What the paper covers
 
-Total explanation: SHORT ✓
-```
-
-**Theory 3: "There's a complicated conspiracy involving..."**
-```
-Description: 500 words
-All clues match, but...
-The theory itself is longer than just listing the clues!
-
-Total explanation: TOO LONG ✗
-```
-
-**MDL says:** Theory 2 wins. It's short AND explains everything.
+1. **Two-part codes** (crude MDL) — the simplest formulation
+2. **Prequential codes** — sequential prediction without explicit model description
+3. **Normalized Maximum Likelihood (NML)** — the theoretically optimal universal code
+4. **Stochastic complexity** — the NML codelength as a model selection criterion
+5. **Connection to Kolmogorov complexity** — MDL as a practical approximation of algorithmic complexity
+6. **Comparison with AIC, BIC, cross-validation** — when MDL agrees and disagrees with other criteria
+7. **Consistency results** — when and why MDL selects the correct model asymptotically
 
 ---
 
-## 🗜️ The Core Problem: How Do We Measure "Explanation"?
+## The Core Framework: Two-Part Codes
 
-### The Brilliant Insight: Use BITS
+### The Idea
 
-Everything can be encoded as bits (0s and 1s).
+To communicate a dataset $D$ to someone, you could send the raw data. Or you could:
+1. First send a model $H$ (a pattern or hypothesis)
+2. Then send the deviations from that model (residuals)
 
-**A good explanation** = A short message that lets someone else reconstruct your data.
+If the model captures real structure, the total message is shorter than sending raw data.
 
-```
-You have: Temperature readings for a year
-  [23, 24, 22, 25, 18, 15, 10, 5, -2, -5, ...]
+### The MDL Principle (Two-Part Code Version)
 
-Option A: Send all 365 numbers
-  Cost: 365 × 8 bits = 2920 bits
+Choose the hypothesis $H$ that minimizes:
 
-Option B: Send "It's a sine wave with amplitude 30, centered at 10"
-  Cost: ~50 bits for the pattern
-        + ~300 bits for small deviations
-  Total: ~350 bits!
+$$L(H) + L(D \mid H)$$
 
-Option B is 8x shorter! It UNDERSTANDS the pattern.
-```
+where:
+- $L(H)$ = bits to describe the model (parameters, structure)
+- $L(D \mid H)$ = bits to describe the data given the model (residual errors encoded as a code)
 
----
+### Why This Prevents Overfitting
 
-## 📦 The Two-Part Code (The Core Idea)
+- A too-simple model: $L(H)$ is small, but $L(D \mid H)$ is large (poor fit, many residuals to encode)
+- A too-complex model: $L(D \mid H)$ is small (good fit), but $L(H)$ is large (many parameters to specify)
+- An overfit model (e.g., degree-99 polynomial for 100 points): $L(H)$ can exceed the raw data cost. The "model" is longer than just listing the data.
 
-Imagine you're mailing a package to a friend who needs to rebuild your LEGO castle.
+The sum automatically finds the balance. No tuning parameter is needed.
 
-### Method 1: Send every brick separately
-```
-Box 1: "Red 2x4 brick at position (3, 5, 2)"
-Box 2: "Blue 1x2 brick at position (4, 5, 2)"
-... (10,000 boxes)
+### Example: Polynomial Degree Selection
 
-Cost: HUGE
-```
+Data generated from a degree-3 polynomial with noise. Which degree fits best?
 
-### Method 2: Send instructions + exceptions
-```
-Envelope: "Build a castle using pattern XYZ" (short instructions)
-Small box: "But at position (10, 20, 5), use green instead of red" (exceptions)
+| Degree | L(H) (model bits) | L(D\|H) (residual bits) | Total |
+|--------|-------------------|------------------------|-------|
+| 1 | 64 | 1842 | 1906 |
+| 2 | 96 | 892 | 988 |
+| 3 | 128 | 412 | **540** |
+| 4 | 160 | 401 | 561 |
+| 9 | 320 | 389 | 709 |
 
-Cost: SMALL
-```
-
-**Two-Part Code:**
-```
-Total Message = Instructions (Model) + Exceptions (Data given Model)
-     L(total) =       L(H)          +         L(D|H)
-```
+MDL selects degree 3 — the true generating degree. The extra parameters in degree 4+ don't compress the data enough to justify their cost.
 
 ---
 
-## 🎯 Why This Works: The Fundamental Truth
+## Encoding Details: How to Count Bits
 
-### Random data is INCOMPRESSIBLE
+### Model Description Length L(H)
 
-If I give you:
-```
-0.7241, 0.1832, 0.9471, 0.3829, 0.6182, ...
-```
+For a parametric model with $k$ parameters at $b$ bits of precision each:
 
-There's NO pattern. You can't compress it. You must send every number.
+$$L(H) = k \cdot b$$
 
-### Structured data IS compressible
+This is the crude version. The paper discusses more refined approaches:
+- **Universal integer codes** for model order (e.g., polynomial degree)
+- **Adaptive precision** — parameters near zero cost fewer bits than large parameters
+- **Two-stage codes** — first encode the model class, then the parameters within that class
 
-If I give you:
-```
-1, 2, 3, 4, 5, 6, 7, 8, 9, 10, ...
-```
+### Data Description Length L(D|H)
 
-The pattern is obvious! You can compress to: "Count from 1 to 1000"
+For regression with Gaussian residuals:
 
-### The MDL Insight:
+$$L(D \mid H) = \frac{n}{2} \log_2(2\pi e \hat{\sigma}^2)$$
 
-> If your model compresses the data, you've found the REAL pattern.
-> If it doesn't compress, your model is wrong (or data is random).
+where $\hat{\sigma}^2$ is the residual variance. Better fit (smaller $\hat{\sigma}^2$) = fewer bits.
 
----
+For classification, it's the negative log-likelihood:
 
-## 🏠 The House Number Analogy
-
-You're describing house numbers on a street to a friend.
-
-### Street A: Random numbers
-```
-Houses: 7, 42, 15, 88, 3, 61, 29, ...
-Best description: List every number
-Length: LONG
-```
-
-### Street B: Sequential numbers
-```
-Houses: 1, 2, 3, 4, 5, 6, 7, ...
-Best description: "Start at 1, add 1 each time"
-Length: SHORT
-Exceptions: "But house 10 is missing" (one exception)
-```
-
-### Street C: Pattern with noise
-```
-Houses: 2, 4, 6, 7, 10, 12, 14, ...
-Best description: "Even numbers"
-Exceptions: "But 8 is replaced with 7"
-Length: MEDIUM
-```
-
-**MDL automatically figures out:**
-- Street A: No pattern worth describing
-- Street B: Strong pattern, one exception
-- Street C: Pattern exists but with noise
+$$L(D \mid H) = -\sum_i \log_2 P(x_i \mid H)$$
 
 ---
 
-## ⚖️ The Goldilocks Zone
+## Beyond Two-Part Codes: Prequential MDL
 
-### Model too simple (Underfitting)
-```
-Model: "All temperatures are 15°C"
-Model cost: 1 bit
-Exceptions: HUGE (every reading differs)
-Total: BAD
-```
+### The Problem with Two-Part Codes
 
-### Model too complex (Overfitting)
-```
-Model: "Temperature at 8am Jan 1 was 23.1°C, at 9am was 23.4°C, ..."
-Model cost: HUGE (describing every point)
-Exceptions: 0
-Total: BAD (model longer than data!)
-```
+The two-part code requires choosing how to encode the model, which introduces some arbitrariness (how many bits per parameter? what code for the model structure?). Different encoding choices can lead to different MDL rankings.
 
-### Model just right (MDL optimal)
-```
-Model: "Seasonal variation: T = 15 + 20*sin(day)"
-Model cost: ~50 bits
-Exceptions: ~300 bits (small daily variations)
-Total: GOOD ✓
-```
+### The Prequential Solution
+
+Instead of describing a model and then residuals, predict each data point using only the previous data points:
+
+$$L_{\text{preq}} = \sum_{i=1}^{n} -\log_2 P(x_i \mid x_1, \ldots, x_{i-1})$$
+
+This is the **cumulative log-loss** (surprise) of a sequential predictor. No model description is needed — the model is implicitly defined by the prediction procedure.
+
+**Key property:** This is a valid code length (it satisfies the Kraft inequality), so it's a legitimate MDL score even though it never explicitly describes a model.
+
+**Advantages over two-part codes:**
+- No arbitrary model description length
+- Natural for online/sequential settings
+- The model class's complexity is automatically accounted for through prediction performance
+
+The paper shows that prequential MDL is connected to Bayesian model averaging via the prequential plug-in code, where you use the maximum likelihood estimate at each step.
 
 ---
 
-## 🎪 Real Example: Polynomial Fitting
+## The Gold Standard: Normalized Maximum Likelihood (NML)
 
-You have 10 data points that look like a parabola.
+### The Idea
 
-### Degree 1 (Line)
-```
-Model: y = ax + b  (2 parameters)
-Model cost: 64 bits
-Fit quality: Poor (misses the curve)
-Residual cost: 500 bits
-Total: 564 bits
-```
+Given a model class $\mathcal{M}$ (e.g., "all polynomials of degree $\leq k$"), define:
 
-### Degree 2 (Parabola)
-```
-Model: y = ax² + bx + c  (3 parameters)
-Model cost: 96 bits
-Fit quality: Great!
-Residual cost: 50 bits
-Total: 146 bits ✓ WINNER
-```
+$$P_{\text{NML}}(x^n) = \frac{P(x^n \mid \hat{\theta}(x^n))}{\sum_{y^n} P(y^n \mid \hat{\theta}(y^n))}$$
 
-### Degree 9 (Crazy wiggly)
-```
-Model: y = ax⁹ + bx⁸ + ... (10 parameters)
-Model cost: 320 bits
-Fit quality: Perfect (goes through every point)
-Residual cost: 0 bits
-Total: 320 bits ✗ OVERFIT
-```
+where $\hat{\theta}(x^n)$ is the maximum likelihood estimate for data $x^n$.
 
-**MDL picked the parabola - the TRUE underlying pattern!**
+### What This Means
+
+The numerator is the best the model class can do on THIS data (maximum likelihood). The denominator sums this over ALL possible datasets — it measures how flexible the model class is.
+
+A more flexible model class has a larger denominator (it can fit many different datasets well), so each individual dataset gets a lower probability — more bits to encode.
+
+### Stochastic Complexity
+
+The NML codelength for data $x^n$ under model class $\mathcal{M}$ is:
+
+$$\text{COMP}(\mathcal{M}, n) = \log \sum_{y^n} P(y^n \mid \hat{\theta}(y^n))$$
+
+This is the **stochastic complexity** of the model class. It measures the "number of different datasets the model class can fit well" — a formal version of model complexity.
+
+**For Gaussian models:**
+
+$$\text{COMP} \approx \frac{k}{2} \log \frac{n}{2\pi}$$
+
+where $k$ is the number of parameters and $n$ is the sample size. This is similar to the BIC penalty but derived from information-theoretic first principles rather than Bayesian approximation.
 
 ---
 
-## 🆚 MDL vs. Other Methods
+## MDL vs. AIC vs. BIC
 
-### AIC (Akaike Information Criterion)
-```
-Score = Fit + 2 × (number of parameters)
+The paper devotes significant attention to comparing MDL with other model selection criteria.
 
-Problem: The "2" is arbitrary. Why 2 and not 3?
-```
+| Criterion | Penalty | Derivation | Properties |
+|-----------|---------|-----------|------------|
+| AIC | $2k$ | KL divergence minimization | Asymptotically efficient; tends to overfit in finite samples |
+| BIC | $k \log n$ | Laplace approximation to Bayesian marginal likelihood | Consistent (selects true model as $n \to \infty$) |
+| MDL (NML) | $\approx \frac{k}{2} \log \frac{n}{2\pi}$ | Minimax optimal universal code | Consistent; adapts to parameter geometry |
 
-### BIC (Bayesian Information Criterion)
-```
-Score = Fit + log(n) × (number of parameters)
+### Key differences from the paper:
 
-Problem: Assumes all parameters equally important.
-```
+1. **AIC does not penalize enough.** For polynomial selection, AIC systematically overfits in small samples because the $2k$ penalty doesn't grow with $n$.
 
-### MDL (Minimum Description Length)
-```
-Score = Model bits + Data bits
+2. **BIC is close to MDL.** For regular exponential family models, BIC approximates the NML codelength. The paper shows the connection: BIC $\approx$ NML + lower-order terms.
 
-Advantage: No arbitrary constants!
-          Penalty depends on how parameters are USED.
-          If a parameter ≈ 0, it costs almost 0 bits.
-```
+3. **MDL adapts to parameter geometry.** Unlike AIC/BIC, which penalize each parameter equally, MDL's penalty depends on how the parameters are used. A parameter near zero (barely used) costs fewer bits than a parameter far from zero.
+
+4. **MDL does not assume a "true model" exists.** AIC and BIC both assume the data was generated by some model in the class. MDL makes no such assumption — it works purely from compression.
 
 ---
 
-## 🧪 The Acid Test
+## Connection to Kolmogorov Complexity
 
-### Can your model predict NEW data?
+The paper traces MDL's intellectual lineage:
 
-**Overfit model:** 
-- Memorized the training data
-- Will fail on new data
-- MDL score was bad (model too long)
+**Kolmogorov Complexity $K(x)$**: The length of the shortest program that produces $x$. This is the "ideal" description length — the absolute limit of compression.
 
-**Good model:**
-- Learned the TRUE pattern
-- Will predict new data well
-- MDL score was good (compressed the pattern)
+**Problem**: $K(x)$ is uncomputable (undecidable).
 
-**MDL predicts generalization!**
-> Short description of old data → Good predictions on new data
+**MDL's relationship**: MDL restricts to a computable model class and minimizes description length within that class. As the model class grows (becomes more expressive), MDL codelengths approach $K(x)$:
 
----
+$$\text{MDL} \to K(x) \text{ as model class } \to \text{ all computable functions}$$
 
-## 🌌 The Deep Philosophy
+This connection, emphasized by Rissanen, gives MDL a philosophical foundation: learning is compression, and the best compression of a dataset captures its true regularities.
 
-### Occam's Razor Made Mathematical
+### Important nuance from the paper
 
-"Entities should not be multiplied beyond necessity"
-→ becomes →
-"Description length should not be multiplied beyond necessity"
-
-### Why does this work?
-
-1. **Universe has structure:** Patterns exist
-2. **Patterns compress:** Structure = compressibility
-3. **Random noise doesn't compress:** Noise is irreducible
-4. **Finding compression = finding structure:** Understanding!
-
-### The Ultimate MDL Equation
-
-```
-Understanding = Compression
-Intelligence = Finding short descriptions
-Learning = Minimizing description length
-```
+Grünwald is careful to distinguish MDL from naive "compression = intelligence" claims. MDL is relative to a model class. Without a good model class, MDL can't find patterns that the class can't express. Domain knowledge matters for choosing the model class.
 
 ---
 
-## 💡 Key Insights to Remember
+## What the Paper Doesn't Do
 
-### 1. Two Parts, One Goal
-```
-L(H) + L(D|H) = Model + Exceptions
-The sum should be MINIMAL.
-```
-
-### 2. Overfitting is EXPENSIVE
-```
-Perfect fit BUT long model → Bad MDL score
-Good fit AND short model → Good MDL score
-```
-
-### 3. Compression = Understanding
-```
-If you can compress it, you understand it.
-If you can't compress it, it's random (or you're missing something).
-```
-
-### 4. No Free Parameters
-```
-AIC: Why is the penalty 2?
-BIC: Why is the penalty log(n)?
-MDL: Penalty emerges from information theory. No magic numbers.
-```
-
-### 5. It's Universal
-```
-Works for: Polynomials, Neural Networks, Grammars, Images, DNA, ...
-The SAME principle applies everywhere.
-```
+- **No deep learning**: The examples are polynomials, Markov models, and simple parametric families. Neural networks are mentioned only in passing.
+- **No algorithm for NML computation**: For most model classes, computing the NML normalizing constant is intractable. The paper discusses approximations.
+- **No claim that MDL is always better**: Grünwald is explicit that MDL, AIC, and BIC all have regimes where they work well. MDL's advantage is theoretical principled-ness, not necessarily practical superiority in all settings.
 
 ---
 
-## 🎬 The Movie Analogy
+## Our Implementation (Going Beyond the Paper)
 
-**Bad movie summary (overfit):**
-```
-"A man named John who has brown hair and blue eyes and drives a 
-red car built in 2015 goes to a store that's on 5th street 
-at 3:47pm on a Tuesday to buy milk that costs $3.99..."
+The paper is theoretical. Our implementation makes it concrete:
 
-Length: 1000 words (longer than watching the movie!)
-```
+1. **Two-part code model selection** — polynomial regression with bits computation (demonstrates Section 3 of the paper)
+2. **Prequential MDL** — sequential prediction for time-series-like data (implements Section 5)
+3. **NML complexity computation** — approximate stochastic complexity for Gaussian models (implements Section 6)
+4. **MDL vs. AIC vs. BIC comparison** — head-to-head on polynomial selection (implements Section 8's comparison)
+5. **Monte Carlo trials** — statistical comparison across many random datasets (our addition for robustness testing)
 
-**Good movie summary (MDL optimal):**
-```
-"John goes grocery shopping."
-
-Length: 4 words
-Missing details: Color of car (irrelevant)
-Kept details: The plot!
-```
-
-**The MDL principle finds the PLOT, not the noise.**
+The polynomial selection experiment is the paper's running example. The Monte Carlo comparison is our extension.
 
 ---
 
-## 🏆 One Thing to Remember
+## Key Equations Summary
 
-If you forget everything else, remember this:
-
-> **The best model is the one that compresses your data the most.**
-> 
-> Not the one that fits best.
-> Not the one that's simplest.
-> The one that COMPRESSES best.
-
-Compression forces you to find the true pattern, ignore the noise, and achieve the perfect balance.
-
----
-
-## 🚀 Next Steps
-
-1. **Read the README** for mathematical formulas
-2. **Check the CHEATSHEET** for quick code snippets
-3. **Run `train_minimal.py`** to see MDL in action
-4. **Do the exercises** to build your own MDL system
+| Concept | Equation | Source |
+|---------|----------|--------|
+| Two-Part MDL | $L(H) + L(D \mid H)$ | Paper, Section 3 |
+| Gaussian residual code | $\frac{n}{2}\log_2(2\pi e \hat{\sigma}^2)$ | Paper, Section 3 |
+| Prequential MDL | $\sum_i -\log_2 P(x_i \mid x_{<i})$ | Paper, Section 5 |
+| NML distribution | $P_{\text{NML}}(x) = P(x \mid \hat{\theta}(x)) / C_n$ | Paper, Section 6 |
+| Stochastic complexity | $\text{COMP} \approx \frac{k}{2}\log\frac{n}{2\pi}$ | Paper, Section 6 |
+| AIC | $-2\log L + 2k$ | Akaike (1974), discussed in Section 8 |
+| BIC | $-2\log L + k\log n$ | Schwarz (1978), discussed in Section 8 |
 
 ---
 
-*"If you understand something, you can describe it briefly. If you can't describe it briefly, you don't understand it."*
-— Possibly Einstein, definitely true
+## Questions Worth Thinking About
+
+1. The two-part code requires choosing how many bits per parameter. What happens if you use 16-bit vs. 64-bit precision? How does this change which model MDL selects, and why?
+
+2. Prequential MDL depends on the order you process the data. For i.i.d. data this doesn't matter asymptotically, but for small samples it can. What does this imply about using prequential MDL in practice?
+
+3. Grünwald notes that MDL and Bayesian model selection are related but not identical. When do they disagree, and whose answer do you trust?
+
+4. The paper argues that "compression = finding regularities." But a JPEG compresses an image using the DCT, which may have nothing to do with the image's semantic content. Does MDL really capture "understanding," or just statistical regularity?
+
+---
+
+**Next:** [Day 6](../06_Complexodynamics/)
