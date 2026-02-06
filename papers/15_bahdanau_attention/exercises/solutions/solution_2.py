@@ -1,7 +1,7 @@
 """
 Solution 2: Bidirectional Encoder
 
-The encoder that sees the future AND the past.
+Reference implementation of a bidirectional GRU encoder.
 """
 
 import torch
@@ -14,8 +14,8 @@ class BidirectionalEncoder(nn.Module):
     Bidirectional GRU Encoder.
     
     Why bidirectional?
-    - Forward pass: "I love cats" → context builds left-to-right
-    - Backward pass: "I love cats" → context builds right-to-left
+    - Forward pass: "I love cats" -> context builds left-to-right
+    - Backward pass: "I love cats" -> context builds right-to-left
     - Together: each position knows about the ENTIRE sentence
     
     This is crucial for attention! When we attend to position 2,
@@ -179,7 +179,7 @@ def test_bidirectional_encoder():
     assert hidden.shape == (2, batch_size, hidden_size), \
         f"Wrong hidden shape: {hidden.shape}"
     
-    print("  ✓ Output shapes correct")
+    print("  Output shapes correct")
     
     # Check that padded positions still have valid outputs
     # (they should, pack_padded_sequence handles this)
@@ -189,7 +189,7 @@ def test_bidirectional_encoder():
     assert encoder.embedding.weight.grad is not None, "No gradient for embeddings!"
     assert encoder.output_projection.weight.grad is not None, "No gradient for projection!"
     
-    print("  ✓ Gradients flow correctly")
+    print("  Gradients flow correctly")
     
     # Test that different length handling is correct
     encoder.zero_grad()
@@ -197,7 +197,7 @@ def test_bidirectional_encoder():
     # The output for sample 1 (length 3) at position 4+ should be from padding
     # but the hidden state should properly represent positions 0-2
     
-    print("\n✅ All tests passed!")
+    print("Test passed.")
     return encoder
 
 

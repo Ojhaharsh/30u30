@@ -1,7 +1,7 @@
 """
 Solution 3: Attention Decoder
 
-The decoder that knows where to look.
+Reference implementation of a Seq2Seq decoder with Bahdanau attention.
 """
 
 import torch
@@ -208,14 +208,14 @@ def test_attention_decoder():
     assert attentions.shape == (batch_size, trg_len - 1, src_len), \
         f"Wrong attention shape: {attentions.shape}"
     
-    print("  ✓ Output shapes correct")
+    print("  Output shapes correct")
     
     # Check attention sums to 1
     attn_sums = attentions.sum(dim=-1)
     assert torch.allclose(attn_sums, torch.ones_like(attn_sums), atol=1e-5), \
         "Attention weights don't sum to 1"
     
-    print("  ✓ Attention weights sum to 1")
+    print("  Attention weights sum to 1")
     
     # Test forward_step
     input_token = torch.randint(3, vocab_size, (batch_size,))
@@ -232,14 +232,14 @@ def test_attention_decoder():
     assert attn.shape == (batch_size, src_len), \
         f"Wrong step attention shape: {attn.shape}"
     
-    print("  ✓ Forward step shapes correct")
+    print("  Forward step shapes correct")
     
     # Test gradient flow
     outputs.sum().backward()
     assert decoder.embedding.weight.grad is not None, "No gradient for embeddings!"
     assert decoder.attention.W_h.weight.grad is not None, "No gradient for attention!"
     
-    print("  ✓ Gradients flow correctly")
+    print("  Gradients flow correctly")
     
     # Test with mask
     decoder.zero_grad()
@@ -254,9 +254,9 @@ def test_attention_decoder():
     masked_attn = attentions_masked[:, :, -2:]
     assert (masked_attn < 1e-5).all(), "Masked positions have attention weight!"
     
-    print("  ✓ Masking works correctly")
+    print("  Masking works correctly")
     
-    print("\n✅ All tests passed!")
+    print("Test passed.")
     return decoder
 
 
