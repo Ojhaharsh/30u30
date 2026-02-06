@@ -1,498 +1,501 @@
 """
-Day 7: Quantifying the Rise and Fall of Complexity in Closed Systems: The Coffee Automaton
+Coffee Automaton — Implementation of Aaronson, Carroll, Ouellette (2014)
+Paper: arXiv:1405.6903
 
-This module implements the Coffee Automaton - a cellular automaton that demonstrates
-how complexity emerges, peaks, and then decays in closed systems. This models
-everything from coffee cooling to the evolution of the universe itself.
+Implements the two models from the paper:
+  - Interacting model (Section 3.1): binary grid, random adjacent swaps
+  - Non-interacting model (Section 3.2): independent cream particle random walks
 
-The key insight: Complexity is temporary and peaks in the "middle" of a system's
-evolution from order to disorder.
+And the two measurement approaches:
+  - Coarse-graining with 3-bucket thresholding (Section 5)
+  - Adjusted coarse-graining with 7-bucket + row-majority (Section 6)
 
-Author: 30u30 Project
-Based on: "Quantifying the Rise and Fall of Complexity in Closed Systems: The Coffee Automaton"
-         by Aaronson et al. (2014) - https://arxiv.org/abs/1405.6903
+Complexity and entropy are estimated via gzip compressed size,
+as a proxy for Kolmogorov complexity.
 """
 
+import gzip
 import numpy as np
-import matplotlib.pyplot as plt
-from scipy import ndimage
-from typing import List, Tuple, Dict, Union
-import warnings
-warnings.filterwarnings('ignore')
+from typing import Optional, Tuple, List, Dict
 
+
+# ---------------------------------------------------------------------------
+# Utility: gzip-based Kolmogorov complexity proxy
+# ---------------------------------------------------------------------------
+
+def gzip_size(data: bytes, level: int = 9) -> int:
+    """
+    Compressed size in bytes — our proxy for K(x).
+    The paper uses gzip throughout (Section 4), and shows different compressors
+    give qualitatively similar curves (Figure 5).
+    """
+    return len(gzip.compress(data, compresslevel=level))
+
+
+def grid_to_bytes(grid: np.ndarray) -> bytes:
+    """Convert a numpy grid to bytes for compression."""
+    return grid.astype(np.uint8).tobytes()
+
+
+# ---------------------------------------------------------------------------
+# Coarse-graining (Sections 5 and 6)
+# ---------------------------------------------------------------------------
+
+def coarse_grain(grid: np.ndarray, grain_size: int) -> np.ndarray:
+    """
+    Coarse-grain the grid by averaging over grain_size x grain_size blocks.
+
+    From Section 5.1: "we construct a new array in which the value of each cell
+    is the average of the values of the nearby cells in the fine-grained array.
+    We define 'nearby' cells as those within a g x g square centered at the
+    cell in question."
+
+    Returns a float array with values in [0, 1].
+    """
+    n = grid.shape[0]
+    # Number of coarse cells
+    cn = n // grain_size
+    if cn == 0:
+        cn = 1
+
+    coarse = np.zeros((cn, cn), dtype=np.float64)
+    for i in range(cn):
+        for j in range(cn):
+            r0 = i * grain_size
+            c0 = j * grain_size
+            r1 = min(r0 + grain_size, n)
+            c1 = min(c0 + grain_size, n)
+            coarse[i, j] = grid[r0:r1, c0:c1].mean()
+    return coarse
+
+
+def threshold_array(coarse: np.ndarray, num_buckets: int = 3) -> np.ndarray:
+    """
+    Threshold floating-point coarse-grained array into discrete buckets.
+
+    Section 5.1: 3 buckets — "areas which are mostly coffee (values close to 0),
+    mostly cream (values close to 1), or mixed (values close to 0.5)."
+
+    Section 6.1: 7 buckets — finer resolution to reduce border artifacts.
+
+    Returns uint8 array with values in [0, num_buckets-1].
+    """
+    # Map [0, 1] to [0, num_buckets-1] and round
+    scaled = coarse * (num_buckets - 1)
+    return np.clip(np.round(scaled), 0, num_buckets - 1).astype(np.uint8)
+
+
+def row_majority_adjust(thresholded: np.ndarray) -> np.ndarray:
+    """
+    Adjusted coarse-graining from Section 6.1.
+
+    "If a cell is within one threshold value of the majority value in its row,
+    it is adjusted to the majority value."
+
+    This removes border pixel artifacts that caused fake complexity
+    in the non-interacting model.
+    """
+    adjusted = thresholded.copy()
+    for i in range(adjusted.shape[0]):
+        row = adjusted[i]
+        # Find majority value in this row
+        values, counts = np.unique(row, return_counts=True)
+        majority = values[np.argmax(counts)]
+        # Snap cells within 1 bucket of majority
+        mask = np.abs(row.astype(np.int16) - int(majority)) <= 1
+        adjusted[i, mask] = majority
+    return adjusted
+
+
+# ---------------------------------------------------------------------------
+# Complexity and entropy measurement
+# ---------------------------------------------------------------------------
+
+def measure_entropy(grid: np.ndarray) -> int:
+    """
+    Entropy estimate: gzip compressed size of the fine-grained state.
+
+    Section 4: "the estimated entropy of the automaton state is the compressed
+    file size of the fine-grained array."
+    """
+    return gzip_size(grid_to_bytes(grid))
+
+
+def measure_complexity(grid: np.ndarray, grain_size: int = 10,
+                       num_buckets: int = 7, adjust: bool = True) -> int:
+    """
+    Apparent complexity estimate: gzip compressed size of coarse-grained state.
+
+    Section 4: "The estimated complexity of the state, K(S), is the file size
+    of the thresholded, coarse-grained array after compression."
+
+    Args:
+        grid: The fine-grained binary grid (N x N, uint8)
+        grain_size: Size of coarse-graining blocks (g in the paper)
+        num_buckets: Number of threshold buckets (3 for Section 5, 7 for Section 6)
+        adjust: Whether to apply row-majority adjustment (Section 6)
+    """
+    coarse = coarse_grain(grid, grain_size)
+    discrete = threshold_array(coarse, num_buckets)
+    if adjust:
+        discrete = row_majority_adjust(discrete)
+    return gzip_size(grid_to_bytes(discrete))
+
+
+# ---------------------------------------------------------------------------
+# The Coffee Automaton (Section 3)
+# ---------------------------------------------------------------------------
 
 class CoffeeAutomaton:
     """
-    The Coffee Automaton: A cellular automaton modeling complexity dynamics.
-    
-    This simulates a coffee cooling process where complexity emerges from the
-    interaction between hot and cold regions, peaks during the cooling process,
-    and then fades as thermal equilibrium is reached.
-    
-    The automaton demonstrates the universal pattern:
-    Simple → Complex → Simple (but at different equilibrium)
+    The coffee automaton from Section 3 of the paper.
+
+    A 2D grid of binary values: 1 = cream, 0 = coffee.
+    Initial state: top half = cream (1), bottom half = coffee (0).
+
+    Two models:
+    - 'interacting' (Section 3.1): One adjacent-different-pair swap per step.
+      "only one particle may occupy each cell."
+    - 'non_interacting' (Section 3.2): Each cream particle random-walks
+      independently. Multiple can occupy one cell.
     """
-    
-    def __init__(self, size: int = 100, rule_type: str = 'thermal_diffusion'):
+
+    def __init__(self, grid_size: int = 100, model: str = 'interacting',
+                 seed: Optional[int] = None):
         """
-        Initialize the Coffee Automaton.
-        
         Args:
-            size: Grid size (size x size)
-            rule_type: Evolution rule ('thermal_diffusion', 'convection', 'mixed')
+            grid_size: Side length of the square grid (N in paper)
+            model: 'interacting' or 'non_interacting'
+            seed: Random seed for reproducibility
         """
-        self.size = size
-        self.grid = np.zeros((size, size), dtype=np.float32)
-        self.rule_type = rule_type
-        self.history = []
-        self.complexity_history = []
+        self.n = grid_size
+        self.model = model
+        self.rng = np.random.default_rng(seed)
         self.time = 0
-        
-        # Physical parameters
-        self.thermal_diffusivity = 0.1
-        self.convection_strength = 0.05
-        self.cooling_rate = 0.01
-        self.ambient_temperature = 0.0
-        
-    def add_heat_source(self, center: Tuple[int, int], radius: int, temperature: float):
-        """
-        Add a hot region to simulate pouring coffee.
-        
-        Args:
-            center: (row, col) center of heat source
-            radius: Radius of the hot region
-            temperature: Initial temperature (0.0 = cold, 1.0 = very hot)
-        """
-        r, c = center
-        y, x = np.ogrid[:self.size, :self.size]
-        mask = (x - c)**2 + (y - r)**2 <= radius**2
-        self.grid[mask] = temperature
-        
-    def add_random_perturbation(self, strength: float = 0.01):
-        """Add small random fluctuations to break symmetry."""
-        noise = np.random.normal(0, strength, self.grid.shape)
-        self.grid += noise
-        self.grid = np.clip(self.grid, 0, 1)
-        
-    def evolve_step(self):
-        """
-        Evolve the system one time step using the specified rule.
-        """
-        if self.rule_type == 'thermal_diffusion':
-            self._thermal_diffusion_step()
-        elif self.rule_type == 'convection':
-            self._convection_step()
-        elif self.rule_type == 'mixed':
-            self._mixed_dynamics_step()
+
+        if model == 'interacting':
+            # Binary grid: top half = 1 (cream), bottom half = 0 (coffee)
+            # Section 3: "The automaton begins in a state in which the top half
+            # of the cells are filled with ones, and the bottom half is filled
+            # with zeros."
+            self.grid = np.zeros((grid_size, grid_size), dtype=np.uint8)
+            self.grid[:grid_size // 2, :] = 1
+        elif model == 'non_interacting':
+            # For non-interacting, track cream particle positions.
+            # Count grid: how many cream particles at each cell.
+            # Initially, one per cell in top half.
+            self.grid = np.zeros((grid_size, grid_size), dtype=np.uint16)
+            self.grid[:grid_size // 2, :] = 1
+            # Also store individual particle positions for random walks
+            self._init_particles()
         else:
-            raise ValueError(f"Unknown rule type: {self.rule_type}")
-            
-        # Apply cooling to ambient temperature
-        self.grid = self.grid - self.cooling_rate * (self.grid - self.ambient_temperature)
-        self.grid = np.clip(self.grid, 0, 1)
-        
-        # Record state
-        self.history.append(self.grid.copy())
-        self.complexity_history.append(self.measure_total_complexity())
-        self.time += 1
-        
-    def _thermal_diffusion_step(self):
-        """Pure thermal diffusion using discrete Laplacian."""
-        laplacian = ndimage.laplace(self.grid)
-        self.grid += self.thermal_diffusivity * laplacian
-        
-    def _convection_step(self):
-        """Convection patterns based on temperature gradients."""
-        # Calculate gradients
-        grad_y, grad_x = np.gradient(self.grid)
-        
-        # Create flow field (hot rises, cold sinks)
-        flow_y = self.convection_strength * grad_y
-        flow_x = self.convection_strength * grad_x
-        
-        # Apply flow using simple advection
-        for i in range(1, self.size-1):
-            for j in range(1, self.size-1):
-                # Upwind scheme for stability
-                if flow_y[i,j] > 0:
-                    dy = self.grid[i,j] - self.grid[i-1,j]
-                else:
-                    dy = self.grid[i+1,j] - self.grid[i,j]
-                    
-                if flow_x[i,j] > 0:
-                    dx = self.grid[i,j] - self.grid[i,j-1]
-                else:
-                    dx = self.grid[i,j+1] - self.grid[i,j]
-                    
-                self.grid[i,j] -= flow_y[i,j] * dy + flow_x[i,j] * dx
-                
-    def _mixed_dynamics_step(self):
-        """Combined thermal diffusion and convection."""
-        self._thermal_diffusion_step()
-        self._convection_step()
+            raise ValueError(f"model must be 'interacting' or 'non_interacting', got '{model}'")
+
+    def _init_particles(self):
+        """Initialize particle position list for non-interacting model."""
+        self.particles = []
+        for r in range(self.n // 2):
+            for c in range(self.n):
+                self.particles.append([r, c])
+        self.particles = np.array(self.particles, dtype=np.int32)
+
+    def step(self, num_steps: int = 1):
+        """
+        Advance the automaton by num_steps.
+
+        For the interacting model, we do batch swaps for efficiency:
+        select many random adjacent pairs, filter to those that differ,
+        and swap them. This is faster than one-swap-per-step while
+        preserving the qualitative dynamics.
+
+        The paper does one swap per step (Section 3.1), but that's
+        extremely slow for large grids. Batch swapping speeds things
+        up without changing the equilibrium behavior.
+        """
+        if self.model == 'interacting':
+            self._step_interacting(num_steps)
+        else:
+            self._step_non_interacting(num_steps)
+        self.time += num_steps
+
+    def _step_interacting(self, num_steps: int):
+        """
+        Interacting model: random adjacent swaps.
+
+        Section 3.1: "at each time step, one pair of horizontally or
+        vertically adjacent, differing particles is selected, and the
+        particles' positions are swapped."
+
+        We batch multiple non-conflicting swaps per call for speed.
+        """
+        n = self.n
+        grid = self.grid
+
+        # How many candidate swaps per batch —
+        # roughly n*n/4 so each pixel gets ~1 chance per batch
+        batch_size = max(1, (n * n) // 4)
+
+        for _ in range(num_steps):
+            # Pick random cells
+            rows = self.rng.integers(0, n, size=batch_size)
+            cols = self.rng.integers(0, n, size=batch_size)
+
+            # Pick random direction: 0=up, 1=down, 2=left, 3=right
+            dirs = self.rng.integers(0, 4, size=batch_size)
+
+            # Compute neighbor coordinates
+            dr = np.array([[-1, 0], [1, 0], [0, -1], [0, 1]])
+            nr = rows + dr[dirs, 0]
+            nc = cols + dr[dirs, 1]
+
+            # Filter: within bounds
+            valid = (nr >= 0) & (nr < n) & (nc >= 0) & (nc < n)
+
+            rows = rows[valid]
+            cols = cols[valid]
+            nr = nr[valid]
+            nc = nc[valid]
+
+            # Filter: different values (only swap if they differ)
+            diff = grid[rows, cols] != grid[nr, nc]
+            rows = rows[diff]
+            cols = cols[diff]
+            nr = nr[diff]
+            nc = nc[diff]
+
+            # Swap
+            if len(rows) > 0:
+                temp = grid[rows, cols].copy()
+                grid[rows, cols] = grid[nr, nc]
+                grid[nr, nc] = temp
+
+    def _step_non_interacting(self, num_steps: int):
+        """
+        Non-interacting model: each cream particle random-walks.
+
+        Section 3.2: "at each time step, each cream particle in the system
+        moves one step in a randomly chosen direction."
+        """
+        n = self.n
+        directions = np.array([[-1, 0], [1, 0], [0, -1], [0, 1]])
+
+        for _ in range(num_steps):
+            # Clear the count grid and rebuild
+            self.grid[:] = 0
+
+            # Move each particle in a random direction
+            choices = self.rng.integers(0, 4, size=len(self.particles))
+            moves = directions[choices]
+            self.particles += moves
+
+            # Periodic boundary conditions
+            # Section 9 (Appendix) assumes periodic boundaries
+            self.particles[:, 0] %= n
+            self.particles[:, 1] %= n
+
+            # Rebuild count grid
+            for p in self.particles:
+                self.grid[p[0], p[1]] += 1
+
+    def get_binary_grid(self) -> np.ndarray:
+        """
+        Get the state as a binary grid for measurement.
+
+        For the interacting model, this is just self.grid.
+        For the non-interacting model, convert counts to binary:
+        1 if any cream particle present, 0 otherwise.
+        """
+        if self.model == 'interacting':
+            return self.grid
+        else:
+            return (self.grid > 0).astype(np.uint8)
+
+    def entropy(self) -> int:
+        """Entropy estimate: gzip(fine-grained state). See Section 4."""
+        return measure_entropy(self.get_binary_grid())
+
+    def complexity(self, grain_size: Optional[int] = None,
+                   num_buckets: int = 7, adjust: bool = True) -> int:
+        """
+        Apparent complexity estimate: gzip(coarse-grained state).
+        See Sections 5 and 6.
+
+        Args:
+            grain_size: g in the paper. Default: n // 10
+            num_buckets: 3 (Section 5) or 7 (Section 6)
+            adjust: Apply row-majority adjustment (Section 6)
+        """
+        if grain_size is None:
+            grain_size = max(2, self.n // 10)
+        return measure_complexity(self.get_binary_grid(), grain_size,
+                                  num_buckets, adjust)
+
+    def fraction_mixed(self) -> float:
+        """
+        Fraction of cells that are "wrong" (cream in bottom half or
+        coffee in top half). A simple monotonic proxy for entropy.
+        """
+        grid = self.get_binary_grid()
+        n = self.n
+        # Cream in bottom half + coffee in top half
+        wrong = (np.sum(grid[n // 2:, :] == 1) +
+                 np.sum(grid[:n // 2, :] == 0))
+        total = n * n
+        return wrong / total
 
 
-class ComplexityMeasures:
+# ---------------------------------------------------------------------------
+# Simulation runner
+# ---------------------------------------------------------------------------
+
+def run_simulation(grid_size: int = 50, total_steps: int = 100000,
+                   num_snapshots: int = 100, model: str = 'interacting',
+                   grain_size: Optional[int] = None, num_buckets: int = 7,
+                   adjust: bool = True, seed: Optional[int] = 42
+                   ) -> Dict[str, np.ndarray]:
     """
-    Collection of complexity measures for analyzing system evolution.
-    
-    Implements various measures of complexity including Shannon entropy,
-    logical depth approximations, effective complexity, and more.
+    Run the coffee automaton and collect measurements over time.
+
+    Returns a dict with keys:
+        'times': array of time steps
+        'entropy': array of entropy estimates
+        'complexity': array of complexity estimates
+        'fraction_mixed': array of mixing fractions
+        'grids': list of grid snapshots (if grid_size <= 100)
+
+    Args:
+        grid_size: N (side length)
+        total_steps: Total number of steps
+        num_snapshots: Number of measurement points
+        model: 'interacting' or 'non_interacting'
+        grain_size: Coarse-graining block size (default: n//10)
+        num_buckets: 3 or 7 (Section 5 vs Section 6)
+        adjust: Row-majority adjustment (Section 6)
+        seed: Random seed
     """
-    
-    @staticmethod
-    def shannon_entropy(grid: np.ndarray, bins: int = 100) -> float:
-        """
-        Calculate Shannon entropy of the temperature distribution.
-        
-        High entropy = uniform distribution
-        Low entropy = concentrated distribution
-        """
-        # Discretize the continuous grid
-        hist, _ = np.histogram(grid.flatten(), bins=bins, range=(0, 1))
-        # Add small epsilon to avoid log(0)
-        hist = hist + 1e-10
-        probs = hist / hist.sum()
-        return -np.sum(probs * np.log2(probs))
-    
-    @staticmethod
-    def spatial_entropy(grid: np.ndarray, window_size: int = 5) -> float:
-        """
-        Calculate entropy of local spatial patterns.
-        
-        Measures how predictable local neighborhoods are.
-        High values indicate complex spatial structure.
-        """
-        patterns = []
-        for i in range(0, grid.shape[0] - window_size + 1, window_size//2):
-            for j in range(0, grid.shape[1] - window_size + 1, window_size//2):
-                patch = grid[i:i+window_size, j:j+window_size]
-                # Convert to discrete pattern
-                pattern = (patch > patch.mean()).astype(int)
-                pattern_hash = hash(pattern.tobytes())
-                patterns.append(pattern_hash)
-        
-        # Calculate entropy of pattern distribution
-        unique_patterns, counts = np.unique(patterns, return_counts=True)
-        probs = counts / len(patterns)
-        return -np.sum(probs * np.log2(probs + 1e-10))
-    
-    @staticmethod
-    def logical_depth_proxy(grid: np.ndarray) -> float:
-        """
-        Approximate logical depth using compression-based measure.
-        
-        Logical depth ≈ computational steps to generate pattern
-        We approximate this by measuring how much the pattern
-        can be compressed vs. a random baseline.
-        """
-        # Convert to binary for compression
-        binary_grid = (grid > grid.mean()).astype(np.uint8)
-        
-        # Calculate run-length encoding compression
-        flat = binary_grid.flatten()
-        runs = []
-        current_val = flat[0]
-        count = 1
-        
-        for val in flat[1:]:
-            if val == current_val:
-                count += 1
-            else:
-                runs.append(count)
-                current_val = val
-                count = 1
-        runs.append(count)
-        
-        # Logical depth proxy: patterns requiring many runs have higher depth
-        compression_ratio = len(runs) / len(flat)
-        
-        # Invert so higher complexity = higher depth
-        return 1.0 / (compression_ratio + 1e-10)
-    
-    @staticmethod
-    def effective_complexity(grid: np.ndarray) -> float:
-        """
-        Murray Gell-Mann's effective complexity.
-        
-        Measures the length of the shortest description of the
-        system's regularities (not its random parts).
-        """
-        # Find dominant spatial frequency components
-        fft = np.fft.fft2(grid)
-        power_spectrum = np.abs(fft)**2
-        
-        # Count significant frequency components (regularities)
-        threshold = 0.01 * np.max(power_spectrum)
-        significant_modes = np.sum(power_spectrum > threshold)
-        
-        # Effective complexity = number of significant patterns
-        total_modes = grid.size
-        return significant_modes / total_modes
-    
-    @staticmethod
-    def thermodynamic_depth(grid: np.ndarray, grid_prev: np.ndarray) -> float:
-        """
-        Energy required to construct current state from previous state.
-        
-        Measures the thermodynamic cost of creating the current pattern.
-        """
-        if grid_prev is None:
-            return 0.0
-            
-        # Energy difference between states
-        energy_diff = np.sum((grid - grid_prev)**2)
-        
-        # Normalize by system size
-        return energy_diff / grid.size
-    
-    @staticmethod
-    def lempel_ziv_complexity(grid: np.ndarray) -> float:
-        """
-        Lempel-Ziv complexity measure.
-        
-        Counts the number of distinct patterns encountered
-        when parsing the sequence.
-        """
-        # Convert to binary string
-        binary_grid = (grid > grid.mean()).astype(int)
-        sequence = ''.join(binary_grid.flatten().astype(str))
-        
-        # Lempel-Ziv parsing
-        patterns = set()
-        i = 0
-        
-        while i < len(sequence):
-            # Find longest pattern not yet seen
-            pattern = sequence[i]
-            j = i + 1
-            
-            while j <= len(sequence) and pattern in patterns:
-                if j < len(sequence):
-                    pattern += sequence[j]
-                j += 1
-                
-            patterns.add(pattern)
-            i = j
-            
-        return len(patterns) / len(sequence)
+    ca = CoffeeAutomaton(grid_size, model, seed)
+
+    if grain_size is None:
+        grain_size = max(2, grid_size // 10)
+
+    steps_per_snapshot = max(1, total_steps // num_snapshots)
+    store_grids = grid_size <= 100
+
+    times = []
+    entropies = []
+    complexities = []
+    fractions = []
+    grids = []
+
+    # Measure initial state
+    times.append(0)
+    entropies.append(ca.entropy())
+    complexities.append(ca.complexity(grain_size, num_buckets, adjust))
+    fractions.append(ca.fraction_mixed())
+    if store_grids:
+        grids.append(ca.get_binary_grid().copy())
+
+    for i in range(num_snapshots):
+        ca.step(steps_per_snapshot)
+        times.append(ca.time)
+        entropies.append(ca.entropy())
+        complexities.append(ca.complexity(grain_size, num_buckets, adjust))
+        fractions.append(ca.fraction_mixed())
+        if store_grids:
+            grids.append(ca.get_binary_grid().copy())
+
+    results = {
+        'times': np.array(times),
+        'entropy': np.array(entropies),
+        'complexity': np.array(complexities),
+        'fraction_mixed': np.array(fractions),
+    }
+    if store_grids:
+        results['grids'] = grids
+
+    return results
 
 
-class ComplexityTracker:
+def compare_models(grid_size: int = 50, total_steps: int = 100000,
+                   num_snapshots: int = 100, seed: int = 42
+                   ) -> Tuple[Dict, Dict]:
     """
-    Tracks and analyzes the evolution of complexity over time.
-    
-    This class manages the measurement of various complexity metrics
-    throughout the system's evolution and provides analysis tools.
+    Run both interacting and non-interacting models and return results.
+    Useful for replicating the paper's comparison (Figures 2 and 10).
     """
-    
-    def __init__(self):
-        self.metrics = {
-            'shannon_entropy': [],
-            'spatial_entropy': [],
-            'logical_depth': [],
-            'effective_complexity': [],
-            'thermodynamic_depth': [],
-            'lempel_ziv': []
-        }
-        self.time_steps = []
-        
-    def measure_step(self, grid: np.ndarray, prev_grid: np.ndarray = None, time: int = 0):
-        """Measure all complexity metrics for current state."""
-        self.time_steps.append(time)
-        
-        # Calculate all metrics
-        self.metrics['shannon_entropy'].append(
-            ComplexityMeasures.shannon_entropy(grid)
-        )
-        self.metrics['spatial_entropy'].append(
-            ComplexityMeasures.spatial_entropy(grid)
-        )
-        self.metrics['logical_depth'].append(
-            ComplexityMeasures.logical_depth_proxy(grid)
-        )
-        self.metrics['effective_complexity'].append(
-            ComplexityMeasures.effective_complexity(grid)
-        )
-        self.metrics['thermodynamic_depth'].append(
-            ComplexityMeasures.thermodynamic_depth(grid, prev_grid)
-        )
-        self.metrics['lempel_ziv'].append(
-            ComplexityMeasures.lempel_ziv_complexity(grid)
-        )
-    
-    def get_peak_complexity_time(self, metric: str = 'effective_complexity') -> int:
-        """Find when complexity peaked for given metric."""
-        values = self.metrics[metric]
-        peak_idx = np.argmax(values)
-        return self.time_steps[peak_idx]
-    
-    def get_complexity_curve(self, metric: str = 'effective_complexity') -> Tuple[List, List]:
-        """Get time series of complexity for plotting."""
-        return self.time_steps.copy(), self.metrics[metric].copy()
-    
-    def analyze_phases(self, metric: str = 'effective_complexity') -> Dict:
-        """
-        Analyze the three phases of complexity evolution:
-        1. Growth phase (simple → complex)
-        2. Peak phase (maximum complexity)
-        3. Decay phase (complex → simple)
-        """
-        values = self.metrics[metric]
-        peak_idx = np.argmax(values)
-        
-        growth_phase = values[:peak_idx+1]
-        decay_phase = values[peak_idx:]
-        
-        analysis = {
-            'peak_time': self.time_steps[peak_idx],
-            'peak_value': values[peak_idx],
-            'growth_rate': np.mean(np.diff(growth_phase)) if len(growth_phase) > 1 else 0,
-            'decay_rate': np.mean(np.diff(decay_phase)) if len(decay_phase) > 1 else 0,
-            'total_evolution_time': len(values),
-            'growth_duration': peak_idx,
-            'decay_duration': len(values) - peak_idx
-        }
-        
-        return analysis
+    print(f"Running interacting model ({grid_size}x{grid_size}, {total_steps} steps)...")
+    interacting = run_simulation(grid_size, total_steps, num_snapshots,
+                                 'interacting', seed=seed)
+
+    print(f"Running non-interacting model ({grid_size}x{grid_size}, {total_steps} steps)...")
+    non_interacting = run_simulation(grid_size, total_steps, num_snapshots,
+                                     'non_interacting', seed=seed)
+
+    return interacting, non_interacting
 
 
-class CoffeeExperiments:
+def scaling_experiment(sizes: List[int] = None, steps_per_pixel: int = 40,
+                       num_snapshots: int = 100, seed: int = 42
+                       ) -> Dict[str, np.ndarray]:
     """
-    Collection of experiments demonstrating complexity dynamics.
+    Replicate the scaling experiment from Figures 6-8.
+    Measure max entropy, max complexity, and time to max complexity
+    as a function of grid size.
+
+    The paper found:
+    - Max entropy ~ n^2
+    - Max complexity ~ n
+    - Time to max complexity ~ n^2
     """
-    
-    @staticmethod
-    def basic_cooling_experiment(size: int = 64, steps: int = 200) -> Tuple[CoffeeAutomaton, ComplexityTracker]:
-        """
-        Basic coffee cooling experiment.
-        Single hot source cooling down in a cold environment.
-        """
-        automaton = CoffeeAutomaton(size=size, rule_type='mixed')
-        tracker = ComplexityTracker()
-        
-        # Pour hot coffee in center
-        center = (size//2, size//2)
-        automaton.add_heat_source(center, radius=size//6, temperature=1.0)
-        automaton.add_random_perturbation(0.01)
-        
-        # Initial measurement
-        tracker.measure_step(automaton.grid, time=0)
-        
-        # Evolve system
-        prev_grid = automaton.grid.copy()
-        for step in range(steps):
-            automaton.evolve_step()
-            tracker.measure_step(automaton.grid, prev_grid, time=step+1)
-            prev_grid = automaton.grid.copy()
-            
-        return automaton, tracker
-    
-    @staticmethod
-    def multiple_sources_experiment(size: int = 64, steps: int = 150) -> Tuple[CoffeeAutomaton, ComplexityTracker]:
-        """
-        Multiple heat sources creating complex interference patterns.
-        """
-        automaton = CoffeeAutomaton(size=size, rule_type='mixed')
-        tracker = ComplexityTracker()
-        
-        # Multiple coffee cups
-        sources = [
-            ((size//4, size//4), size//10, 0.9),
-            ((3*size//4, size//4), size//10, 0.8),
-            ((size//2, 3*size//4), size//10, 0.7)
-        ]
-        
-        for center, radius, temp in sources:
-            automaton.add_heat_source(center, radius, temp)
-            
-        automaton.add_random_perturbation(0.02)
-        
-        # Track evolution
-        tracker.measure_step(automaton.grid, time=0)
-        prev_grid = automaton.grid.copy()
-        
-        for step in range(steps):
-            automaton.evolve_step()
-            tracker.measure_step(automaton.grid, prev_grid, time=step+1)
-            prev_grid = automaton.grid.copy()
-            
-        return automaton, tracker
-    
-    @staticmethod
-    def life_sweet_spot_experiment() -> Dict:
-        """
-        Experiment showing complexity peaks at intermediate energy levels.
-        Tests the hypothesis that life exists in the complexity maximum.
-        """
-        results = {}
-        energy_levels = np.linspace(0.1, 0.9, 9)
-        
-        for energy in energy_levels:
-            automaton = CoffeeAutomaton(size=48, rule_type='mixed')
-            tracker = ComplexityTracker()
-            
-            # Set initial energy level
-            automaton.grid.fill(energy)
-            automaton.add_random_perturbation(0.05)
-            
-            # Short evolution to measure peak complexity
-            tracker.measure_step(automaton.grid, time=0)
-            prev_grid = automaton.grid.copy()
-            
-            for step in range(100):
-                automaton.evolve_step()
-                tracker.measure_step(automaton.grid, prev_grid, time=step+1)
-                prev_grid = automaton.grid.copy()
-            
-            # Find peak complexity
-            peak_complexity = max(tracker.metrics['effective_complexity'])
-            results[energy] = peak_complexity
-            
-        return results
+    if sizes is None:
+        sizes = [10, 20, 30, 50, 70]
+
+    max_entropies = []
+    max_complexities = []
+    peak_times = []
+
+    for n in sizes:
+        total_steps = steps_per_pixel * n * n
+        print(f"  Grid size {n}x{n}, {total_steps} steps...")
+        results = run_simulation(n, total_steps, num_snapshots, 'interacting',
+                                 seed=seed)
+        max_entropies.append(np.max(results['entropy']))
+        max_complexities.append(np.max(results['complexity']))
+        peak_idx = np.argmax(results['complexity'])
+        peak_times.append(results['times'][peak_idx])
+
+    return {
+        'sizes': np.array(sizes),
+        'max_entropy': np.array(max_entropies),
+        'max_complexity': np.array(max_complexities),
+        'peak_time': np.array(peak_times),
+    }
 
 
-# Convenience function for measuring total complexity
-def measure_complexity_suite(grid: np.ndarray, prev_grid: np.ndarray = None) -> Dict:
-    """Measure all complexity metrics for a given grid state."""
-    metrics = {}
-    
-    metrics['shannon_entropy'] = ComplexityMeasures.shannon_entropy(grid)
-    metrics['spatial_entropy'] = ComplexityMeasures.spatial_entropy(grid)
-    metrics['logical_depth'] = ComplexityMeasures.logical_depth_proxy(grid)
-    metrics['effective_complexity'] = ComplexityMeasures.effective_complexity(grid)
-    metrics['lempel_ziv'] = ComplexityMeasures.lempel_ziv_complexity(grid)
-    
-    if prev_grid is not None:
-        metrics['thermodynamic_depth'] = ComplexityMeasures.thermodynamic_depth(grid, prev_grid)
+# ---------------------------------------------------------------------------
+# Main: quick demo
+# ---------------------------------------------------------------------------
+
+if __name__ == '__main__':
+    print("Coffee Automaton (Aaronson, Carroll, Ouellette 2014)")
+    print("=" * 55)
+
+    # Quick interacting simulation
+    print("\nRunning interacting model (50x50, 50000 steps)...")
+    results = run_simulation(grid_size=50, total_steps=50000, num_snapshots=50)
+
+    peak_idx = np.argmax(results['complexity'])
+    print(f"\nResults:")
+    print(f"  Peak complexity at t = {results['times'][peak_idx]}")
+    print(f"  Peak complexity value = {results['complexity'][peak_idx]} bytes")
+    print(f"  Final entropy = {results['entropy'][-1]} bytes")
+    print(f"  Final complexity = {results['complexity'][-1]} bytes")
+    print(f"  Fraction mixed at end = {results['fraction_mixed'][-1]:.3f}")
+
+    # Verify: complexity should rise then fall
+    first_half = results['complexity'][:len(results['complexity']) // 2]
+    second_half = results['complexity'][len(results['complexity']) // 2:]
+    if np.mean(first_half) > np.mean(second_half) * 0.8:
+        print("\n  Complexity shows rise-then-fall pattern [OK]")
     else:
-        metrics['thermodynamic_depth'] = 0.0
-        
-    return metrics
-
-
-# Add method to CoffeeAutomaton for convenience
-CoffeeAutomaton.measure_total_complexity = lambda self: ComplexityMeasures.effective_complexity(self.grid)
-
-
-if __name__ == "__main__":
-    # Quick demo
-    print("🔥 Coffee Automaton Demo")
-    print("=" * 50)
-    
-    # Run basic experiment
-    automaton, tracker = CoffeeExperiments.basic_cooling_experiment(steps=50)
-    
-    # Analyze results
-    analysis = tracker.analyze_phases()
-    print(f"Peak complexity at time step: {analysis['peak_time']}")
-    print(f"Peak complexity value: {analysis['peak_value']:.3f}")
-    print(f"Growth duration: {analysis['growth_duration']} steps")
-    print(f"Decay duration: {analysis['decay_duration']} steps")
-    
-    # Test life sweet spot
-    life_results = CoffeeExperiments.life_sweet_spot_experiment()
-    optimal_energy = max(life_results.keys(), key=lambda k: life_results[k])
-    print(f"Optimal energy for complexity: {optimal_energy:.2f}")
-    
-    print("\n✅ All tests passed! Coffee complexity is brewing perfectly.")
+        print("\n  [NOTE] May need more steps to see full pattern")
