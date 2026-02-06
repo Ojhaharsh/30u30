@@ -1,17 +1,8 @@
 """
 Exercise 5: Visualize Attention Patterns
 
-"Show me what the model is looking at."
-
-Attention visualization is one of the most beautiful aspects of this paper.
-For a reversal task, we expect to see a reversed diagonal pattern:
-
-    Output position 1 → Input position N (last)
-    Output position 2 → Input position N-1
-    ...
-    Output position N → Input position 1 (first)
-
-Your task: Create beautiful attention heatmaps that show what the model learned!
+Analyze the learned alignment patterns of the Seq2Seq model.
+For the reversal task, a successful model should display a reversed diagonal pattern.
 """
 
 import torch
@@ -243,7 +234,7 @@ def demo_visualization():
     
     plt.xlabel('Source Sequence', fontsize=12)
     plt.ylabel('Target Sequence', fontsize=12)
-    plt.title('Attention Pattern for Reversal Task\n(Reversed Diagonal = Correct!)', fontsize=14)
+    plt.title('Attention Pattern for Reversal Task\n(Reversed Diagonal = Correct)', fontsize=14)
     
     plt.tight_layout()
     plt.savefig('attention_demo.png', dpi=150)
@@ -252,9 +243,8 @@ def demo_visualization():
     
     # Analysis
     print("\nAttention Analysis:")
-    print(f"  Pattern forms reversed diagonal: ✓")
-    print(f"  Each output token focuses on correct input")
-    print(f"  This is what a well-trained model looks like!")
+    print(f"  Pattern forms reversed diagonal: Yes")
+    print(f"  Each output token focuses on corresponding input position.")
 
 
 def test_implementation():
@@ -290,15 +280,15 @@ def test_implementation():
         print("\nTesting plot_attention_heatmap...")
         plot_attention_heatmap(attention, source, target, 
                                title="Test Attention", save_path="test_attention.png")
-        print("  ✓ Visualization created!")
+        print("  Visualization created.")
     except NotImplementedError:
         print("  (Not implemented yet)")
     except Exception as e:
         print(f"  Error: {e}")
     
     print("\n" + "="*50)
-    print("Implement the TODO functions to complete this exercise!")
-    print("Then run demo_visualization() to see a beautiful heatmap.")
+    print("Implement the TODO functions to complete this exercise.")
+    print("Then run demo_visualization() to see a sample heatmap.")
 
 
 if __name__ == '__main__':

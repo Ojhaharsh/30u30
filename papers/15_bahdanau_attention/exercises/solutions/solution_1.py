@@ -1,7 +1,7 @@
 """
 Solution 1: Additive (Bahdanau) Attention
 
-The attention mechanism that changed everything.
+Reference implementation of the alignment model.
 """
 
 import torch
@@ -126,8 +126,8 @@ def test_additive_attention():
     assert torch.allclose(weight_sums, torch.ones(batch_size), atol=1e-5), \
         f"Weights don't sum to 1: {weight_sums}"
     
-    print("  ✓ Shape tests passed")
-    print("  ✓ Weights sum to 1")
+    print("  Shape tests passed")
+    print("  Weights sum to 1")
     
     # Test with mask
     mask = torch.zeros(batch_size, src_len, dtype=torch.bool)
@@ -142,7 +142,7 @@ def test_additive_attention():
     assert torch.allclose(weights_masked.sum(dim=-1), torch.ones(batch_size), atol=1e-5), \
         "Masked weights don't sum to 1"
     
-    print("  ✓ Masking works correctly")
+    print("  Masking works correctly")
     
     # Test gradient flow
     context.sum().backward()
@@ -150,9 +150,9 @@ def test_additive_attention():
     assert attention.W_s.weight.grad is not None, "No gradients for W_s!"
     assert attention.v.weight.grad is not None, "No gradients for v!"
     
-    print("  ✓ Gradients flow correctly")
+    print("  Gradients flow correctly")
     
-    print("\n✅ All tests passed!")
+    print("Test passed.")
     return attention
 
 
