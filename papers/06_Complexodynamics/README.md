@@ -1,632 +1,250 @@
 # Day 6: The First Law of Complexodynamics
 
-> *"Complexity increases with time - it's not just evolution, it's thermodynamics"*
+> Scott Aaronson (2011) — [The First Law of Complexodynamics](https://scottaaronson.blog/?p=762)
 
-**Paper:** [The First Law of Complexodynamics](https://arxiv.org/abs/0912.0368) (Christoph Adami, 2011)  
-**Concept:** Physics of Complexity, Information Evolution  
-**Prerequisites:** Basic probability, information theory (Days 4 & 5 helpful)
-
-⏱️ **Time to Complete:** 4-5 hours
-
-🎯 **What You'll Learn:**
-- Why complexity increases over time (like entropy, but different!)
-- Information equilibration: how systems exchange fitness information
-- Physical channel capacity and its connection to evolution
-- Why complexity plateaus (there's a ceiling!)
-- How to measure biological complexity using Shannon entropy
-- The fundamental trade-off between replication fidelity and complexity
-- Connection between thermodynamics and evolutionary dynamics
+**Time:** 3-4 hours
+**Prerequisites:** Basic probability, Kolmogorov complexity intuition (Days 4-5 helpful)
+**Code:** Python + gzip/zlib + NumPy + Matplotlib
 
 ---
 
-## 🌍 The Big Idea
+## What This Post Is Actually About
 
-**Question:** Why does life get more complex over time? Is it just random, or is there a fundamental law?
+Aaronson's blog post tackles a question that physicists and computer scientists have struggled with for decades: why does "complexity" or "interestingness" increase and then decrease over time, even as entropy increases monotonically?
 
-**Answer:** There's a **First Law of Complexodynamics** - analogous to thermodynamics:
+The question was posed by Sean Carroll at the FQXi "Setting Time Aright" conference (2011, on a cruise from Bergen to Copenhagen). Think of a cup of coffee with cream. At first, the two are separated — simple, low entropy. Then you get intricate tendrils as they mix — complex, intermediate entropy. Finally, everything is uniform beige — simple again, high entropy. The same arc plays out for the universe: Big Bang (simple soup) to galaxies and brains (complex structures) to heat death (uniform radiation).
 
-> **"The information content of a replicator will increase up to the limit imposed by the accuracy of its replication machinery."**
+Entropy goes monotonically up. But "interestingness" goes up, then back down. So what *is* that thing that peaks in the middle? Can we formalize it? Can we prove it must peak?
 
-Think of it like this:
-- **Thermodynamics:** Entropy increases (disorder spreads)
-- **Complexodynamics:** Complexity increases (information accumulates)
+Aaronson's post proposes a concrete answer: **complextropy**, a resource-bounded version of sophistication (itself a variant of Kolmogorov complexity). He conjectures that complextropy is small at early times, large at intermediate times, and small again at equilibrium. He doesn't prove the conjecture — the post is about defining the right question and the right complexity measure.
 
-Both are inevitable consequences of physical laws!
+This matters for ML because the relationship between compression, structure, and complexity is at the heart of representation learning, and because the practical tools Aaronson discusses (gzip compression as a proxy for Kolmogorov complexity, two-part codes) are directly useful.
 
 ---
 
-## 🎨 The River Analogy
+## The Core Idea
 
-Imagine a **river system** where water flows from mountains to the sea:
+**Entropy** measures disorder. It goes up. Done.
 
-### 🏔️ **The Setup**
-- **Water** = Information about the environment
-- **River width** = Channel capacity (how much information can flow)
-- **Sediment** = Complexity (accumulated information)
-- **Riverbed depth** = Replication fidelity (how well you copy information)
+**Complexity** — the thing we'd like to measure — is different. Both totally ordered states (all black) and totally disordered states (random noise) are simple to describe. The interesting stuff is in between.
 
-### 🌊 **The Flow**
-1. **Early Stage:** Small stream, fast flow, little sediment
-   - *Low complexity organisms (bacteria): fast replication, low fidelity*
+```
+Low entropy          Intermediate           High entropy
+(simple)             (complex)              (simple)
+┌──────────┐        ┌──────────┐           ┌──────────┐
+│ BLACK    │  -->   │ ▓░▒▓█▒░▓ │   -->     │ ░░░░░░░░ │
+│ BLACK    │        │ ░▒█▓░▓▒█ │           │ ░░░░░░░░ │
+│ BLACK    │        │ ▓█░▒▓█▓░ │           │ ░░░░░░░░ │
+└──────────┘        └──────────┘           └──────────┘
+entropy: low        entropy: medium         entropy: high
+complexity: low     complexity: HIGH        complexity: low
+```
 
-2. **Mid Stage:** Wider river, moderate flow, accumulating sediment
-   - *Medium complexity (insects): balanced replication and fidelity*
-
-3. **Late Stage:** Delta, slow flow, maximum sediment deposit
-   - *High complexity (humans): slow replication, high fidelity*
-
-### 🎯 **The Law**
-- Water **always flows downhill** (information flows into genome)
-- Sediment **accumulates** until riverbed can't hold more (complexity increases to capacity limit)
-- **Equilibrium:** Input = Output (information gain = loss from mutation)
-
-This is **information equilibration** - the system reaches a steady state!
+The challenge is making "complexity" rigorous. Kolmogorov complexity (KC) alone won't work — a random string has *maximum* KC, but zero structure. We need something that is low for BOTH simple and random things, and high only for things with genuine structure.
 
 ---
 
-## 📊 The Core Mathematics
+## What Aaronson Actually Proposed
 
-### 1️⃣ **Physical Complexity (Shannon Entropy)**
+### Background: Why KC Alone Fails
 
-The complexity of a genome sequence:
+For deterministic systems, you can describe the state after t steps with just two things: the initial state and the number t. So KC grows only as O(log t) — it never gets large. Two fixes:
 
-$$
-C = -\sum_{i=1}^{N} p_i \log_2 p_i
-$$
+1. **Probabilistic systems**: KC of the list of possible states can grow polynomially.
+2. **Resource-bounded KC**: Require that the shortest program runs in polynomial time (not just any program).
 
-Where:
-- $C$ = Complexity (bits per site)
-- $p_i$ = Frequency of symbol $i$ in genome
-- $N$ = Number of possible symbols (4 for DNA: A, C, G, T)
+Both help, but neither captures "interestingness" precisely. A random string has high KC but no structure.
 
-**Maximum complexity:** $C_{\max} = 2$ bits/site (for DNA, when all bases equally likely)
+### Sophistication (Koppel 1988, Gacs-Tromp-Vitanyi)
 
-**Real genomes:**
-- Bacteria: ~1.4-1.6 bits/site
-- Humans: ~1.8-1.9 bits/site
-- Maximum possible: 2.0 bits/site
+**Sophistication** separates structure from randomness via a two-part code:
 
-### 2️⃣ **Information Equilibration Equation**
+> K(S) = length of the shortest program describing a set S such that x is in S and x is "random" within S (i.e., K(x|S) >= log2(|S|) - c).
 
-The rate of complexity change:
+Intuitively: find the smallest "model" (the set S) such that x looks like a typical member of S. The complexity of that model is the sophistication.
 
-$$
-\frac{dC}{dt} = I_E - I_L
-$$
+- A simple string (all zeros): low sophistication — the model is trivial.
+- A random string: low sophistication — the model is "all strings of length n."
+- A structured string (English text): high sophistication — the model encodes grammar, vocabulary, etc.
 
-Where:
-- $\frac{dC}{dt}$ = Rate of complexity increase
-- $I_E$ = Information gain from environment (selection)
-- $I_L$ = Information loss from replication errors (mutation)
+**Problem for dynamics**: For deterministic systems, sophistication hits the same O(log t) wall. For probabilistic systems, the set of reachable states S(t) is specifiable with log(t)+c bits.
 
-**At equilibrium:** $I_E = I_L$ → $\frac{dC}{dt} = 0$ (complexity plateaus!)
+### Complextropy (Aaronson's Key Proposal)
 
-### 3️⃣ **Channel Capacity (Replication Fidelity)**
+Aaronson proposes **complextropy** — resource-bounded sophistication. The key idea: impose efficiency constraints on BOTH the sampling algorithm and the reconstruction algorithm.
 
-Maximum sustainable complexity:
+Informally, complextropy of a string x is:
 
-$$
-C_{\max} = \frac{1}{2} \log_2\left(\frac{1}{2\pi e \sigma^2}\right)
-$$
+> "The number of bits in the shortest computer program that runs in n*log(n) time, and outputs a nearly-uniform sample from a set S such that (i) x is in S, and (ii) any computer program that outputs x in n*log(n) time, given an oracle providing independent uniform samples from S, has at least log2(|S|)-c bits."
 
-For a Gaussian channel with noise variance $\sigma^2$.
+The efficiency requirement is what makes this work for dynamical systems. At early times, the state is efficiently describable (low complextropy). At equilibrium, the state looks random within the set of all possible states (low complextropy). At intermediate times — when you have those intricate coffee tendrils — the boundaries between regions carry genuine structural information that resists efficient compression.
 
-**In biological terms:**
+### The Conjecture ("The First Law")
 
-$$
-C_{\max} \approx -\log_2(\mu \cdot L)
-$$
+> **Complextropy is small at initial times, large at intermediate times, and small again after the system reaches equilibrium.**
 
-Where:
-- $\mu$ = Per-base mutation rate
-- $L$ = Genome length
-- $C_{\max}$ = Maximum complexity (bits)
-
-**The trade-off:**
-- **Low mutation rate** ($\mu$ small) → **High complexity** (large genomes possible)
-- **High mutation rate** ($\mu$ large) → **Low complexity** (small genomes only)
-
-This is the **error threshold** or **Eigen's paradox**!
-
-### 4️⃣ **The Complexity Trajectory**
-
-Solving the differential equation:
-
-$$
-C(t) = C_{\max}\left(1 - e^{-t/\tau}\right)
-$$
-
-Where:
-- $C(t)$ = Complexity at time $t$
-- $C_{\max}$ = Maximum sustainable complexity
-- $\tau$ = Time constant (depends on selection pressure and mutation rate)
-
-**Shape:** Exponential saturation (fast initial growth, then plateau)
+Aaronson is explicit: "I don't yet know how to prove this conjecture." The blog post is about defining the question precisely, not answering it. What counts is getting the *definition* right — so that the conjecture is even meaningful.
 
 ---
 
-## 🧬 Biological Interpretation
+## The Model System: Coffee and Milk
 
-### **Why Bacteria Stay Simple**
-- **High mutation rate:** ~$10^{-6}$ per base per replication
-- **Fast replication:** ~20 minutes per generation
-- **Trade-off:** Speed over complexity
+Aaronson describes a concrete model for empirical testing:
 
-$$
-C_{\max}^{bacteria} \approx 1.5 \text{ bits/site}
-$$
+- **Setup**: A 2D array of black (coffee) and white (milk) pixels. Initially separated: top half black, bottom half white.
+- **Dynamics**: At each step, pick an adjacent pair (one coffee, one milk) uniformly at random and swap them.
+- **Measurement**: Track some complexity measure over time.
 
-### **Why Humans Are Complex**
-- **Low mutation rate:** ~$10^{-9}$ per base per replication (DNA repair!)
-- **Slow replication:** ~25 years per generation
-- **Trade-off:** Complexity over speed
+This is a random mixing process. Early states are simple (clean boundary). Late states are simple (uniform grey). Intermediate states have complex fractal-like tendrils — exactly the phenomenon Carroll asked about.
 
-$$
-C_{\max}^{human} \approx 1.9 \text{ bits/site}
-$$
+Lauren Ouellette, an MIT undergraduate working with Aaronson at the time, began coding crude KC approximations for this system:
+- **gzip compression** of the bitmap as a rough KC proxy
+- **Two-part codes** (coarse-grained description + residual) as a sophistication proxy
 
-### **The Fundamental Limit**
-- **Theoretical maximum:** 2.0 bits/site (random sequence)
-- **Biological reality:** ~1.9 bits/site (due to functional constraints)
-- **Gap:** ~0.1 bits/site (structure, regulation, redundancy needed)
+This research directly became the Coffee Automaton paper (Day 7, arXiv:1405.6903).
 
 ---
 
-## 🔬 Three Key Experiments
+## Practical Approaches to Measuring Complexity
 
-### **Experiment 1: Complexity vs Time (E. coli)**
+### Approach 1: gzip as KC Proxy
 
-Simulate 50,000 generations of E. coli evolution:
+Kolmogorov complexity is uncomputable, but gzip gives a workable upper bound:
 
 ```python
-from implementation import ComplexityTrajectory
+import gzip
 
-# Parameters
-mu = 1e-6          # Mutation rate
-L = 4.6e6          # E. coli genome length
-selection = 0.01   # Selection pressure
-
-# Compute trajectory
-sim = ComplexityTrajectory(mu, L, selection)
-C_t = sim.evolve(generations=50000)
-
-# Result: Plateaus at ~1.5 bits/site after ~10,000 generations
+def gzip_complexity(data: bytes) -> int:
+    """Compressed size as crude KC approximation."""
+    return len(gzip.compress(data, compresslevel=9))
 ```
 
-**Key insight:** Complexity **saturates** - there's a ceiling!
+For a 2D grid, serialize the pixels to bytes and compress. Simple grids (all one color) compress well. Random grids don't compress at all. Structured grids (the tendrils) compress to an intermediate size.
 
-### **Experiment 2: Fidelity-Complexity Trade-off**
+### Approach 2: Coarse-Grained KC (Sean Carroll's Suggestion)
 
-Test different mutation rates:
+Carroll proposed (in the blog comments): blur/coarse-grain the bitmap at some scale, then measure KC of the coarse-grained version. At the right scale, the tendrils create structure that is hard to compress.
 
 ```python
-from implementation import fidelity_complexity_curve
-
-# Sweep mutation rates
-mutation_rates = np.logspace(-9, -5, 50)
-C_max = fidelity_complexity_curve(mutation_rates, L=1e6)
-
-# Result: Log-linear relationship
-# Lower mu → Higher C_max
+def coarse_grain(grid, block_size):
+    """Average grid values over block_size x block_size blocks."""
+    h, w = grid.shape
+    h_new, w_new = h // block_size, w // block_size
+    result = np.zeros((h_new, w_new))
+    for i in range(h_new):
+        for j in range(w_new):
+            block = grid[i*block_size:(i+1)*block_size,
+                        j*block_size:(j+1)*block_size]
+            result[i, j] = block.mean()
+    return result
 ```
 
-**Key insight:** Better copying = more complexity allowed
+### Approach 3: Two-Part Code (Sophistication Proxy)
 
-### **Experiment 3: Information Flow (Avida)**
+Split the description into two parts:
+1. A coarse model (e.g., the blurred image) — this is the "sophistication" part
+2. The residual (difference between coarse model and actual state) — this is the "randomness" part
 
-Measure information gain vs loss in digital organisms:
+The size of part 1 is a proxy for sophistication. It should be small at early times (trivial model), large at intermediate times (complex boundaries), and small again at equilibrium (trivial model again).
 
-```python
-from implementation import information_flow
+### Approach 4: Multi-Scale Analysis (Luca Trevisan's Idea)
 
-# Run Avida-style simulation
-I_E, I_L = information_flow(
-    population=1000,
-    generations=10000,
-    environment_changes=100
-)
-
-# Result: I_E ≈ I_L at equilibrium
-```
-
-**Key insight:** Evolution finds the balance point automatically!
+Trevisan proposed (in the blog comments): divide the cup into cubes at each scale, compute average content per cube, then track KC at each scale over time. This produces a 3D plot (scale x time x complexity) where the complexity "bump" appears at intermediate scales and intermediate times.
 
 ---
 
-## 🏗️ Implementation Architecture
+## The Logical Depth Debate
 
-```
-┌─────────────────────────────────────────────────────────┐
-│                    COMPLEXODYNAMICS                      │
-│                                                          │
-│  ┌────────────────────────────────────────────────────┐ │
-│  │         1. SHANNON COMPLEXITY CALCULATOR           │ │
-│  │    shannon_complexity(sequence) → bits/site        │ │
-│  └────────────────────────────────────────────────────┘ │
-│                           ↓                              │
-│  ┌────────────────────────────────────────────────────┐ │
-│  │       2. INFORMATION EQUILIBRATION DYNAMICS        │ │
-│  │    dC/dt = I_E(selection) - I_L(mutation)          │ │
-│  └────────────────────────────────────────────────────┘ │
-│                           ↓                              │
-│  ┌────────────────────────────────────────────────────┐ │
-│  │         3. CHANNEL CAPACITY CALCULATOR             │ │
-│  │    C_max = f(mutation_rate, genome_length)         │ │
-│  └────────────────────────────────────────────────────┘ │
-│                           ↓                              │
-│  ┌────────────────────────────────────────────────────┐ │
-│  │          4. COMPLEXITY TRAJECTORY SOLVER           │ │
-│  │    C(t) = C_max * (1 - exp(-t/tau))                │ │
-│  └────────────────────────────────────────────────────┘ │
-│                           ↓                              │
-│  ┌────────────────────────────────────────────────────┐ │
-│  │           5. EVOLUTIONARY SIMULATOR                │ │
-│  │    Population dynamics + selection + mutation      │ │
-│  └────────────────────────────────────────────────────┘ │
-│                                                          │
-└─────────────────────────────────────────────────────────┘
-```
+An important thread in the blog comments involves Charles Bennett's **logical depth** (1988) as an alternative complexity measure:
+
+- **Logical depth**: how long the shortest program for x takes to run. A deep string is one that can be specified concisely but requires long computation to produce.
+- **Bennett's argument**: intermediate coffee cup states ARE logically deep, because any short program to produce them must approximately simulate the physical mixing process, which takes many steps. Equilibrium is logically SHALLOW because you can short-circuit the evolution.
+- **Aaronson's skepticism**: "I don't see any intuitive reason why the depth should become large at intermediate times." Specifying the tendril boundaries is high sophistication (structural complexity) but not necessarily high depth (given the boundaries, sampling is fast).
+
+This debate was unresolved in 2011 and remains an active research question. Day 7 empirically tests some of these measures.
 
 ---
 
-## 🚀 Quick Start
+## Implementation Notes
 
-### **1. Run the Basic Demo**
+The implementation in `implementation.py` builds the coffee-mixing simulation and complexity measurement tools:
+
+Key decisions:
+- **gzip/zlib for KC**: The standard approach. Not theoretically clean (gzip is not optimal compression) but widely used and reproducible.
+- **NumPy arrays for the grid**: 2D array of 0s (milk) and 1s (coffee). Serialized to bytes for compression.
+- **Multiple complexity measures**: We compute gzip size, coarse-grained gzip, and two-part code sizes. Comparing them is the point — Aaronson's post is partly about which measure is "right."
+- **Random neighbor swaps**: The specific dynamics Aaronson describes. At each step, find adjacent coffee-milk pairs and swap one uniformly at random.
+
+Things that will bite you:
+- **gzip compression level matters**: Use `compresslevel=9` for consistency. Lower levels give noisier estimates.
+- **Grid serialization**: How you flatten the 2D grid to bytes affects gzip's performance. Row-major (the default for NumPy's `.tobytes()`) is fine; just be consistent.
+- **Coarse-graining artifacts**: Very small block sizes are noisy; very large block sizes blur away all structure. Experiment with block sizes relative to your grid size.
+- **Convergence is slow**: For a 64x64 grid, you need tens of thousands of swaps to see the full complexity arc. Track both swap count and "fraction mixed" to know where you are.
+
+---
+
+## What to Build
+
+### Quick Start
 
 ```bash
 cd papers/06_Complexodynamics
-python train_minimal.py --organism bacteria --generations 10000
+python train_minimal.py --grid-size 64 --steps 50000
 ```
 
-**Output:**
-```
-Starting complexity: 0.80 bits/site
-Final complexity: 1.52 bits/site
-Equilibrium reached at generation: 8,234
-Time to equilibrium: 342.4 hours (14.3 days)
-```
+This runs the coffee-mixing simulation and plots complexity (gzip size) over time, showing the characteristic "hump."
 
-### **2. Compare Organisms**
+### Exercises (in `exercises/`)
 
-```bash
-python train_minimal.py --compare --organisms bacteria virus human
-```
+| # | Task | What You'll Get Out of It |
+|---|------|--------------------------|
+| 1 | KC via gzip (`exercise_01_gzip_complexity.py`) | Build the core KC approximation tool and verify it on known signals |
+| 2 | Coffee mixing simulation (`exercise_02_coffee_mixing.py`) | Implement the 2D grid dynamics Aaronson describes |
+| 3 | Multi-scale analysis (`exercise_03_multiscale.py`) | Coarse-grain at multiple scales, see where complexity lives |
+| 4 | Two-part codes (`exercise_04_two_part_codes.py`) | Build a sophistication proxy and compare to raw gzip |
+| 5 | Complexity measures comparison (`exercise_05_measures_comparison.py`) | Run all measures on same simulation, compare curves |
 
-**Output:**
-```
-Organism   | Mu (per base) | C_max (bits/site) | Equilibrium time
------------|---------------|-------------------|------------------
-Virus      | 1e-4          | 1.20              | 2.1 hours
-Bacteria   | 1e-6          | 1.52              | 14.3 days
-Human      | 1e-9          | 1.89              | 68.5 years
-```
-
-### **3. Interactive Notebook**
-
-```bash
-jupyter notebook notebook.ipynb
-```
-
-Explore:
-- Live complexity evolution animation
-- Parameter sensitivity analysis
-- Real genome data analysis
+Solutions are in `exercises/solutions/`. Try to get stuck first.
 
 ---
 
-## 🎓 Exercises
+## Key Takeaways
 
-### ⭐ **Exercise 1: Shannon Complexity** (Easy, 30 min)
-Compute the Shannon complexity of DNA sequences.
+1. **Entropy and complexity are different things.** Entropy goes monotonically up. Complexity — if defined correctly — peaks at intermediate times. Random strings have maximum entropy but zero structure. (Aaronson, opening section)
 
-**File:** `exercises/exercise_01_shannon_complexity.py`
+2. **Sophistication separates structure from randomness.** Unlike KC, sophistication is low for BOTH simple and random strings, and high only for genuinely structured ones. Complextropy adds resource-boundedness to make this work for dynamical systems. (Aaronson, defining complextropy)
 
-```python
-def shannon_complexity(sequence: str) -> float:
-    """
-    Calculate Shannon entropy of a sequence.
-    
-    Args:
-        sequence: DNA sequence (string of A, C, G, T)
-        
-    Returns:
-        Complexity in bits per symbol
-        
-    Example:
-        >>> shannon_complexity("AAAA")  # Uniform
-        0.0
-        >>> shannon_complexity("ACGT")  # Maximum diversity
-        2.0
-    """
-    # TODO: Implement this
-    pass
-```
+3. **The "First Law" is a conjecture, not a theorem.** Aaronson explicitly says he cannot prove it. The post's contribution is the precise definition of complextropy and the formulation of a provable (or disprovable) conjecture. (Aaronson, "I don't yet know how to prove this conjecture")
 
-### ⭐⭐ **Exercise 2: Information Flow** (Medium, 45 min)
-Calculate information gain and loss rates.
+4. **gzip is a useful but crude KC approximation.** It's computable, reproducible, and captures gross structure. But it misses patterns that more sophisticated compressors would catch. This matters for empirical work. (Aaronson, discussion of Lauren Ouellette's experiments)
 
-**File:** `exercises/exercise_02_information_flow.py`
-
-```python
-class InformationFlow:
-    def __init__(self, mutation_rate: float, selection_strength: float):
-        """Model information exchange with environment."""
-        pass
-        
-    def compute_gain(self, environment: np.ndarray) -> float:
-        """Calculate I_E from selection."""
-        pass
-        
-    def compute_loss(self, genome_length: int) -> float:
-        """Calculate I_L from mutation."""
-        pass
-        
-    def equilibrium_complexity(self) -> float:
-        """Find C where I_E = I_L."""
-        pass
-```
-
-### ⭐⭐ **Exercise 3: Channel Capacity** (Medium, 45 min)
-Implement the fidelity-complexity trade-off.
-
-**File:** `exercises/exercise_03_channel_capacity.py`
-
-```python
-def channel_capacity(mutation_rate: float, 
-                     genome_length: int,
-                     noise_model: str = 'binomial') -> float:
-    """
-    Calculate maximum sustainable complexity.
-    
-    Args:
-        mutation_rate: Per-base error rate
-        genome_length: Number of bases
-        noise_model: 'binomial', 'gaussian', or 'exponential'
-        
-    Returns:
-        Maximum complexity (bits)
-    """
-    # TODO: Implement for different noise models
-    pass
-```
-
-### ⭐⭐⭐ **Exercise 4: Evolutionary Dynamics** (Hard, 90 min)
-Full population-based simulator.
-
-**File:** `exercises/exercise_04_evolutionary_dynamics.py`
-
-```python
-class EvolutionarySimulator:
-    """Simulate complexity evolution in populations."""
-    
-    def __init__(self, pop_size: int, genome_length: int,
-                 mutation_rate: float, selection_model: callable):
-        """Initialize population."""
-        pass
-        
-    def step(self) -> None:
-        """One generation: mutate → select → reproduce."""
-        pass
-        
-    def evolve(self, generations: int) -> np.ndarray:
-        """Run for multiple generations, track complexity."""
-        pass
-        
-    def measure_equilibrium(self) -> Tuple[float, int]:
-        """Detect when dC/dt ≈ 0."""
-        pass
-```
-
-### ⭐⭐⭐ **Exercise 5: Real Genome Analysis** (Hard, 90 min)
-Analyze actual genomic data.
-
-**File:** `exercises/exercise_05_genome_analysis.py`
-
-```python
-def analyze_genome(fasta_file: str) -> Dict[str, float]:
-    """
-    Compute complexodynamics metrics for real genome.
-    
-    Returns:
-        {
-            'complexity': float,           # Shannon entropy
-            'predicted_mu': float,          # Inferred mutation rate
-            'distance_to_max': float,       # Gap to C_max
-            'equilibrium_status': str       # 'Growing', 'Equilibrium', 'Shrinking'
-        }
-    """
-    # TODO: 
-    # 1. Load FASTA
-    # 2. Compute current complexity
-    # 3. Estimate mutation rate from codon usage
-    # 4. Predict C_max
-    # 5. Determine evolutionary status
-    pass
-```
-
-**Test on:**
-- E. coli genome (provided in `data/ecoli_genome.fasta`)
-- Human chromosome 22 (provided in `data/human_chr22.fasta`)
-- SARS-CoV-2 (provided in `data/sars_cov2_genome.fasta`)
+5. **This directly led to Day 7.** Lauren Ouellette's research project, started from this blog post, became the Coffee Automaton paper (arXiv:1405.6903) with Aaronson and Carroll. The blog post is theory and conjecture; Day 7 is the empirical follow-up.
 
 ---
 
-## 📊 Visualization Suite
+## Files in This Directory
 
-Run `visualization.py` to generate 7 key plots:
-
-1. **Complexity Trajectory** - C(t) over time
-2. **Fidelity-Complexity Curve** - Trade-off landscape
-3. **Information Flow** - I_E vs I_L dynamics
-4. **Organism Comparison** - Bacteria, insects, mammals
-5. **Equilibrium Phase Diagram** - Parameter space
-6. **Real Genome Analysis** - Scatter plot of organisms
-7. **Thermodynamics Analogy** - Side-by-side entropy vs complexity
-
----
-
-## 🧪 Key Insights
-
-### **1. Complexity is Inevitable**
-- Not random: it's a physical law!
-- Like entropy, but for information
-- Driven by selection pressure
-
-### **2. There's Always a Ceiling**
-- Mutation rate sets the limit
-- Better proofreading = higher ceiling
-- Why DNA repair is crucial
-
-### **3. Evolution is Equilibration**
-- Input (selection) = Output (mutation)
-- Automatic balancing act
-- No "goal" needed - just physics
-
-### **4. The Speed-Complexity Trade-off**
-- Fast replication → high mutation → low complexity (viruses)
-- Slow replication → low mutation → high complexity (mammals)
-- No free lunch!
-
-### **5. Connection to Machine Learning**
-- **Training** = Information flow from data
-- **Overfitting** = Exceeding channel capacity
-- **Regularization** = Artificial mutation (noise injection)
-- **Early stopping** = Equilibrium detection
+| File | What It Is |
+|------|-----------|
+| `implementation.py` | Coffee-mixing simulation, gzip KC, coarse-graining, sophistication proxies |
+| `train_minimal.py` | CLI script — run simulation, measure complexity over time, plot results |
+| `visualization.py` | Complexity curves, multi-scale heatmaps, entropy vs. complexity comparison |
+| `notebook.ipynb` | Interactive walkthrough — build the simulation step by step |
+| `exercises/` | 5 exercises: gzip KC, coffee mixing, multi-scale, two-part codes, comparison |
+| `paper_notes.md` | Detailed notes on Aaronson's blog post |
+| `CHEATSHEET.md` | Quick reference for complexity measures and key results |
 
 ---
 
-## 🔗 Connections to Previous Days
+## Further Reading
 
-| Day | Connection |
-|-----|------------|
-| **Day 4** | MDL principle: compression = intelligence = complexity |
-| **Day 5** | Two-part code: genome as compressed environment description |
-| **Information Theory** | Shannon entropy as complexity measure |
-| **Thermodynamics** | Second law (entropy ↑) vs First law of complexodynamics (complexity ↑) |
-
----
-
-## 📚 Deep Dive: The Physics
-
-### **Why "Complexodynamics"?**
-
-The name draws a parallel to thermodynamics:
-
-| Thermodynamics | Complexodynamics |
-|----------------|------------------|
-| Energy (E) | Information (I) |
-| Entropy (S) | Complexity (C) |
-| Temperature (T) | Selection pressure (β) |
-| Heat flow (dQ) | Information flow (dI) |
-| Second Law: dS/dt ≥ 0 | First Law: dC/dt ≥ 0 |
-| Equilibrium: dS = 0 | Equilibrium: dC = 0 |
-
-### **The "First Law" Statement**
-
-> *"In a stationary environment, the information content of a replicator will increase monotonically up to a maximum value determined by the fidelity of the replication process."*
-
-**In plain English:**
-- Complexity goes up (until it can't anymore)
-- The ceiling is set by copying accuracy
-- This is **inevitable** given replication + selection
-
-### **Mathematical Proof Sketch**
-
-1. **Information gain from selection:**
-   $$I_E = \int p(x) \log\frac{p(x|s)}{p(x)} dx$$
-   Where $p(x|s)$ is fitness-weighted distribution
-
-2. **Information loss from mutation:**
-   $$I_L = H(X|X') = -\sum p(x'|x) \log p(x'|x)$$
-   Where $p(x'|x)$ is mutation probability
-
-3. **Net rate:**
-   $$\frac{dC}{dt} = I_E - I_L$$
-
-4. **Equilibrium:**
-   When $I_E = I_L$, we have $\frac{dC}{dt} = 0$
-   
-   This happens when:
-   $$C = C_{\max} \approx -\log_2(\mu L)$$
-
-5. **Solution:**
-   Exponential approach to equilibrium:
-   $$C(t) = C_{\max}(1 - e^{-\lambda t})$$
-   
-   Where $\lambda$ depends on selection strength
-
-**Q.E.D.** - Complexity must increase to $C_{\max}$!
+- [Aaronson's Blog Post](https://scottaaronson.blog/?p=762) — read this first, including the comments (especially Bennett #110, Carroll #6-7, Trevisan #17)
+- [Coffee Automaton Paper (Day 7)](https://arxiv.org/abs/1405.6903) — the empirical follow-up by Aaronson, Carroll, and Ouellette
+- [Sophistication (Gacs, Tromp, Vitanyi)](https://doi.org/10.1016/S0304-3975(00)00171-0) — the formal definition of sophistication
+- [Logical Depth (Bennett 1988)](https://doi.org/10.1007/978-1-4612-4544-3_11) — the time-based alternative to sophistication
+- [Kolmogorov Complexity Textbook (Li & Vitanyi)](https://link.springer.com/book/10.1007/978-3-030-11298-1) — comprehensive reference
 
 ---
 
-## 🤔 Philosophical Implications
-
-### **1. Evolution is Not Random**
-- Complexity increase is **deterministic** (given physics)
-- "Progress" emerges from basic laws
-- No teleology needed
-
-### **2. Life's Complexity is Bounded**
-- There's a maximum possible complexity
-- We might be approaching it (humans at ~95% of max)
-- Future evolution = optimization, not more complexity
-
-### **3. Intelligence is Inevitable**
-- More complexity = more information processing
-- Information processing = proto-intelligence
-- Given enough time and fidelity, intelligence emerges
-
-### **4. The Universe as Information Pump**
-- Energy flows → Entropy increases (thermodynamics)
-- Information flows → Complexity increases (complexodynamics)
-- Both driven by gradients
-- Both irreversible
-
----
-
-## 🏆 Challenge: Reproduce Figure 2
-
-The paper's key figure shows:
-- **Y-axis:** Complexity (bits/site)
-- **X-axis:** Generations
-- **Curves:** Different mutation rates
-
-Can you reproduce it with our simulator?
-
-```bash
-python train_minimal.py --reproduce-figure2
-```
-
-**Target:** Match the curve shapes and equilibrium values!
-
----
-
-## 📖 Further Reading
-
-1. **Original Paper:** Adami (2011) - The First Law of Complexodynamics
-2. **Extensions:** Adami (2004) - Information Theory of Evolution
-3. **Connection to Physics:** Schneider (2010) - Information Theory Primer
-4. **Digital Evolution:** Ofria & Adami (2004) - Avida platform
-
----
-
-## 🎯 Summary
-
-**You've learned:**
-✅ Why complexity increases over time (it's physics!)  
-✅ The mathematical law governing information evolution  
-✅ How replication fidelity sets complexity limits  
-✅ The equilibration of information gain and loss  
-✅ Why different organisms have different complexity ceilings  
-✅ How to measure and simulate complexity evolution  
-✅ The deep connection between thermodynamics and evolution  
-
-**Next up: Day 7 - The Coffee Automaton** ☕  
-*Why does intelligence exist at all? (Spoiler: free energy!)*
-
----
-
-**Questions? Found a bug? Have ideas?**  
-Open an issue or PR on GitHub! Let's make this the best resource for learning complexodynamics.
-
-⭐ **Star this repo** if it helped you understand the physics of complexity!
+**Previous:** [Day 5 — A Tutorial Introduction to the Minimum Description Length Principle](../05_MDL_Principle/)
+**Next:** [Day 7 — The Coffee Automaton](../07_coffee_automaton/)
