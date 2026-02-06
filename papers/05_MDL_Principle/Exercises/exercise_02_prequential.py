@@ -192,9 +192,9 @@ def test_implementation():
         
         print(f"   Predicting y(5) from [0,1,4,9,16]")
         print(f"   Prediction: {pred:.2f}, Sigma: {sigma:.4f}")
-        print("   ✓ PASSED")
+        print("   [ok] PASSED")
     except Exception as e:
-        print(f"   ✗ FAILED: {e}")
+        print(f"   [FAIL] FAILED: {e}")
     
     # Test 2: code_length_for_point
     print("\n2. Testing code_length_for_point()...")
@@ -211,9 +211,9 @@ def test_implementation():
         
         print(f"   Error = 0.1: {small_code:.2f} bits")
         print(f"   Error = 5.0: {large_code:.2f} bits")
-        print("   ✓ PASSED")
+        print("   [ok] PASSED")
     except Exception as e:
-        print(f"   ✗ FAILED: {e}")
+        print(f"   [FAIL] FAILED: {e}")
     
     # Test 3: prequential_mdl
     print("\n3. Testing prequential_mdl()...")
@@ -231,11 +231,11 @@ def test_implementation():
         
         # Degree 2 should have lowest (best) score
         if score_2 < score_1 and score_2 < score_5:
-            print("   ✓ PASSED - Degree 2 has lowest score!")
+            print("   [ok] PASSED - Degree 2 has lowest score!")
         else:
-            print("   ⚠ Score ordering unexpected (might be noise)")
+            print("   [NOTE] Score ordering unexpected (might be noise)")
     except Exception as e:
-        print(f"   ✗ FAILED: {e}")
+        print(f"   [FAIL] FAILED: {e}")
     
     # Test 4: prequential_model_selection
     print("\n4. Testing prequential_model_selection()...")
@@ -250,11 +250,11 @@ def test_implementation():
         print(f"   True: degree 2")
         
         if best_degree == 2:
-            print("   ✓ PASSED - Found true degree!")
+            print("   [ok] PASSED - Found true degree!")
         else:
-            print(f"   ⚠ Selected {best_degree} (may vary with noise)")
+            print(f"   [NOTE] Selected {best_degree} (may vary with noise)")
     except Exception as e:
-        print(f"   ✗ FAILED: {e}")
+        print(f"   [FAIL] FAILED: {e}")
     
     # Test 5: Comparison with Two-Part Code
     print("\n5. Comparing with Two-Part Code...")
@@ -267,9 +267,9 @@ def test_implementation():
         
         print(f"   Prequential selects: degree {preq_best}")
         print("   (Compare this with two-part code in exercise 1)")
-        print("   ✓ Test complete")
+        print("   [ok] Test complete")
     except Exception as e:
-        print(f"   ✗ FAILED: {e}")
+        print(f"   [FAIL] FAILED: {e}")
     
     print("\n" + "=" * 50)
     print("Testing complete!")
