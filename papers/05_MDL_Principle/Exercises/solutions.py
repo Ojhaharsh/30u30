@@ -511,24 +511,24 @@ def verify_solutions():
     x = np.linspace(0, 10, 50)
     y = 3 + 2*x - 0.5*x**2 + np.random.randn(50) * 1.5
     
-    print("\n✓ Exercise 1: Two-Part MDL")
+    print("\n[ok] Exercise 1: Two-Part MDL")
     total, model, data = solution_two_part_mdl(x, y, 2)
     print(f"  MDL(degree=2) = {total:.1f} bits")
     
-    print("\n✓ Exercise 2: Prequential MDL")
+    print("\n[ok] Exercise 2: Prequential MDL")
     preq = solution_prequential_mdl(x, y, 2)
     print(f"  Prequential(degree=2) = {preq:.1f} bits")
     
-    print("\n✓ Exercise 3: Model Selection")
+    print("\n[ok] Exercise 3: Model Selection")
     selector = SolutionMDLModelSelector(max_degree=8)
     selector.fit(x, y)
     print(f"  Selected degree: {selector.best_degree}")
     
-    print("\n✓ Exercise 4: NML Complexity")
+    print("\n[ok] Exercise 4: NML Complexity")
     complexity = solution_estimate_nml_complexity_polynomial(x, 2, n_samples=200)
     print(f"  COMP(degree=2) = {complexity:.1f} bits")
     
-    print("\n✓ Exercise 5: MDL vs AIC vs BIC")
+    print("\n[ok] Exercise 5: MDL vs AIC vs BIC")
     mc = solution_monte_carlo_comparison(n_trials=50)
     print(f"  MDL: {mc['mdl_accuracy']*100:.0f}%, "
           f"AIC: {mc['aic_accuracy']*100:.0f}%, "
