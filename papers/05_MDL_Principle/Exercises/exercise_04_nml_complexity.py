@@ -218,9 +218,9 @@ def test_implementation():
         
         # Complexity should generally increase with degree
         assert complexities[5] > complexities[1], "Higher degree should have higher complexity"
-        print("   ✓ PASSED - Complexity increases with flexibility")
+        print("   [ok] PASSED - Complexity increases with flexibility")
     except Exception as e:
-        print(f"   ✗ FAILED: {e}")
+        print(f"   [FAIL] FAILED: {e}")
     
     # Test 2: logsumexp
     print("\n2. Testing logsumexp()...")
@@ -231,9 +231,9 @@ def test_implementation():
         # Should be approximately 1002 + log(1 + e^-1 + e^-2) ≈ 1002.41
         assert 1002 < result < 1003, f"Expected ~1002.4, got {result}"
         print(f"   logsumexp([1000, 1001, 1002]) = {result:.2f}")
-        print("   ✓ PASSED")
+        print("   [ok] PASSED")
     except Exception as e:
-        print(f"   ✗ FAILED: {e}")
+        print(f"   [FAIL] FAILED: {e}")
     
     # Test 3: NML MDL score
     print("\n3. Testing compute_nml_mdl()...")
@@ -249,11 +249,11 @@ def test_implementation():
         print(f"   NML(degree=5): {nml_5[0]:.1f} = {nml_5[1]:.1f} + {nml_5[2]:.1f}")
         
         if nml_2[0] < nml_1[0] and nml_2[0] < nml_5[0]:
-            print("   ✓ PASSED - NML correctly prefers degree 2!")
+            print("   [ok] PASSED - NML correctly prefers degree 2!")
         else:
-            print("   ⚠ Score ordering varies (NML is stochastic)")
+            print("   [NOTE] Score ordering varies (NML is stochastic)")
     except Exception as e:
-        print(f"   ✗ FAILED: {e}")
+        print(f"   [FAIL] FAILED: {e}")
     
     # Test 4: Compare NML vs Two-Part
     print("\n4. Testing compare_nml_vs_two_part()...")
@@ -266,19 +266,19 @@ def test_implementation():
         print(f"   Two-Part selects: degree {result['two_part_best']}")
         
         if result['nml_best'] == result['two_part_best']:
-            print("   ✓ Methods agree!")
+            print("   [ok] Methods agree!")
         else:
-            print("   ⚠ Methods disagree (both are valid)")
+            print("   [NOTE] Methods disagree (both are valid)")
     except Exception as e:
-        print(f"   ✗ FAILED: {e}")
+        print(f"   [FAIL] FAILED: {e}")
     
     # Test 5: Complexity visualization
     print("\n5. Testing visualize_complexity_vs_degree()...")
     try:
         visualize_complexity_vs_degree(x, max_degree=5)
-        print("   ✓ PASSED")
+        print("   [ok] PASSED")
     except Exception as e:
-        print(f"   ⚠ Skipped: {e}")
+        print(f"   [NOTE] Skipped: {e}")
     
     print("\n" + "=" * 55)
     print("Testing complete!")
