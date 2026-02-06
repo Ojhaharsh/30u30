@@ -194,13 +194,13 @@ def plot_polynomial_fits(
         # Color based on optimality
         if deg == best_degree:
             color = COLORS['true']
-            title_extra = "\n✓ OPTIMAL (MDL)"
+            title_extra = "\n[ok] OPTIMAL (MDL)"
         elif deg < best_degree:
             color = COLORS['aic']
-            title_extra = "\n✗ Underfit"
+            title_extra = "\n[FAIL] Underfit"
         else:
             color = COLORS['model_cost']
-            title_extra = "\n✗ Overfit"
+            title_extra = "\n[FAIL] Overfit"
         
         ax.plot(x_fine, y_fit, color=color, linewidth=2.5, label=f'Degree {deg}')
         
@@ -487,7 +487,7 @@ def plot_compression_analysis(
         ax2.text(bar.get_x() + bar.get_width()/2, bar.get_height() + 0.05,
                  f'{ratio:.1f}x', ha='center', va='bottom', fontsize=8)
     
-    fig.suptitle('Compression = Understanding: Finding Structure in Data',
+    fig.suptitle('Compression Reveals Regularity: MDL Score Breakdown',
                  fontsize=14, fontweight='bold', y=1.02)
     
     plt.tight_layout()
@@ -556,12 +556,12 @@ def plot_model_probabilities(
 
 
 # =============================================================================
-# PLOT 7: THE SPY ANALOGY VISUALIZATION
+# PLOT 7: THE CODING ANALOGY VISUALIZATION
 # =============================================================================
 
 def plot_spy_analogy(save_path: str = None):
     """
-    Visualize the spy encoding analogy from the README.
+    Visualize the coding analogy from Section 3 of the paper.
     
     Shows naive encoding vs model-based encoding.
     """
@@ -613,15 +613,15 @@ def plot_spy_analogy(save_path: str = None):
     ax2.legend()
     
     # Add text boxes
-    ax1.text(0.5, 0.02, '❌ Expensive!\nNo structure found',
+    ax1.text(0.5, 0.02, '[FAIL] Expensive!\nNo structure found',
              transform=ax1.transAxes, fontsize=11, ha='center',
              bbox=dict(boxstyle='round', facecolor='white', alpha=0.8))
     
-    ax2.text(0.5, 0.02, '✓ Efficient!\nPattern + small corrections',
+    ax2.text(0.5, 0.02, '[ok] Efficient!\nPattern + small corrections',
              transform=ax2.transAxes, fontsize=11, ha='center',
              bbox=dict(boxstyle='round', facecolor='white', alpha=0.8))
     
-    fig.suptitle('🕵️ The Spy Analogy: How MDL Finds Patterns',
+    fig.suptitle('The Coding Analogy: How MDL Finds Patterns',
                  fontsize=14, fontweight='bold', y=1.02)
     
     plt.tight_layout()
@@ -694,8 +694,8 @@ def main():
     plt.figure(fig6.number)
     plt.show(block=False)
     
-    # 7. Spy Analogy
-    print("7/7: Spy Analogy...")
+    # 7. Coding Analogy
+    print("7/7: Coding Analogy...")
     fig7 = plot_spy_analogy()
     plt.figure(fig7.number)
     plt.show(block=False)
