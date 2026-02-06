@@ -1,319 +1,177 @@
-# Day 7: Coffee Automaton - Quick Reference Guide 📋
+# CHEATSHEET: The Coffee Automaton
 
-*"Complexity theory at your fingertips - from simple rules to emergent intelligence"*
-
----
-
-## The Big Idea (30 seconds)
-
-The Coffee Automaton demonstrates how **complex behaviors emerge from simple local rules** - a fundamental principle underlying neural networks, AI systems, and natural intelligence. Think of it as:
-- **Simple Rule** = Each cell shares heat with neighbors
-- **Complex Result** = Dancing patterns, memory, life-like behavior
-- **Key Insight** = Intelligence emerges at the "edge of chaos"
+> Quick reference for Aaronson, Carroll, Ouellette (2014), arXiv:1405.6903
 
 ---
 
-## Core Equations
+## The Model
 
-```python
-# Heat Diffusion (Laplacian)
-T_new[i,j] = T_old[i,j] + α × (ΣT_neighbors - 4×T_old[i,j]) + noise
+### Setup
+- N x N grid of binary values: 1 = cream, 0 = coffee
+- Initial state: top half = 1 (cream), bottom half = 0 (coffee)
 
-# Environmental Cooling
-T_new[i,j] = T_new[i,j] × (1 - cooling_rate)
-
-# Complexity Measure  
-complexity = σ²(local_patterns) / mean(local_patterns)
-
-# Shannon Entropy
-entropy = -Σ p(i) × log(p(i))
+### Interacting Model (Section 3.1) — the main one
+```
+At each time step:
+  1. Pick a random pair of adjacent cells (horizontally or vertically)
+  2. If they are different, swap them
+  3. One swap per step
 ```
 
-**Key insight**: Complexity peaks at intermediate diffusion rates ("edge of chaos")!
+### Non-Interacting Model (Section 3.2) — the control
+```
+At each time step:
+  For each cream particle:
+    Move to a random neighbor (up/down/left/right)
+  Multiple particles can occupy one cell
+  Coffee is just background
+```
 
 ---
 
-## Quick Start
+## The Measurements
 
-### Basic Setup
+### Entropy Estimate (proxy for K(x))
+```python
+entropy = len(gzip.compress(grid.tobytes(), compresslevel=9))
+```
+Compress the fine-grained (original) binary grid. Monotonically increases.
+
+### Apparent Complexity Estimate (proxy for K(f(x)))
+```python
+# Step 1: Coarse-grain — average over g x g blocks
+coarse = average_blocks(grid, grain_size=g)
+
+# Step 2: Threshold into discrete buckets
+# Section 5: 3 buckets (0, 0.5, 1)
+# Section 6: 7 buckets (0, 1/6, 2/6, ..., 1)
+thresholded = threshold(coarse, num_buckets)
+
+# Step 3: Compress
+complexity = len(gzip.compress(thresholded.tobytes(), compresslevel=9))
+```
+Rises then falls for interacting model. Stays flat for non-interacting (after adjustment).
+
+### Adjusted Coarse-Graining (Section 6)
+```python
+# After thresholding, apply row-majority adjustment:
+for each row in thresholded:
+    majority_value = mode(row)
+    for each cell in row:
+        if abs(cell - majority_value) <= 1 bucket:
+            cell = majority_value
+```
+Removes border pixel artifacts. Non-interacting complexity drops to near zero.
+
+---
+
+## Key Equations
+
+### Apparent Complexity (Definition)
+$$C_{\text{apparent}}(x) = K(f(x))$$
+where $f$ = smoothing function, $K$ = Kolmogorov complexity.
+
+### Sophistication (for theory reference — NOT computed in experiments)
+$$\text{soph}_c(x) = \min\{K(S) : x \in S, \; K(S) + \log_2|S| \leq K(x) + c\}$$
+
+### Apparent Complexity as Resource-Bounded Sophistication (Section 2.5)
+$$K(f(x)) \approx K(S_{f,x}) \quad \text{where } S_{f,x} = \{y : f(y) = f(x)\}$$
+
+### Non-Interacting Random Walk (Appendix)
+$$E[a_{t+1}(x,y)] = \frac{E[a_t(x-1,y)] + E[a_t(x+1,y)] + E[a_t(x,y-1)] + E[a_t(x,y+1)]}{4}$$
+
+### Chernoff Concentration (Appendix)
+$$\Pr[|a_t(B) - E[a_t(B)]| > L^2/G] < 2\exp\left(-\frac{L^2}{3G^2}\right)$$
+
+Grain size needed: $L \gg G\sqrt{3 \ln(2n^2)}$
+
+---
+
+## Scaling Results (Figures 6-8)
+
+| Quantity | Scaling | Fit $r^2$ |
+|----------|---------|-----------|
+| Max entropy | ~ $n^2$ (quadratic) | 0.9999 |
+| Max complexity (interacting) | ~ $n$ (linear) | 0.9798 |
+| Max complexity (non-interacting) | ~ $n$ (linear) | 0.9729 |
+| Time to max complexity (interacting) | ~ $n^2$ (quadratic) | 0.9878 |
+| Time to max complexity (non-interacting) | ~ $n^2$ (quadratic) | 0.9927 |
+
+Why max complexity ~ n: complexity develops along the 1D boundary between coffee and cream.
+Why max entropy ~ n^2: entropy counts all n^2 particles.
+
+---
+
+## Quick API Reference (implementation.py)
+
+### CoffeeAutomaton
 ```python
 from implementation import CoffeeAutomaton
 
 # Create automaton
-coffee = CoffeeAutomaton(
-    size=50,              # Grid size  
-    initial_temp=100.0,   # Starting temperature
-    diffusion_rate=0.1,   # Heat spreading rate
-    cooling_rate=0.02,    # Environmental cooling
-    noise_level=0.01      # Random fluctuations
+ca = CoffeeAutomaton(grid_size=100, model='interacting')
+
+# Run steps
+ca.step(num_steps=1000)  # batch swap for speed
+
+# Get current state
+grid = ca.grid  # numpy uint8 array, 0 or 1
+
+# Measure
+entropy = ca.entropy()        # gzip(fine-grained)
+complexity = ca.complexity(    # gzip(coarse-grained)
+    grain_size=10,
+    num_buckets=7,
+    adjust=True
 )
-
-# Add hotspot and evolve
-coffee.add_hotspot(25, 25, intensity=30, radius=5)
-for step in range(100):
-    coffee.step()
 ```
 
-### Analysis
+### Measurements
 ```python
-from implementation import ComplexityMeasures
+from implementation import gzip_size, coarse_grain, threshold_array
 
-calc = ComplexityMeasures()
-complexity = calc.calculate_local_complexity(coffee.grid)
-entropy = calc.calculate_entropy(coffee.grid)
-patterns = calc.identify_patterns(coffee.grid)
+# Raw gzip size of any data
+size = gzip_size(data_bytes)
 
-print(f"System complexity: {complexity.mean():.3f}")
-print(f"Information entropy: {entropy:.3f}")
-```
+# Coarse-grain a grid
+coarse = coarse_grain(grid, grain_size=10)
 
-### Visualization
-```python
-from visualization import CoffeeAutomatonVisualizer
-
-viz = CoffeeAutomatonVisualizer()
-viz.create_evolution_animation(coffee, steps=50)
-viz.plot_complexity_landscape(param_range=(0.05, 0.3, 10))
+# Threshold into buckets
+discrete = threshold_array(coarse, num_buckets=7)
 ```
 
 ---
 
-## Parameter Guide
+## Four Complexity Measures (Section 2) — Why Only One Was Used
 
-| Parameter      | Typical Range | Description                     | Too Low            | Too High           |
-|----------------|---------------|---------------------------------|--------------------|--------------------|
-| `diffusion_rate` | 0.05-0.20   | Heat spreading speed            | Isolated patterns  | Uniform blur       |
-| `cooling_rate`   | 0.01-0.05   | Environmental heat loss         | System heats up    | Dies quickly       |
-| `noise_level`    | 0.001-0.02  | Random perturbations            | Too ordered        | Too chaotic        |
-| `size`           | 30-100      | Grid dimensions                 | Cramped            | Slow, memory heavy |
-
-### Good Starting Point
-```python
-diffusion_rate = 0.1
-cooling_rate = 0.02
-noise_level = 0.01
-size = 50
-```
+| Measure | What It Captures | Why Not Used |
+|---------|-----------------|--------------|
+| Apparent complexity | KC of smoothed state | **USED** — computable, matches intuition |
+| Sophistication | Size of minimal model | Never large for short-program outputs |
+| Logical depth | Time of shortest program | Complex patterns don't need long computation |
+| Light-cone complexity | Past-future mutual info | Requires causal history, not just current state |
 
 ---
 
-## Common Issues & Fixes
+## Common Gotchas
 
-### 1. System Dies Quickly
-**Symptom**: All cells cool to room temperature rapidly
-
-**Fixes**:
-```python
-# Reduce cooling
-cooling_rate = 0.01  # instead of 0.05
-
-# Add continuous heat source
-if step % 10 == 0:
-    coffee.add_hotspot(25, 25, intensity=10, radius=3)
-```
-
-### 2. System Becomes Uniform Blur
-**Symptom**: No patterns, everything averages out
-
-**Fixes**:
-```python
-# Reduce diffusion
-diffusion_rate = 0.08  # instead of 0.3
-
-# Add noise for diversity
-noise_level = 0.015
-```
-
-### 3. No Interesting Patterns
-**Symptom**: System runs but nothing exciting happens
-
-**Fixes**:
-```python
-# Move toward edge of chaos
-coffee = CoffeeAutomaton(
-    diffusion_rate=0.12,   # edge of chaos
-    noise_level=0.01,      # enough randomness
-    cooling_rate=0.025
-)
-
-# Better initial conditions - multiple hotspots
-for (x, y) in [(10,10), (30,30), (15,25)]:
-    coffee.add_hotspot(x, y, intensity=25, radius=4)
-```
+1. **gzip operates on bytes, not floats**: Convert grid to bytes before compressing
+2. **Threshold BEFORE compressing**: Floating-point averages won't compress well
+3. **One swap per step is slow**: For N=100, need ~10^7 steps. Use batch swaps.
+4. **Non-interacting needs count grid**: Particles overlap, so use uint16, not uint8
+5. **"Entropy" in this paper = gzip(fine-grained)**: Not Shannon entropy formula
+6. **3-bucket thresholding has artifacts**: Use 7-bucket + adjustment for reliable results
+7. **Grain size matters**: Too small = noise not smoothed. Too large = structure erased. Default: g = n/10.
 
 ---
 
-## Debugging Checklist
+## Paper References
 
-When things go wrong, check:
-
-- [ ] **Parameters in valid range?** All should be > 0 and < 1
-- [ ] **Initial conditions set?** Need hotspots to start
-- [ ] **Grid size reasonable?** Too small (<20) won't show patterns
-- [ ] **Enough steps?** Complex patterns need time (100+ steps)
-- [ ] **Temperature range OK?** Should be between 0 and initial_temp
-- [ ] **Memory sufficient?** Large grids (>100) need RAM
-
----
-
-## Tips & Tricks
-
-### 1. Finding Interesting Behavior
-- Start with `diffusion_rate=0.1`, sweep from 0.05 to 0.2
-- Keep `noise_level` low (0.005-0.015) for coherent patterns
-- Use `cooling_rate` around 0.02 for slow evolution
-- Grid size 40-60 is optimal for visualization
-
-### 2. Initial Conditions Recipes
-```python
-# For stable patterns: Single central hotspot
-coffee.add_hotspot(size//2, size//2, intensity=30, radius=5)
-
-# For dynamic patterns: Multiple sources
-for i in range(5):
-    x, y = np.random.randint(0, size, 2)
-    coffee.add_hotspot(x, y, intensity=20, radius=3)
-
-# For waves: Linear heat source
-coffee.grid[size//2, :] = 80  # Horizontal line
-```
-
-### 3. Finding Edge of Chaos
-```python
-# Sweep diffusion rate to find peak complexity
-diffusions = np.linspace(0.05, 0.3, 20)
-max_complexities = []
-
-for diff in diffusions:
-    coffee = CoffeeAutomaton(diffusion_rate=diff)
-    coffee.add_hotspot(25, 25, intensity=30, radius=5)
-    
-    complexities = []
-    for step in range(50):
-        coffee.step()
-        complexity = calc.calculate_local_complexity(coffee.grid)
-        complexities.append(complexity.mean())
-    
-    max_complexities.append(max(complexities))
-
-optimal_diff = diffusions[np.argmax(max_complexities)]
-print(f"Edge of chaos at diffusion = {optimal_diff:.3f}")
-```
-
----
-
-## Connection to Deep Learning
-
-### Why This Matters for AI
-
-```python
-# Neural networks also need "edge of chaos"!
-
-# Critical Initialization (Kaiming He, 2015)
-def kaiming_init(layer):
-    """Initialize at critical point for ReLU networks"""
-    fan_in = layer.weight.size(1)
-    std = np.sqrt(2.0 / fan_in)  # Critical variance!
-    layer.weight.data.normal_(0, std)
-
-# Too small std → gradients vanish
-# Too large std → gradients explode  
-# Just right → learning happens!
-```
-
-### Complexity in Neural Networks
-```python
-def analyze_network_complexity(model, data):
-    """Measure emergence in trained networks"""
-    activations = []
-    
-    def hook(module, input, output):
-        activations.append(output.detach().cpu().numpy())
-    
-    handles = [layer.register_forward_hook(hook) 
-               for layer in model.modules()]
-    model(data)
-    
-    # Calculate layer-wise complexity
-    complexities = []
-    for activation in activations:
-        var = np.var(activation)
-        mean = np.mean(np.abs(activation)) + 1e-8
-        complexity = var / mean
-        complexities.append(complexity)
-    
-    for handle in handles:
-        handle.remove()
-    
-    return complexities
-```
-
----
-
-## When to Use This vs Alternatives
-
-| Method | Best For | Strengths | Weaknesses |
-|--------|----------|-----------|------------|
-| **Coffee Automaton** | Studying emergence, complexity | Simple rules, interpretable | Computationally simple |
-| **Game of Life** | Discrete patterns | Binary, fast | Less physical |
-| **Reaction-Diffusion** | Pattern formation | Realistic chemistry | More complex math |
-| **Neural CA** | Learning dynamics | Can be trained | Needs data |
-
-**Rule of thumb**:
-- Want to understand emergence? → Coffee Automaton
-- Want discrete life-like patterns? → Game of Life  
-- Want realistic chemistry? → Reaction-Diffusion
-
----
-
-## Quick Debug Commands
-
-```python
-# System Health Check
-print(f"Temperature range: {coffee.grid.min():.1f} - {coffee.grid.max():.1f}")
-print(f"Average temp: {coffee.grid.mean():.1f}")
-print(f"Std dev: {coffee.grid.std():.1f}")
-
-# Complexity Sanity Check
-complexity = calc.calculate_local_complexity(coffee.grid)
-if complexity.mean() < 0.1:
-    print("⚠️  Low complexity - increase diffusion or noise")
-elif complexity.mean() > 2.0:
-    print("⚠️  High complexity - system may be chaotic")
-else:
-    print("✅ Good complexity range (edge of chaos)")
-```
-
----
-
-## Resources
-
-### Papers
-- **Langton (1990)**: "Computation at the edge of chaos"
-- **Kauffman (1993)**: "The Origins of Order"
-- **Bak (1996)**: "How Nature Works"  
-- **Mitchell (2009)**: "Complexity: A Guided Tour"
-
-### Related Topics
-- Cellular Automata (Game of Life, Rule 110)
-- Self-Organized Criticality
-- Neural Network Initialization
-- Phase Transitions in Deep Learning
-
----
-
-## Quick Comparison: Order vs Chaos vs Edge
-
-| Regime | Diffusion | Noise | Behavior | Complexity | Applications |
-|--------|-----------|-------|----------|------------|--------------|
-| **Order** | Low | Low | Stable, predictable | Low | Optimization |
-| **Chaos** | High | High | Random, unpredictable | Low | Exploration |
-| **Edge** | Medium | Medium | Complex, adaptive | **High** | Learning, Intelligence |
-
-**The sweet spot**: Edge of chaos is where interesting computation happens!
-
----
-
-*"In the dance between order and chaos, intelligence emerges."*
-
-**Next**: Try the exercises to explore different parameter regimes! 🚀
+- Koppel (1987) — sophistication definition
+- Bennett (1995) — logical depth definition
+- Evans et al. (2003) — OSCR two-part code (tried but didn't work)
+- Shalizi et al. (2004) — light-cone complexity
+- Gacs, Tromp, Vitanyi (2001) — algorithmic statistics
+- Antunes & Fortnow (2009) — coarse sophistication = Busy Beaver depth
+- Gell-Mann (1994) — "The Quark and the Jaguar," informal discussion of complexity rise-and-fall
+- Carroll (2010) — "From Eternity to Here," arrow of time and complexity
