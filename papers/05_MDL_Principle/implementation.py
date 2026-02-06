@@ -42,9 +42,9 @@ def universal_code_integers(n: int) -> float:
     L(n) = log*(n) + log(c₀)
     where log*(n) = log(n) + log(log(n)) + ... (only positive terms)
     
-    The Spy Analogy:
+    Coding Analogy:
     ================
-    Imagine telling your spy friend a number without knowing the range.
+    Imagine telling a receiver a number without knowing the range.
     You can't just use 4 bits (that assumes max 15).
     
     Universal code says: "First tell me how many digits, then the number."
@@ -136,9 +136,9 @@ def two_part_mdl_polynomial(
     
     Two-Part Code = L(Model) + L(Data|Model)
     
-    The Spy Analogy (from README):
-    ==============================
-    You're a spy sending temperature readings to headquarters.
+    Coding Analogy (Section 3 of the paper):
+    ==========================================
+    You're sending temperature readings to a receiver.
     
     L(Model): Cost of sending the polynomial formula
               "Use: T = 23.5 + 0.02*hour - 0.001*hour²"
@@ -998,7 +998,7 @@ def main():
     print(f"\nRaw data size: {raw_bits} bits ({len(y)} × 32-bit floats)")
     print(f"MDL compressed: {best_mdl:.0f} bits")
     print(f"Compression ratio: {ratio:.2f}x")
-    print(f"\n{'✓ Found compressible structure!' if ratio > 1 else '✗ Data appears random.'}")
+    print(f"\n{'[ok] Found compressible structure!' if ratio > 1 else '[FAIL] Data appears random.'}")
     
     print()
     print("=" * 70)
