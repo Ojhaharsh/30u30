@@ -150,10 +150,10 @@ def run_experiment(
     
     if verbose:
         print("\n" + "=" * 70)
-        print("🎓 MDL (Minimum Description Length) - Model Selection Demo")
+        print("MDL (Minimum Description Length) - Model Selection Demo")
         print("=" * 70)
         print()
-        print("📊 DATA GENERATION")
+        print("DATA GENERATION")
         print("-" * 40)
         print(f"  True polynomial degree: {true_degree}")
         print(f"  True coefficients: {np.round(true_coeffs, 2)}")
@@ -181,7 +181,7 @@ def run_experiment(
     
     if verbose:
         print()
-        print("📈 MDL SCORES BY DEGREE")
+        print("MDL SCORES BY DEGREE")
         print("-" * 40)
         print(f"{'Degree':<8} {'MDL (bits)':<15} {'AIC':<15} {'BIC':<15}")
         print("-" * 55)
@@ -200,12 +200,12 @@ def run_experiment(
     
     if verbose:
         print()
-        print("🏆 MODEL SELECTION RESULTS")
+        print("MODEL SELECTION RESULTS")
         print("-" * 40)
         print(f"  True degree:  {true_degree}")
-        print(f"  MDL selects:  {mdl_best} {'✓' if mdl_best == true_degree else '✗'}")
-        print(f"  AIC selects:  {aic_best} {'✓' if aic_best == true_degree else '✗'}")
-        print(f"  BIC selects:  {bic_best} {'✓' if bic_best == true_degree else '✗'}")
+        print(f"  MDL selects:  {mdl_best} {'[ok]' if mdl_best == true_degree else '[FAIL]'}")
+        print(f"  AIC selects:  {aic_best} {'[ok]' if aic_best == true_degree else '[FAIL]'}")
+        print(f"  BIC selects:  {bic_best} {'[ok]' if bic_best == true_degree else '[FAIL]'}")
     
     # =========================================================================
     # Compression analysis
@@ -217,16 +217,16 @@ def run_experiment(
     
     if verbose:
         print()
-        print("🗜️  COMPRESSION ANALYSIS")
+        print("COMPRESSION ANALYSIS")
         print("-" * 40)
         print(f"  Raw data size:      {raw_bits} bits")
         print(f"  MDL compressed:     {best_mdl_bits:.0f} bits")
         print(f"  Compression ratio:  {compression_ratio:.2f}x")
         
         if compression_ratio > 1:
-            print(f"  ✅ Model found compressible structure!")
+            print(f"  [OK] Model found compressible structure!")
         else:
-            print(f"  ⚠️  Data might be mostly noise")
+            print(f"  [NOTE] Data might be mostly noise")
     
     # =========================================================================
     # Model details
@@ -237,7 +237,7 @@ def run_experiment(
         winner_coeffs = np.polyfit(x, y, mdl_best)
         
         print()
-        print("📐 WINNING MODEL DETAILS")
+        print("WINNING MODEL DETAILS")
         print("-" * 40)
         print(f"  Selected degree: {mdl_best}")
         print(f"  Fitted coefficients: {np.round(winner_coeffs, 3)}")
@@ -253,19 +253,19 @@ def run_experiment(
         # Compare to true
         if mdl_best == true_degree:
             print()
-            print("  🎯 MDL correctly identified the true structure!")
+            print("  MDL correctly identified the true structure!")
         elif mdl_best < true_degree:
             print()
-            print("  ⚠️ MDL underfit - might need more data or less noise")
+            print("  [NOTE] MDL underfit - might need more data or less noise")
         else:
             print()
-            print("  ⚠️ MDL overfit - true pattern might be simpler")
+            print("  [NOTE] MDL overfit - true pattern might be simpler")
     
     if verbose:
         print()
         print("=" * 70)
-        print("💡 KEY INSIGHT: MDL finds the model that COMPRESSES data best.")
-        print("   Compression = Understanding. Random noise can't be compressed.")
+        print("KEY INSIGHT: MDL finds the model that COMPRESSES data best.")
+        print("   Shorter total description = better model. Random noise can't be compressed.")
         print("=" * 70)
     
     return {
@@ -294,7 +294,7 @@ def run_monte_carlo(
     Run multiple trials to compare MDL, AIC, BIC reliability.
     """
     print("\n" + "=" * 70)
-    print("🎲 MONTE CARLO COMPARISON: MDL vs AIC vs BIC")
+    print("MONTE CARLO COMPARISON: MDL vs AIC vs BIC")
     print("=" * 70)
     print(f"\nRunning {n_trials} trials...")
     print(f"True degree: {true_degree}, Noise: {noise_std}, Samples: {n_samples}")
@@ -318,7 +318,7 @@ def run_monte_carlo(
         bic_correct += int(result['bic_correct'])
     
     print()
-    print("📊 ACCURACY OVER", n_trials, "TRIALS")
+    print("ACCURACY OVER", n_trials, "TRIALS")
     print("-" * 40)
     print(f"  MDL: {mdl_correct}/{n_trials} ({100*mdl_correct/n_trials:.1f}%)")
     print(f"  AIC: {aic_correct}/{n_trials} ({100*aic_correct/n_trials:.1f}%)")
@@ -329,7 +329,7 @@ def run_monte_carlo(
              ('AIC' if aic_correct > bic_correct else 'BIC')
     
     print()
-    print(f"🏆 Winner: {winner}")
+    print(f"Winner: {winner}")
     print()
 
 
