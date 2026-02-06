@@ -281,9 +281,9 @@ def test_implementation():
         
         print(f"   Best degree selected: {selector.best_degree}")
         print(f"   True degree: {true_degree}")
-        print("   ✓ PASSED")
+        print("   [ok] PASSED")
     except Exception as e:
-        print(f"   ✗ FAILED: {e}")
+        print(f"   [FAIL] FAILED: {e}")
     
     # Test 2: Prediction
     print("\n2. Testing MDLModelSelector.predict()...")
@@ -293,9 +293,9 @@ def test_implementation():
         
         assert len(predictions) == len(x_test), "Wrong number of predictions"
         print(f"   Predictions for x=[11,12,13]: {predictions}")
-        print("   ✓ PASSED")
+        print("   [ok] PASSED")
     except Exception as e:
-        print(f"   ✗ FAILED: {e}")
+        print(f"   [FAIL] FAILED: {e}")
     
     # Test 3: Compression ratio
     print("\n3. Testing get_compression_ratio()...")
@@ -306,12 +306,12 @@ def test_implementation():
         print(f"   Compression ratio: {ratio:.2f}x")
         
         if ratio > 1:
-            print("   ✓ Data is compressible - structure found!")
+            print("   [ok] Data is compressible - structure found!")
         else:
-            print("   ⚠ No compression - data might be random")
-        print("   ✓ PASSED")
+            print("   [NOTE] No compression - data might be random")
+        print("   [ok] PASSED")
     except Exception as e:
-        print(f"   ✗ FAILED: {e}")
+        print(f"   [FAIL] FAILED: {e}")
     
     # Test 4: Model probabilities
     print("\n4. Testing get_model_probability()...")
@@ -322,9 +322,9 @@ def test_implementation():
         
         print(f"   P(degree=2): {selector.get_model_probability(2):.4f}")
         print(f"   Sum of all probabilities: {total_prob:.4f}")
-        print("   ✓ PASSED")
+        print("   [ok] PASSED")
     except Exception as e:
-        print(f"   ✗ FAILED: {e}")
+        print(f"   [FAIL] FAILED: {e}")
     
     # Test 5: Summary
     print("\n5. Testing summary()...")
@@ -332,9 +332,9 @@ def test_implementation():
         summary = selector.summary()
         assert "Best degree" in summary, "Summary should contain best degree"
         print("   Summary generated successfully")
-        print("   ✓ PASSED")
+        print("   [ok] PASSED")
     except Exception as e:
-        print(f"   ✗ FAILED: {e}")
+        print(f"   [FAIL] FAILED: {e}")
     
     # Test 6: Compare with CV (if implemented)
     print("\n6. Testing compare_with_cross_validation()...")
@@ -344,11 +344,11 @@ def test_implementation():
         print(f"   CV selects: degree {result['cv_best']}")
         
         if result['mdl_best'] == result['cv_best']:
-            print("   ✓ MDL and CV agree!")
+            print("   [ok] MDL and CV agree!")
         else:
-            print("   ⚠ Methods disagree (happens sometimes)")
+            print("   [NOTE] Methods disagree (happens sometimes)")
     except Exception as e:
-        print(f"   ⚠ Skipped (not implemented): {e}")
+        print(f"   [NOTE] Skipped (not implemented): {e}")
     
     print("\n" + "=" * 50)
     print("Testing complete!")
