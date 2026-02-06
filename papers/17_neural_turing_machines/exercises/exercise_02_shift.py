@@ -6,7 +6,7 @@ NTMs implementations location-based addressing via circular convolution
 (Graves et al., 2014, Section 3.3.1, Equation 8).
 
 Formula:
-w_s(i) = Σ_{j=0}^{N-1} w_g(j) s(i - j)
+w_s(i) = sum_{j=0}^{N-1} w_g(j) s(i - j)
 
 For a shift range of 3 (indices 0, 1, 2 representing shifts -1, 0, 1), 
 Equation 8 simplifies to:

@@ -10,7 +10,7 @@ how much the head should focus on a specific memory location based on
 its similarity to a search key 'k'.
 
 Formula (Eq 5 & 6):
-w_c(i) = exp(beta * K[k, M(i)]) / Σ exp(beta * K[k, M(j)])
+w_c(i) = exp(beta * K[k, M(i)]) / sum exp(beta * K[k, M(j)])
 Where K[., .] is the cosine similarity.
 """
 
