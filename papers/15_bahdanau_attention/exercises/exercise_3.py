@@ -1,18 +1,8 @@
 """
 Exercise 3: Build the Attention Decoder
 
-The decoder is where the magic happens! At each step, it:
-1. Looks at what it generated so far (previous token)
-2. Asks "what should I focus on?" (attention over encoder)
-3. Combines this with its memory (hidden state)
-4. Generates the next token
-
-Think of it like writing a summary:
-- You keep re-reading the relevant parts of the original text
-- Each sentence you write requires looking at different parts
-- The attention mechanism is your "eyes" scanning the source
-
-Your task: Implement the attention decoder.
+The decoder generates the target sequence step-by-step, using the attention 
+mechanism to focus on relevant source tokens at each position.
 """
 
 import torch
@@ -199,7 +189,7 @@ def test_decoder():
     assert abs(attn_sums - 1.0) < 1e-5, \
         f"Attention doesn't sum to 1: {attn_sums}"
     
-    print("✅ All tests passed!")
+    print("Test passed.")
     print(f"   Single step output: {output.shape}")
     print(f"   Full output: {outputs.shape}")
     print(f"   Attention weights: {attentions.shape}")

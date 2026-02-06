@@ -3,16 +3,10 @@ Exercise 1: Implement Basic Additive (Bahdanau) Attention
 
 The core of Bahdanau attention is the alignment model:
     e_{t,i} = v^T * tanh(W_s * s + W_h * h)
-    α_{t,i} = softmax(e_{t,i})
-    c_t = Σ α_{t,i} * h_i
+    alpha_{t,i} = softmax(e_{t,i})
+    c_t = sum alpha_{t,i} * h_i
 
-Your task: Implement the attention mechanism from scratch.
-
-Think of it like this:
-- You're in a library (encoder outputs = books on shelves)
-- You have a question in mind (query = decoder state)
-- You need to figure out which books are relevant (attention weights)
-- Then you read the relevant parts (context = weighted sum)
+Your task: Implement the additive attention mechanism as described in the paper.
 """
 
 import torch
@@ -128,7 +122,7 @@ def test_attention():
     assert (weights_masked[:, -2:] < 0.01).all(), \
         f"Masked positions have too much attention: {weights_masked[:, -2:]}"
     
-    print("✅ All tests passed!")
+    print("Test passed.")
     print(f"   Context shape: {context.shape}")
     print(f"   Weights shape: {weights.shape}")
     print(f"   Weights sum: {weights[0].sum().item():.4f}")
