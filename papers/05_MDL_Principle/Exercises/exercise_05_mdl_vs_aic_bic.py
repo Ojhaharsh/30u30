@@ -297,9 +297,9 @@ def test_implementation():
         print(f"   AIC(degree=2) = {aic_2:.2f}")
         print(f"   BIC(degree=2) = {bic_2:.2f}")
         print(f"   MDL(degree=2) = {mdl_2:.2f}")
-        print("   ✓ PASSED")
+        print("   [ok] PASSED")
     except Exception as e:
-        print(f"   ✗ FAILED: {e}")
+        print(f"   [FAIL] FAILED: {e}")
     
     # Test 2: Full selection
     print("\n2. Testing select_with_all_criteria()...")
@@ -318,9 +318,9 @@ def test_implementation():
             results['bic']['best'] == true_degree
         ])
         print(f"   {correct}/3 methods correct")
-        print("   ✓ PASSED")
+        print("   [ok] PASSED")
     except Exception as e:
-        print(f"   ✗ FAILED: {e}")
+        print(f"   [FAIL] FAILED: {e}")
     
     # Test 3: Monte Carlo
     print("\n3. Testing monte_carlo_comparison()...")
@@ -340,9 +340,9 @@ def test_implementation():
         winner = max(['mdl', 'aic', 'bic'],
                      key=lambda m: mc_results[f'{m}_accuracy'])
         print(f"   Winner: {winner.upper()}")
-        print("   ✓ PASSED")
+        print("   [ok] PASSED")
     except Exception as e:
-        print(f"   ✗ FAILED: {e}")
+        print(f"   [FAIL] FAILED: {e}")
     
     # Test 4: Sample size effect
     print("\n4. Testing analyze_sample_size_effect()...")
@@ -356,9 +356,9 @@ def test_implementation():
         for method in ['mdl', 'aic', 'bic']:
             accs = size_results[method]
             print(f"   {method.upper()}: n=20→{accs[0]*100:.0f}%, n=50→{accs[1]*100:.0f}%, n=100→{accs[2]*100:.0f}%")
-        print("   ✓ PASSED")
+        print("   [ok] PASSED")
     except Exception as e:
-        print(f"   ⚠ Skipped: {e}")
+        print(f"   [NOTE] Skipped: {e}")
     
     # Test 5: Disagreement analysis
     print("\n5. Testing when_do_they_disagree()...")
@@ -370,9 +370,9 @@ def test_implementation():
         else:
             print(f"   Methods disagree!")
             print(f"   Analysis: {disagreement.get('explanation', 'N/A')}")
-        print("   ✓ PASSED")
+        print("   [ok] PASSED")
     except Exception as e:
-        print(f"   ⚠ Skipped: {e}")
+        print(f"   [NOTE] Skipped: {e}")
     
     print("\n" + "=" * 55)
     print("Testing complete!")
