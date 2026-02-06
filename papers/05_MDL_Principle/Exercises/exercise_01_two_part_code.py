@@ -11,9 +11,9 @@ Where:
 
 Your task: Implement the two-part code for polynomial regression.
 
-The Spy Analogy:
-----------------
-You're a spy sending temperature data to HQ. You can either:
+Coding Analogy (from the paper's Section 3 framework):
+-------------------------------------------------------
+You're sending data to a receiver. You can either:
 1. Send every number individually (naive, expensive)
 2. Send a formula + small corrections (smart, cheap!)
 
@@ -170,9 +170,9 @@ def test_implementation():
         print(f"   universal_code_length(1) = {len_1:.2f}")
         print(f"   universal_code_length(10) = {len_10:.2f}")
         print(f"   universal_code_length(100) = {len_100:.2f}")
-        print("   ✓ PASSED")
+        print("   [ok] PASSED")
     except Exception as e:
-        print(f"   ✗ FAILED: {e}")
+        print(f"   [FAIL] FAILED: {e}")
     
     # Test 2: Model description length
     print("\n2. Testing model_description_length()...")
@@ -185,9 +185,9 @@ def test_implementation():
         print(f"   model_description_length(0) = {model_0:.2f}")
         print(f"   model_description_length(2) = {model_2:.2f}")
         print(f"   model_description_length(5) = {model_5:.2f}")
-        print("   ✓ PASSED")
+        print("   [ok] PASSED")
     except Exception as e:
-        print(f"   ✗ FAILED: {e}")
+        print(f"   [FAIL] FAILED: {e}")
     
     # Test 3: Data description length
     print("\n3. Testing data_description_length()...")
@@ -201,9 +201,9 @@ def test_implementation():
         assert data_1 < data_0, "Better fitting model should have lower data cost"
         print(f"   data_cost(degree=0) = {data_0:.2f} (poor fit)")
         print(f"   data_cost(degree=1) = {data_1:.2f} (good fit)")
-        print("   ✓ PASSED")
+        print("   [ok] PASSED")
     except Exception as e:
-        print(f"   ✗ FAILED: {e}")
+        print(f"   [FAIL] FAILED: {e}")
     
     # Test 4: Two-part MDL
     print("\n4. Testing two_part_mdl()...")
@@ -222,9 +222,9 @@ def test_implementation():
         print(f"   MDL(degree=1) = {mdl_1:.1f} (model: {m1:.1f}, data: {d1:.1f})")
         print(f"   MDL(degree=2) = {mdl_2:.1f} (model: {m2:.1f}, data: {d2:.1f}) ← BEST")
         print(f"   MDL(degree=5) = {mdl_5:.1f} (model: {m5:.1f}, data: {d5:.1f})")
-        print("   ✓ PASSED")
+        print("   [ok] PASSED")
     except Exception as e:
-        print(f"   ✗ FAILED: {e}")
+        print(f"   [FAIL] FAILED: {e}")
     
     # Test 5: Model selection
     print("\n5. Testing model selection...")
@@ -240,11 +240,11 @@ def test_implementation():
         print(f"   True degree: 2")
         
         if best_degree == 2:
-            print("   ✓ PASSED - MDL found the true structure!")
+            print("   [ok] PASSED - MDL found the true structure!")
         else:
-            print(f"   ⚠ Selected {best_degree} instead of 2 (might be noise)")
+            print(f"   [NOTE] Selected {best_degree} instead of 2 (might be noise)")
     except Exception as e:
-        print(f"   ✗ FAILED: {e}")
+        print(f"   [FAIL] FAILED: {e}")
     
     print("\n" + "=" * 50)
     print("Testing complete!")
