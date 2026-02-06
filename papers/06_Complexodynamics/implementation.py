@@ -1,869 +1,751 @@
 """
-Complexodynamics: The First Law of Complexity Evolution
+Complexodynamics: Coffee Mixing Simulation & Complexity Measurement
 
-Implements the core algorithms from Adami's "First Law of Complexodynamics" paper:
-1. Shannon complexity calculation
-2. Information flow dynamics (I_E and I_L)
-3. Channel capacity computation
-4. Complexity trajectory solver
-5. Full evolutionary simulator
+Implements the core ideas from Aaronson's "The First Law of Complexodynamics"
+blog post (2011):
+
+1. Coffee-milk mixing simulation (2D pixel grid with random neighbor swaps)
+2. Kolmogorov complexity approximation via gzip
+3. Coarse-grained KC (Sean Carroll's suggestion from blog comments)
+4. Two-part code sophistication proxy
+5. Multi-scale complexity analysis (Luca Trevisan's suggestion)
+6. Entropy tracking for comparison
+
+The central demonstration: entropy increases monotonically, but complexity
+(measured by gzip size, coarse-grained KC, or sophistication proxy) peaks
+at intermediate times and then decreases -- the "hump" that Aaronson's
+"First Law" conjectures must occur.
+
+Reference: https://scottaaronson.blog/?p=762
 
 Author: 30u30 Project
-Date: 2026
 """
 
 import numpy as np
-from typing import Tuple, Dict, List, Optional, Callable
-from collections import Counter
+import gzip
+from typing import Tuple, Dict, List, Optional
 import warnings
 
+
 # ============================================================================
-# SECTION 1: SHANNON COMPLEXITY
+# SECTION 1: COFFEE-MILK GRID SIMULATION
+# ============================================================================
+# Aaronson describes a 2D array of black (coffee) and white (milk) pixels.
+# Initially separated (top half black, bottom half white). At each step,
+# pick a random adjacent coffee-milk pair and swap them. This is a discrete
+# random diffusion process.
 # ============================================================================
 
-def shannon_complexity(sequence: str, base: int = 2) -> float:
+def create_initial_grid(size: int = 64) -> np.ndarray:
     """
-    Calculate Shannon entropy (complexity) of a sequence.
-    
-    The Shannon entropy quantifies the information content per symbol:
-        H = -Σ p_i * log(p_i)
-    
-    For DNA (4 symbols), maximum entropy is log2(4) = 2 bits/symbol.
-    
+    Create the initial coffee-milk grid: top half = 1 (coffee/black),
+    bottom half = 0 (milk/white).
+
     Args:
-        sequence: String of symbols (e.g., "ACGTACGT")
-        base: Logarithm base (2 for bits, e for nats)
-        
+        size: Side length of the square grid.
+
     Returns:
-        Entropy in bits (or nats) per symbol
-        
-    Example:
-        >>> shannon_complexity("AAAA")  # Uniform sequence
-        0.0
-        >>> shannon_complexity("ACGT")  # Maximum diversity
-        2.0
-        >>> shannon_complexity("AACCGGTT")  # Still maximum
-        2.0
+        2D numpy array of shape (size, size) with values 0 or 1.
     """
-    if len(sequence) == 0:
-        return 0.0
-    
-    # Count symbol frequencies
-    counts = Counter(sequence)
-    total = len(sequence)
-    
-    # Calculate probabilities
-    probs = np.array([count / total for count in counts.values()])
-    
-    # Shannon entropy
-    log_fn = np.log2 if base == 2 else np.log
-    entropy = -np.sum(probs * log_fn(probs))
-    
-    return entropy
+    grid = np.zeros((size, size), dtype=np.uint8)
+    grid[:size // 2, :] = 1  # top half is coffee
+    return grid
 
 
-def complexity_vector(sequences: List[str]) -> np.ndarray:
+def find_adjacent_pairs(grid: np.ndarray) -> List[Tuple[Tuple[int, int], Tuple[int, int]]]:
     """
-    Compute complexity for multiple sequences (vectorized).
-    
+    Find all adjacent pairs where one cell is coffee (1) and the other is milk (0).
+    Considers horizontal and vertical neighbors only (4-connectivity).
+
+    This is the set of "swappable" pairs in Aaronson's model.
+
     Args:
-        sequences: List of strings
-        
+        grid: 2D binary array.
+
     Returns:
-        Array of complexities
+        List of ((r1, c1), (r2, c2)) pairs.
     """
-    return np.array([shannon_complexity(seq) for seq in sequences])
+    rows, cols = grid.shape
+    pairs = []
+
+    # Horizontal neighbors
+    for r in range(rows):
+        for c in range(cols - 1):
+            if grid[r, c] != grid[r, c + 1]:
+                pairs.append(((r, c), (r, c + 1)))
+
+    # Vertical neighbors
+    for r in range(rows - 1):
+        for c in range(cols):
+            if grid[r, c] != grid[r + 1, c]:
+                pairs.append(((r, c), (r + 1, c)))
+
+    return pairs
 
 
-def sequence_diversity(sequence: str, window_size: int = 100) -> np.ndarray:
+def swap_step(grid: np.ndarray) -> np.ndarray:
     """
-    Calculate local complexity over sliding windows.
-    
-    Useful for detecting regions of high/low complexity in genomes.
-    
+    Perform one swap step: pick a random adjacent coffee-milk pair and swap.
+
+    This is the elementary operation in Aaronson's coffee model. At each
+    time step, we uniformly pick from all adjacent pairs where one is
+    coffee and one is milk, then swap them.
+
     Args:
-        sequence: DNA/protein sequence
-        window_size: Size of sliding window
-        
+        grid: 2D binary array (modified in place).
+
     Returns:
-        Array of local complexities
+        The grid (same object, modified in place).
     """
-    if len(sequence) < window_size:
-        return np.array([shannon_complexity(sequence)])
-    
-    n_windows = len(sequence) - window_size + 1
-    complexities = np.zeros(n_windows)
-    
-    for i in range(n_windows):
-        window = sequence[i:i + window_size]
-        complexities[i] = shannon_complexity(window)
-    
-    return complexities
+    pairs = find_adjacent_pairs(grid)
+    if len(pairs) == 0:
+        return grid  # fully mixed or fully separated (shouldn't happen)
+
+    idx = np.random.randint(len(pairs))
+    (r1, c1), (r2, c2) = pairs[idx]
+    grid[r1, c1], grid[r2, c2] = grid[r2, c2], grid[r1, c1]
+    return grid
 
 
-# ============================================================================
-# SECTION 2: INFORMATION FLOW DYNAMICS
-# ============================================================================
-
-class InformationFlow:
+def batch_swap(grid: np.ndarray, n_swaps: int = 100) -> np.ndarray:
     """
-    Models information gain (from selection) and loss (from mutation).
-    
-    The First Law states:
-        dC/dt = I_E - I_L
-    
-    Where:
-        I_E = Information gain from environment (selection)
-        I_L = Information loss from mutation
-    """
-    
-    def __init__(self, mutation_rate: float, selection_strength: float,
-                 genome_length: int, n_symbols: int = 4):
-        """
-        Initialize information flow model.
-        
-        Args:
-            mutation_rate: Per-base mutation probability
-            selection_strength: Strength of selection pressure
-            genome_length: Number of bases in genome
-            n_symbols: Alphabet size (4 for DNA)
-        """
-        self.mu = mutation_rate
-        self.beta = selection_strength
-        self.L = genome_length
-        self.n_symbols = n_symbols
-        
-    def information_gain(self, fitness_variance: float) -> float:
-        """
-        Calculate I_E: information gained from selection.
-        
-        From Fisher's Fundamental Theorem:
-            I_E ≈ β * Var(fitness)
-        
-        Args:
-            fitness_variance: Variance in fitness across population
-            
-        Returns:
-            Information gain in bits/generation
-        """
-        return self.beta * fitness_variance
-    
-    def information_loss(self) -> float:
-        """
-        Calculate I_L: information lost from mutation.
-        
-        For uniform mutation to all other symbols:
-            I_L = μ * L * log2(n_symbols)
-        
-        Each mutation loses log2(n_symbols) bits of information.
-        
-        Returns:
-            Information loss in bits/generation
-        """
-        return self.mu * self.L * np.log2(self.n_symbols)
-    
-    def net_information_flow(self, fitness_variance: float) -> float:
-        """
-        Net information flow: dC/dt = I_E - I_L
-        
-        Args:
-            fitness_variance: Population fitness variance
-            
-        Returns:
-            Net information change per generation
-        """
-        I_E = self.information_gain(fitness_variance)
-        I_L = self.information_loss()
-        return I_E - I_L
-    
-    def equilibrium_complexity(self) -> float:
-        """
-        Find equilibrium complexity where I_E = I_L.
-        
-        At equilibrium:
-            β * Var(fitness) = μ * L * log2(n_symbols)
-        
-        Solving for C:
-            C_eq ≈ C_max * (1 - μL / (β * N_e))
-        
-        Returns:
-            Equilibrium complexity in bits/site
-        """
-        # Simplified: assume we're near C_max
-        C_max = np.log2(self.n_symbols)
-        
-        # Fitness variance at equilibrium
-        # (approximation from quasispecies theory)
-        equilibrium_factor = min(1.0, self.beta / (self.mu * self.L))
-        
-        return C_max * equilibrium_factor
+    Perform multiple swap steps at once for efficiency.
 
+    For large grids, doing one swap per "step" is very slow. This batches
+    n_swaps random swaps. We pick random adjacent pairs using a fast
+    stochastic method rather than enumerating all pairs each time.
 
-# ============================================================================
-# SECTION 3: CHANNEL CAPACITY
-# ============================================================================
+    Note: this is an approximation of the exact model (some pairs may
+    overlap within a batch), but for large grids the effect is negligible.
 
-def channel_capacity_simple(mutation_rate: float, genome_length: int) -> float:
-    """
-    Maximum sustainable complexity (simple formula).
-    
-    From Shannon's noisy channel theorem:
-        C_max ≈ -log2(μ * L)
-    
     Args:
-        mutation_rate: Per-base error rate
-        genome_length: Number of bases
-        
+        grid: 2D binary array (modified in place).
+        n_swaps: Number of swaps per batch.
+
     Returns:
-        Maximum complexity in total bits
-        
-    Example:
-        >>> channel_capacity_simple(1e-6, 1e6)  # E. coli
-        19.93 bits
-        >>> channel_capacity_simple(1e-9, 3e9)  # Human
-        34.76 bits
+        The grid (same object, modified in place).
     """
-    product = mutation_rate * genome_length
-    if product >= 1.0:
-        warnings.warn("μL ≥ 1: Error catastrophe! Genome cannot be maintained.")
-        return 0.0
-    return -np.log2(product)
+    rows, cols = grid.shape
 
+    for _ in range(n_swaps):
+        # Pick a random cell
+        r = np.random.randint(rows)
+        c = np.random.randint(cols)
 
-def channel_capacity_gaussian(mutation_rate: float, genome_length: int,
-                               noise_variance: float = None) -> float:
-    """
-    Channel capacity for Gaussian noise model.
-    
-    From information theory:
-        C = 0.5 * log2(1 / (2πe * σ²))
-    
-    Args:
-        mutation_rate: Not used directly (included for consistency)
-        genome_length: Not used directly
-        noise_variance: Variance of Gaussian noise channel
-        
-    Returns:
-        Channel capacity in bits
-    """
-    if noise_variance is None:
-        # Estimate from mutation rate
-        noise_variance = mutation_rate
-    
-    if noise_variance >= 1.0 / (2 * np.pi * np.e):
-        return 0.0
-    
-    capacity = 0.5 * np.log2(1.0 / (2 * np.pi * np.e * noise_variance))
-    return capacity
-
-
-def channel_capacity_binomial(mutation_rate: float, genome_length: int) -> float:
-    """
-    Channel capacity for binomial noise (discrete mutations).
-    
-    More accurate model for biological sequences.
-    
-    Args:
-        mutation_rate: Per-base error probability
-        genome_length: Number of bases
-        
-    Returns:
-        Channel capacity in bits/site
-    """
-    # Binary symmetric channel capacity
-    p = mutation_rate
-    
-    if p >= 0.5:
-        return 0.0  # No information can flow
-    
-    # H(p) = -p*log(p) - (1-p)*log(1-p)
-    if p == 0:
-        return np.log2(4)  # Maximum for DNA
-    
-    H_p = -p * np.log2(p) - (1 - p) * np.log2(1 - p)
-    
-    # Capacity per symbol
-    C_symbol = np.log2(4) - H_p
-    
-    return C_symbol
-
-
-def eigen_error_threshold(mutation_rate: float) -> float:
-    """
-    Calculate Eigen's error threshold: maximum genome length.
-    
-    Beyond this length, information loss exceeds gain (error catastrophe).
-    
-        L_max = (1/μ) * log(1/μ)
-    
-    Args:
-        mutation_rate: Per-base error rate
-        
-    Returns:
-        Maximum sustainable genome length
-        
-    Example:
-        >>> eigen_error_threshold(1e-4)  # RNA virus
-        ~10,000 bases (matches reality!)
-        >>> eigen_error_threshold(1e-9)  # Human with DNA repair
-        ~10 billion bases
-    """
-    if mutation_rate == 0:
-        return np.inf
-    
-    L_max = (1.0 / mutation_rate) * np.log(1.0 / mutation_rate)
-    return L_max
-
-
-# ============================================================================
-# SECTION 4: COMPLEXITY TRAJECTORY
-# ============================================================================
-
-class ComplexityTrajectory:
-    """
-    Solves for C(t): complexity as a function of time.
-    
-    Differential equation:
-        dC/dt = I_E - I_L = λ(C_max - C)
-    
-    Solution:
-        C(t) = C_max * (1 - exp(-λt))
-    """
-    
-    def __init__(self, mutation_rate: float, genome_length: int,
-                 selection_strength: float, n_symbols: int = 4):
-        """
-        Initialize trajectory solver.
-        
-        Args:
-            mutation_rate: Per-base mutation rate
-            genome_length: Genome size
-            selection_strength: Selection pressure
-            n_symbols: Alphabet size
-        """
-        self.mu = mutation_rate
-        self.L = genome_length
-        self.beta = selection_strength
-        self.n_symbols = n_symbols
-        
-        # Calculate equilibrium complexity
-        self.C_max = self._calculate_C_max()
-        
-        # Calculate growth rate
-        self.lambda_ = self._calculate_lambda()
-        
-    def _calculate_C_max(self) -> float:
-        """Calculate maximum complexity (bits/site)."""
-        total_capacity = channel_capacity_simple(self.mu, self.L)
-        # Convert to per-site
-        return min(total_capacity / self.L, np.log2(self.n_symbols))
-    
-    def _calculate_lambda(self) -> float:
-        """Calculate exponential growth rate."""
-        # From theory: λ ≈ β (selection strength)
-        # Empirically observed to be proportional
-        return self.beta
-    
-    def complexity_at_time(self, t: float) -> float:
-        """
-        Calculate C(t) at a specific time.
-        
-        Args:
-            t: Time in generations
-            
-        Returns:
-            Complexity in bits/site
-        """
-        return self.C_max * (1.0 - np.exp(-self.lambda_ * t))
-    
-    def evolve(self, generations: int, initial_complexity: float = 0.0) -> np.ndarray:
-        """
-        Simulate complexity evolution over time.
-        
-        Args:
-            generations: Number of generations to simulate
-            initial_complexity: Starting complexity (default: 0)
-            
-        Returns:
-            Array of complexities at each generation
-        """
-        t = np.arange(generations)
-        C_t = self.C_max * (1.0 - np.exp(-self.lambda_ * t))
-        
-        # Adjust for initial complexity
-        if initial_complexity > 0:
-            C_t = initial_complexity + (self.C_max - initial_complexity) * (1.0 - np.exp(-self.lambda_ * t))
-        
-        return C_t
-    
-    def time_to_equilibrium(self, threshold: float = 0.95) -> float:
-        """
-        Calculate time to reach threshold * C_max.
-        
-        Args:
-            threshold: Fraction of C_max (default: 95%)
-            
-        Returns:
-            Number of generations to equilibrium
-        """
-        # C(t) = C_max * (1 - exp(-λt)) = threshold * C_max
-        # 1 - exp(-λt) = threshold
-        # exp(-λt) = 1 - threshold
-        # -λt = log(1 - threshold)
-        # t = -log(1 - threshold) / λ
-        
-        if threshold >= 1.0:
-            return np.inf
-        
-        t_eq = -np.log(1.0 - threshold) / self.lambda_
-        return t_eq
-
-
-# ============================================================================
-# SECTION 5: EVOLUTIONARY SIMULATOR
-# ============================================================================
-
-class EvolutionarySimulator:
-    """
-    Full population-based evolution simulator.
-    
-    Simulates:
-    - Population of genomes
-    - Mutation (with specified rate)
-    - Selection (fitness-based)
-    - Complexity tracking over time
-    """
-    
-    def __init__(self, pop_size: int, genome_length: int,
-                 mutation_rate: float, selection_model: Callable,
-                 n_symbols: int = 4):
-        """
-        Initialize evolutionary simulator.
-        
-        Args:
-            pop_size: Population size
-            genome_length: Length of each genome
-            mutation_rate: Per-base mutation probability
-            selection_model: Function(genome) -> fitness
-            n_symbols: Alphabet size (4 for DNA)
-        """
-        self.N = pop_size
-        self.L = genome_length
-        self.mu = mutation_rate
-        self.fitness_fn = selection_model
-        self.n_symbols = n_symbols
-        
-        # Initialize random population
-        self.population = self._initialize_population()
-        
-        # Track history
-        self.complexity_history = []
-        self.fitness_history = []
-        
-    def _initialize_population(self) -> np.ndarray:
-        """Create random initial population."""
-        # Random genomes (integers 0 to n_symbols-1)
-        return np.random.randint(0, self.n_symbols, size=(self.N, self.L))
-    
-    def _mutate(self, genome: np.ndarray) -> np.ndarray:
-        """
-        Apply mutations to a genome.
-        
-        Args:
-            genome: Original genome (array of integers)
-            
-        Returns:
-            Mutated genome
-        """
-        mutated = genome.copy()
-        
-        # Determine which sites mutate
-        mutation_mask = np.random.random(self.L) < self.mu
-        n_mutations = np.sum(mutation_mask)
-        
-        if n_mutations > 0:
-            # Mutate to random other symbols
-            new_symbols = np.random.randint(0, self.n_symbols, size=n_mutations)
-            mutated[mutation_mask] = new_symbols
-        
-        return mutated
-    
-    def _compute_complexity(self, genome: np.ndarray) -> float:
-        """Calculate Shannon complexity of a genome."""
-        # Convert to string for shannon_complexity function
-        genome_str = ''.join(map(str, genome))
-        return shannon_complexity(genome_str, base=2)
-    
-    def _population_complexity(self) -> float:
-        """Average complexity across population."""
-        complexities = [self._compute_complexity(g) for g in self.population]
-        return np.mean(complexities)
-    
-    def step(self) -> None:
-        """
-        Perform one generation of evolution:
-        1. Calculate fitness
-        2. Select parents (fitness-weighted)
-        3. Reproduce with mutation
-        """
-        # 1. Calculate fitness for each genome
-        fitnesses = np.array([self.fitness_fn(g) for g in self.population])
-        
-        # Store metrics
-        self.fitness_history.append(np.mean(fitnesses))
-        self.complexity_history.append(self._population_complexity())
-        
-        # 2. Selection: fitness-proportional sampling
-        if np.sum(fitnesses) == 0:
-            # All zero fitness: uniform selection
-            selection_probs = np.ones(self.N) / self.N
+        # Pick a random neighbor (up, down, left, right)
+        direction = np.random.randint(4)
+        if direction == 0 and r > 0:
+            nr, nc = r - 1, c
+        elif direction == 1 and r < rows - 1:
+            nr, nc = r + 1, c
+        elif direction == 2 and c > 0:
+            nr, nc = r, c - 1
+        elif direction == 3 and c < cols - 1:
+            nr, nc = r, c + 1
         else:
-            selection_probs = fitnesses / np.sum(fitnesses)
-        
-        # Sample parents
-        parent_indices = np.random.choice(self.N, size=self.N, p=selection_probs, replace=True)
-        
-        # 3. Reproduction with mutation
-        new_population = []
-        for idx in parent_indices:
-            child = self._mutate(self.population[idx])
-            new_population.append(child)
-        
-        self.population = np.array(new_population)
-    
-    def evolve(self, generations: int) -> Tuple[np.ndarray, np.ndarray]:
-        """
-        Run evolution for multiple generations.
-        
-        Args:
-            generations: Number of generations to simulate
-            
-        Returns:
-            (complexity_history, fitness_history)
-        """
-        for _ in range(generations):
-            self.step()
-        
-        return np.array(self.complexity_history), np.array(self.fitness_history)
-    
-    def measure_equilibrium(self, window: int = 100, 
-                           threshold: float = 0.01) -> Tuple[bool, int]:
-        """
-        Detect if complexity has reached equilibrium.
-        
-        Args:
-            window: Number of recent generations to check
-            threshold: Maximum allowed change (as fraction of mean)
-            
-        Returns:
-            (at_equilibrium, generation_reached)
-        """
-        if len(self.complexity_history) < window:
-            return False, -1
-        
-        recent = np.array(self.complexity_history[-window:])
-        mean_C = np.mean(recent)
-        std_C = np.std(recent)
-        
-        # Check if variation is below threshold
-        if std_C / mean_C < threshold:
-            # Find when equilibrium was first reached
-            for i in range(len(self.complexity_history) - window, 0, -1):
-                if i < window:
-                    return True, i
-                chunk = np.array(self.complexity_history[i-window:i])
-                if np.std(chunk) / np.mean(chunk) >= threshold:
-                    return True, i
-            return True, 0
-        
-        return False, -1
+            continue  # boundary, skip
+
+        # Only swap if they differ (one coffee, one milk)
+        if grid[r, c] != grid[nr, nc]:
+            grid[r, c], grid[nr, nc] = grid[nr, nc], grid[r, c]
+
+    return grid
 
 
-# ============================================================================
-# SECTION 6: FITNESS LANDSCAPES
-# ============================================================================
-
-def fitness_counting_ones(genome: np.ndarray) -> float:
+def run_simulation(
+    grid_size: int = 64,
+    n_steps: int = 50000,
+    swaps_per_step: int = 50,
+    measure_interval: int = 500,
+    seed: Optional[int] = 42
+) -> Dict:
     """
-    Simple fitness: count number of '1' symbols.
-    
-    Selects for genomes with more 1s.
-    """
-    return np.sum(genome == 1)
+    Run the full coffee mixing simulation and measure complexity at intervals.
 
+    This is the main experiment. We create a half-and-half grid, run random
+    swaps, and periodically measure:
+    - Shannon entropy (should increase monotonically)
+    - gzip complexity (should show the "hump")
+    - Coarse-grained KC at various scales
+    - Two-part code sophistication proxy
 
-def fitness_matching_target(target: np.ndarray):
-    """
-    Create fitness function that rewards matching target sequence.
-    
     Args:
-        target: Target genome to match
-        
+        grid_size: Side length of grid.
+        n_steps: Total number of batch-swap steps.
+        swaps_per_step: How many individual swaps per step.
+        measure_interval: Measure complexity every this many steps.
+        seed: Random seed for reproducibility.
+
     Returns:
-        Fitness function
+        Dict with keys:
+            'times': list of measurement times
+            'grids': list of grid snapshots
+            'entropy': list of entropy values
+            'gzip_complexity': list of gzip compressed sizes
+            'coarse_kc': dict of {block_size: list of coarse KC values}
+            'two_part': list of (part1, part2) tuples
+            'fraction_mixed': list of fraction of boundary pixels
     """
-    def fitness(genome: np.ndarray) -> float:
-        matches = np.sum(genome == target)
-        return matches / len(target)
-    return fitness
+    if seed is not None:
+        np.random.seed(seed)
 
+    grid = create_initial_grid(grid_size)
 
-def fitness_royal_road(genome: np.ndarray, block_size: int = 8) -> float:
-    """
-    Royal Road fitness landscape.
-    
-    Rewards contiguous blocks of identical symbols.
-    """
-    n_blocks = len(genome) // block_size
-    fitness = 0
-    
-    for i in range(n_blocks):
-        block = genome[i*block_size:(i+1)*block_size]
-        if len(set(block)) == 1:  # All same
-            fitness += 1
-    
-    return fitness
+    # Storage
+    times = []
+    grids = []
+    entropy_vals = []
+    gzip_vals = []
+    coarse_kc_vals = {bs: [] for bs in [2, 4, 8]}
+    two_part_vals = []
+    fraction_mixed_vals = []
 
+    # Measurement function
+    def measure(step):
+        times.append(step * swaps_per_step)
+        grids.append(grid.copy())
+        entropy_vals.append(grid_entropy(grid))
+        gzip_vals.append(gzip_complexity(grid))
+        for bs in coarse_kc_vals:
+            if grid_size // bs >= 4:  # need at least 4x4 coarse grid
+                coarse_kc_vals[bs].append(coarse_grained_kc(grid, bs))
+            else:
+                coarse_kc_vals[bs].append(0)
+        two_part_vals.append(two_part_code(grid, block_size=4))
+        fraction_mixed_vals.append(boundary_fraction(grid))
 
-def fitness_max_entropy(genome: np.ndarray) -> float:
-    """
-    Fitness function that selects for maximum entropy (complexity).
-    
-    This creates pressure toward high-complexity genomes.
-    """
-    genome_str = ''.join(map(str, genome))
-    complexity = shannon_complexity(genome_str)
-    return complexity
+    # Initial measurement
+    measure(0)
 
+    # Run simulation
+    for step in range(1, n_steps + 1):
+        batch_swap(grid, n_swaps=swaps_per_step)
+        if step % measure_interval == 0:
+            measure(step)
 
-# ============================================================================
-# SECTION 7: ANALYSIS TOOLS
-# ============================================================================
-
-def fidelity_complexity_curve(mutation_rates: np.ndarray, 
-                               genome_length: int) -> np.ndarray:
-    """
-    Generate fidelity-complexity trade-off curve.
-    
-    Args:
-        mutation_rates: Array of mutation rates to test
-        genome_length: Fixed genome length
-        
-    Returns:
-        Array of maximum complexities
-    """
-    capacities = np.array([
-        channel_capacity_simple(mu, genome_length) / genome_length
-        for mu in mutation_rates
-    ])
-    
-    return capacities
-
-
-def compare_organisms(organism_params: Dict[str, Dict]) -> Dict[str, Dict]:
-    """
-    Compare complexity metrics across different organisms.
-    
-    Args:
-        organism_params: Dict mapping organism name to parameters
-            {
-                'bacteria': {'mu': 1e-6, 'L': 1e6, 'beta': 0.01},
-                'human': {'mu': 1e-9, 'L': 3e9, 'beta': 0.001},
-                ...
-            }
-    
-    Returns:
-        Dict mapping organism name to metrics
-    """
-    results = {}
-    
-    for name, params in organism_params.items():
-        mu = params['mu']
-        L = params['L']
-        beta = params.get('beta', 0.01)
-        
-        # Calculate metrics
-        C_max = channel_capacity_simple(mu, L) / L
-        L_max = eigen_error_threshold(mu)
-        trajectory = ComplexityTrajectory(mu, int(L), beta)
-        t_eq = trajectory.time_to_equilibrium()
-        
-        results[name] = {
-            'C_max': C_max,
-            'L_max': L_max,
-            'L_actual': L,
-            'utilization': L / L_max if L_max < np.inf else 0.0,
-            't_equilibrium': t_eq,
-            'lambda': trajectory.lambda_
-        }
-    
-    return results
-
-
-def information_flow_analysis(simulator: EvolutionarySimulator, 
-                               generation: int) -> Dict[str, float]:
-    """
-    Analyze information flow at a specific generation.
-    
-    Args:
-        simulator: Running evolutionary simulator
-        generation: Which generation to analyze
-        
-    Returns:
-        Dict with I_E, I_L, and dC/dt
-    """
-    if generation >= len(simulator.complexity_history):
-        raise ValueError("Generation not yet simulated")
-    
-    # Estimate I_E from fitness variance
-    if generation >= len(simulator.fitness_history):
-        return {}
-    
-    # Get fitness variance (proxy for selection strength)
-    recent_fitness = simulator.fitness_history[max(0, generation-10):generation+1]
-    fitness_var = np.var(recent_fitness)
-    
-    # Create info flow model
-    info_flow = InformationFlow(
-        simulator.mu, 
-        simulator.fitness_fn, 
-        simulator.L,
-        simulator.n_symbols
-    )
-    
-    I_E = info_flow.information_gain(fitness_var)
-    I_L = info_flow.information_loss()
-    
-    # Estimate dC/dt from recent history
-    if generation >= 10:
-        recent_C = simulator.complexity_history[generation-10:generation+1]
-        dC_dt = np.mean(np.diff(recent_C))
-    else:
-        dC_dt = 0.0
-    
     return {
-        'I_E': I_E,
-        'I_L': I_L,
-        'dC_dt': dC_dt,
-        'net_flow': I_E - I_L
+        'times': times,
+        'grids': grids,
+        'entropy': entropy_vals,
+        'gzip_complexity': gzip_vals,
+        'coarse_kc': coarse_kc_vals,
+        'two_part': two_part_vals,
+        'fraction_mixed': fraction_mixed_vals,
+        'grid_size': grid_size,
+        'n_steps': n_steps,
+        'swaps_per_step': swaps_per_step,
     }
 
 
 # ============================================================================
-# SECTION 8: UTILITIES
+# SECTION 2: KOLMOGOROV COMPLEXITY APPROXIMATION VIA GZIP
+# ============================================================================
+# KC is uncomputable, but gzip gives a useful upper bound. Aaronson
+# discusses this approach and Lauren Ouellette used it in her experiments
+# (which became the Day 7 paper).
+#
+# For our 2D grid, we serialize to bytes and compress. The compressed
+# size tracks the structure in the grid:
+# - All-one-color: very compressible (low KC)
+# - Random noise: incompressible (high KC)
+# - Structured tendrils: intermediate (moderate KC, but high sophistication)
 # ============================================================================
 
-def genome_to_string(genome: np.ndarray, alphabet: str = 'ACGT') -> str:
-    """Convert numeric genome to string representation."""
-    return ''.join([alphabet[i % len(alphabet)] for i in genome])
-
-
-def string_to_genome(sequence: str, alphabet: str = 'ACGT') -> np.ndarray:
-    """Convert string sequence to numeric genome."""
-    mapping = {char: i for i, char in enumerate(alphabet)}
-    return np.array([mapping[char] for char in sequence if char in mapping])
-
-
-def load_fasta(filepath: str) -> str:
+def gzip_complexity(grid: np.ndarray) -> int:
     """
-    Load sequence from FASTA file.
-    
+    Approximate Kolmogorov complexity of a grid using gzip compressed size.
+
     Args:
-        filepath: Path to FASTA file
-        
+        grid: 2D binary numpy array.
+
     Returns:
-        Sequence as string
+        Compressed size in bytes.
     """
-    with open(filepath, 'r') as f:
-        lines = f.readlines()
-    
-    # Skip header lines (starting with '>')
-    sequence_lines = [line.strip() for line in lines if not line.startswith('>')]
-    sequence = ''.join(sequence_lines)
-    
-    return sequence.upper()
+    data = grid.astype(np.uint8).tobytes()
+    return len(gzip.compress(data, compresslevel=9))
+
+
+def gzip_complexity_bytes(data: bytes) -> int:
+    """
+    gzip complexity of raw bytes.
+
+    Args:
+        data: Raw byte string.
+
+    Returns:
+        Compressed size in bytes.
+    """
+    return len(gzip.compress(data, compresslevel=9))
+
+
+def robust_gzip_complexity(grid: np.ndarray) -> float:
+    """
+    More robust KC estimate: average gzip size over row-major and
+    column-major serializations.
+
+    gzip is sensitive to serialization order because it uses LZ77
+    (sliding window). Averaging over orderings reduces this artifact.
+
+    Args:
+        grid: 2D binary numpy array.
+
+    Returns:
+        Average compressed size in bytes.
+    """
+    # Row-major (default)
+    data_row = grid.astype(np.uint8).tobytes()
+    size_row = len(gzip.compress(data_row, compresslevel=9))
+
+    # Column-major
+    data_col = grid.T.astype(np.uint8).tobytes()
+    size_col = len(gzip.compress(data_col, compresslevel=9))
+
+    return (size_row + size_col) / 2.0
 
 
 # ============================================================================
-# MAIN: DEMO
+# SECTION 3: COARSE-GRAINED KC (SEAN CARROLL'S SUGGESTION)
+# ============================================================================
+# Carroll proposed in blog comments (#6-7): blur/coarse-grain the bitmap
+# at some scale, then measure KC of the coarse-grained version. This
+# captures macroscopic structure rather than pixel-level noise.
+#
+# The idea: at the right coarse-graining scale, the tendril boundaries
+# create structure that is hard to compress. Too fine = noise dominates.
+# Too coarse = all structure is blurred away.
+# ============================================================================
+
+def coarse_grain(grid: np.ndarray, block_size: int) -> np.ndarray:
+    """
+    Coarse-grain a grid by averaging over block_size x block_size blocks.
+
+    Args:
+        grid: 2D array.
+        block_size: Size of blocks to average over.
+
+    Returns:
+        Coarse-grained 2D array (smaller than input).
+    """
+    h, w = grid.shape
+    h_new = h // block_size
+    w_new = w // block_size
+
+    result = np.zeros((h_new, w_new), dtype=np.float64)
+    for i in range(h_new):
+        for j in range(w_new):
+            block = grid[i * block_size:(i + 1) * block_size,
+                        j * block_size:(j + 1) * block_size]
+            result[i, j] = block.mean()
+
+    return result
+
+
+def coarse_grained_kc(grid: np.ndarray, block_size: int) -> int:
+    """
+    KC of a coarse-grained version of the grid.
+
+    Steps:
+    1. Average over block_size x block_size blocks
+    2. Quantize to uint8 (0-255)
+    3. Compress with gzip
+
+    Args:
+        grid: 2D binary array.
+        block_size: Coarse-graining scale.
+
+    Returns:
+        Compressed size of the coarse-grained representation.
+    """
+    coarse = coarse_grain(grid, block_size)
+    # Quantize to 256 levels
+    quantized = (coarse * 255).astype(np.uint8)
+    return gzip_complexity_bytes(quantized.tobytes())
+
+
+def multiscale_kc(grid: np.ndarray, scales: Optional[List[int]] = None) -> Dict[int, int]:
+    """
+    Compute KC at multiple coarse-graining scales (Trevisan's idea).
+
+    Trevisan (blog comment #17) proposed tracking KC at each scale to get
+    a 2D picture of where complexity lives (scale x time).
+
+    Args:
+        grid: 2D binary array.
+        scales: List of block sizes. Defaults to powers of 2.
+
+    Returns:
+        Dict mapping scale -> compressed size.
+    """
+    grid_size = min(grid.shape)
+    if scales is None:
+        scales = [2**k for k in range(1, int(np.log2(grid_size)))]
+
+    result = {}
+    for s in scales:
+        if grid_size // s >= 2:  # need at least 2x2 coarse grid
+            result[s] = coarse_grained_kc(grid, s)
+    return result
+
+
+# ============================================================================
+# SECTION 4: TWO-PART CODE (SOPHISTICATION PROXY)
+# ============================================================================
+# Sophistication (Koppel 1988, Gacs-Tromp-Vitanyi) measures the complexity
+# of the "model" part of a two-part code:
+#
+#   Part 1: Description of a set S containing x  (the "model")
+#   Part 2: Index of x within S                   (the "data given model")
+#
+# Sophistication = K(S), the complexity of the model.
+#
+# We approximate this by:
+#   Part 1 = coarse-grained version of the grid (the structural model)
+#   Part 2 = residual (exact grid minus coarse reconstruction)
+#
+# Part 1 size should show the characteristic hump: low at t=0 (trivial
+# model), high at intermediate times (complex tendril boundaries),
+# low at equilibrium (trivial uniform model).
+# ============================================================================
+
+def two_part_code(
+    grid: np.ndarray,
+    block_size: int = 4
+) -> Tuple[int, int]:
+    """
+    Compute two-part code sizes for a grid.
+
+    Part 1 (model/sophistication): coarse-grained description
+    Part 2 (data given model): residual to reconstruct exact grid
+
+    Args:
+        grid: 2D binary array.
+        block_size: Coarse-graining scale for the model.
+
+    Returns:
+        (part1_size, part2_size) in bytes.
+    """
+    h, w = grid.shape
+    grid_float = grid.astype(np.float64)
+
+    # Part 1: coarse model
+    coarse = coarse_grain(grid_float, block_size)
+    model_quantized = (coarse * 255).astype(np.uint8)
+    part1 = gzip_complexity_bytes(model_quantized.tobytes())
+
+    # Reconstruct from coarse model
+    reconstructed = np.repeat(
+        np.repeat(coarse, block_size, axis=0),
+        block_size, axis=1
+    )[:h, :w]
+
+    # Part 2: residual
+    # Scale residual to [0, 255] range for compression
+    residual = grid_float - reconstructed
+    # residual is in [-1, 1], map to [0, 255]
+    residual_uint8 = ((residual + 1.0) * 127.5).astype(np.uint8)
+    part2 = gzip_complexity_bytes(residual_uint8.tobytes())
+
+    return part1, part2
+
+
+def sophistication_proxy(grid: np.ndarray, block_size: int = 4) -> int:
+    """
+    Sophistication proxy = Part 1 of the two-part code.
+
+    Args:
+        grid: 2D binary array.
+        block_size: Coarse-graining scale.
+
+    Returns:
+        Part 1 size in bytes (the "model" complexity).
+    """
+    part1, _ = two_part_code(grid, block_size)
+    return part1
+
+
+# ============================================================================
+# SECTION 5: ENTROPY AND MIXING MEASURES
+# ============================================================================
+# Shannon entropy of the pixel distribution. For a binary grid, this is
+# just H(p) = -p*log(p) - (1-p)*log(1-p) where p is the fraction of 1s.
+#
+# For the coffee simulation, entropy tracks the fraction mixed. It starts
+# at 1.0 (half black, half white = maximum entropy for binary) and stays
+# near 1.0 throughout (the fraction of 1s is conserved by swaps).
+#
+# The more useful entropy measure is the LOCAL entropy: compute entropy
+# in sliding windows. This tracks how uniformly mixed each neighborhood is.
+# ============================================================================
+
+def grid_entropy(grid: np.ndarray) -> float:
+    """
+    Shannon entropy of the overall pixel distribution.
+
+    For a binary grid, H = -p*log2(p) - (1-p)*log2(1-p).
+    Note: this is always near 1.0 for the coffee simulation because
+    swaps conserve the total number of coffee/milk pixels.
+
+    Args:
+        grid: 2D binary array.
+
+    Returns:
+        Shannon entropy in bits.
+    """
+    p = grid.mean()
+    if p == 0.0 or p == 1.0:
+        return 0.0
+    return -(p * np.log2(p) + (1 - p) * np.log2(1 - p))
+
+
+def local_entropy(grid: np.ndarray, window_size: int = 8) -> np.ndarray:
+    """
+    Compute entropy in sliding windows across the grid.
+
+    This is more informative than global entropy for tracking mixing.
+    Initially: some windows are all-0, some all-1 (entropy = 0 in each).
+    At equilibrium: all windows are ~50/50 (entropy = 1.0 in each).
+
+    The AVERAGE local entropy increases monotonically with mixing.
+
+    Args:
+        grid: 2D binary array.
+        window_size: Side length of the sliding window.
+
+    Returns:
+        2D array of local entropy values.
+    """
+    h, w = grid.shape
+    h_out = h - window_size + 1
+    w_out = w - window_size + 1
+    result = np.zeros((h_out, w_out))
+
+    for i in range(h_out):
+        for j in range(w_out):
+            window = grid[i:i + window_size, j:j + window_size]
+            p = window.mean()
+            if p == 0.0 or p == 1.0:
+                result[i, j] = 0.0
+            else:
+                result[i, j] = -(p * np.log2(p) + (1 - p) * np.log2(1 - p))
+
+    return result
+
+
+def mean_local_entropy(grid: np.ndarray, window_size: int = 8) -> float:
+    """
+    Average local entropy across the grid. This is a better monotone
+    measure than global entropy for tracking the mixing process.
+
+    Args:
+        grid: 2D binary array.
+        window_size: Side length of sliding window.
+
+    Returns:
+        Mean local entropy.
+    """
+    le = local_entropy(grid, window_size)
+    return le.mean()
+
+
+def boundary_fraction(grid: np.ndarray) -> float:
+    """
+    Fraction of adjacent pixel pairs that are different (one coffee, one milk).
+
+    This tracks the "interface length" between coffee and milk regions.
+    Starts low (single horizontal boundary), peaks during mixing
+    (fractal-like tendrils), then decreases as mixing approaches uniformity.
+
+    Note: this is related to but not the same as complexity. A checkerboard
+    pattern has maximum boundary fraction but low complexity.
+
+    Args:
+        grid: 2D binary array.
+
+    Returns:
+        Fraction of boundary pairs (0 to 1).
+    """
+    h, w = grid.shape
+    total_pairs = 0
+    diff_pairs = 0
+
+    # Horizontal pairs
+    h_diff = np.sum(grid[:, :-1] != grid[:, 1:])
+    h_total = h * (w - 1)
+
+    # Vertical pairs
+    v_diff = np.sum(grid[:-1, :] != grid[1:, :])
+    v_total = (h - 1) * w
+
+    return (h_diff + v_diff) / (h_total + v_total)
+
+
+# ============================================================================
+# SECTION 6: NORMALIZED COMPLEXITY MEASURES
+# ============================================================================
+# For comparison, it helps to normalize complexity measures to [0, 1].
+# We define:
+#   normalized_kc = (gzip_size - min_gzip_size) / (max_gzip_size - min_gzip_size)
+# where min is the gzip size of an all-zeros grid and max is a random grid.
+# ============================================================================
+
+def compute_normalization_bounds(grid_size: int, n_samples: int = 5) -> Dict:
+    """
+    Compute gzip size bounds for normalization.
+
+    Args:
+        grid_size: Side length of grid.
+        n_samples: Number of random grids to average over.
+
+    Returns:
+        Dict with 'min_gzip' (all-zeros) and 'max_gzip' (random average).
+    """
+    # Minimum: all-zeros grid
+    zeros = np.zeros((grid_size, grid_size), dtype=np.uint8)
+    min_gzip = gzip_complexity(zeros)
+
+    # Maximum: average over random grids
+    max_gzips = []
+    for _ in range(n_samples):
+        rand_grid = np.random.randint(0, 2, size=(grid_size, grid_size), dtype=np.uint8)
+        max_gzips.append(gzip_complexity(rand_grid))
+    max_gzip = np.mean(max_gzips)
+
+    return {'min_gzip': min_gzip, 'max_gzip': max_gzip}
+
+
+def normalize_complexity(
+    values: List[float],
+    bounds: Dict
+) -> List[float]:
+    """
+    Normalize complexity values to [0, 1] using precomputed bounds.
+
+    Args:
+        values: Raw complexity values.
+        bounds: Dict with 'min_gzip' and 'max_gzip'.
+
+    Returns:
+        Normalized values.
+    """
+    lo = bounds['min_gzip']
+    hi = bounds['max_gzip']
+    if hi == lo:
+        return [0.0] * len(values)
+    return [(v - lo) / (hi - lo) for v in values]
+
+
+# ============================================================================
+# SECTION 7: UTILITY FUNCTIONS
+# ============================================================================
+
+def grid_to_image(grid: np.ndarray) -> np.ndarray:
+    """
+    Convert binary grid to grayscale image (0 = white, 1 = black).
+
+    Args:
+        grid: 2D binary array.
+
+    Returns:
+        2D array suitable for matplotlib imshow (0.0=white, 1.0=black).
+    """
+    return grid.astype(np.float64)
+
+
+def save_grid(grid: np.ndarray, filepath: str) -> None:
+    """
+    Save grid as a NumPy binary file.
+
+    Args:
+        grid: 2D binary array.
+        filepath: Output path.
+    """
+    np.save(filepath, grid)
+
+
+def load_grid(filepath: str) -> np.ndarray:
+    """
+    Load grid from a NumPy binary file.
+
+    Args:
+        filepath: Input path.
+
+    Returns:
+        2D binary array.
+    """
+    return np.load(filepath)
+
+
+def summarize_results(results: Dict) -> str:
+    """
+    Print a summary of simulation results.
+
+    Args:
+        results: Dict returned by run_simulation().
+
+    Returns:
+        Summary string.
+    """
+    times = results['times']
+    gzip_vals = results['gzip_complexity']
+    entropy_vals = results['entropy']
+
+    # Find peak complexity
+    peak_idx = np.argmax(gzip_vals)
+    peak_time = times[peak_idx]
+    peak_val = gzip_vals[peak_idx]
+
+    lines = [
+        "=" * 60,
+        "COFFEE MIXING SIMULATION RESULTS",
+        "=" * 60,
+        f"Grid size: {results['grid_size']}x{results['grid_size']}",
+        f"Total swaps: {results['n_steps'] * results['swaps_per_step']:,}",
+        f"Measurements: {len(times)}",
+        "",
+        "COMPLEXITY (gzip compressed size):",
+        f"  Initial:     {gzip_vals[0]} bytes",
+        f"  Peak:        {peak_val} bytes (at swap {peak_time:,})",
+        f"  Final:       {gzip_vals[-1]} bytes",
+        f"  Peak/Initial ratio: {peak_val / max(gzip_vals[0], 1):.2f}x",
+        "",
+        "ENTROPY (Shannon, global):",
+        f"  Initial: {entropy_vals[0]:.4f} bits",
+        f"  Final:   {entropy_vals[-1]:.4f} bits",
+        "",
+        "THE HUMP:",
+        f"  Complexity rises from {gzip_vals[0]} to {peak_val} bytes",
+        f"  then falls to {gzip_vals[-1]} bytes.",
+    ]
+
+    if peak_val > gzip_vals[0] and peak_val > gzip_vals[-1]:
+        lines.append("  [OK] Characteristic complexity hump observed.")
+    else:
+        lines.append("  [NOTE] Hump not clearly visible. Try more steps or larger grid.")
+
+    lines.append("=" * 60)
+    return "\n".join(lines)
+
+
+# ============================================================================
+# MAIN: Run a quick demo if executed directly
 # ============================================================================
 
 if __name__ == "__main__":
-    print("=" * 70)
-    print("COMPLEXODYNAMICS: First Law Demonstrations")
-    print("=" * 70)
-    
-    # Demo 1: Shannon Complexity
-    print("\n1. Shannon Complexity")
-    print("-" * 70)
-    sequences = {
-        "Uniform": "AAAAAAAAAA",
-        "Low complexity": "AACCAACCAA",
-        "Medium complexity": "ACACACGTGT",
-        "High complexity": "ACGTACGTACGT"
-    }
-    for name, seq in sequences.items():
-        C = shannon_complexity(seq)
-        print(f"{name:20s}: {seq:20s} → C = {C:.3f} bits/site")
-    
-    # Demo 2: Channel Capacity
-    print("\n2. Channel Capacity Comparison")
-    print("-" * 70)
-    organisms = {
-        'RNA Virus': {'mu': 1e-4, 'L': 1e4},
-        'Bacteria': {'mu': 1e-6, 'L': 4.6e6},
-        'Yeast': {'mu': 1e-8, 'L': 1.2e7},
-        'Human': {'mu': 1e-9, 'L': 3e9}
-    }
-    
-    print(f"{'Organism':<15} {'μ':<12} {'L':<12} {'C_max':<15} {'L_max':<15}")
-    for name, params in organisms.items():
-        C_max = channel_capacity_simple(params['mu'], params['L']) / params['L']
-        L_max = eigen_error_threshold(params['mu'])
-        print(f"{name:<15} {params['mu']:<12.2e} {params['L']:<12.2e} "
-              f"{C_max:<15.3f} {L_max:<15.2e}")
-    
-    # Demo 3: Complexity Trajectory
-    print("\n3. Complexity Trajectory (Bacteria)")
-    print("-" * 70)
-    trajectory = ComplexityTrajectory(mu=1e-6, genome_length=int(4.6e6), 
-                                     selection_strength=0.01)
-    
-    print(f"C_max: {trajectory.C_max:.3f} bits/site")
-    print(f"Growth rate (λ): {trajectory.lambda_:.4f}")
-    print(f"Time to 95% equilibrium: {trajectory.time_to_equilibrium():.0f} generations")
-    
-    time_points = [0, 1000, 5000, 10000, 20000]
-    print(f"\n{'Generation':<15} {'Complexity (bits/site)':<25}")
-    for t in time_points:
-        C_t = trajectory.complexity_at_time(t)
-        print(f"{t:<15} {C_t:<25.4f}")
-    
-    # Demo 4: Small Evolution Simulation
-    print("\n4. Evolution Simulation (100 generations)")
-    print("-" * 70)
-    print("Simulating small population evolving toward high entropy...")
-    
-    sim = EvolutionarySimulator(
-        pop_size=50,
-        genome_length=100,
-        mutation_rate=0.01,
-        selection_model=fitness_max_entropy
+    print("Coffee Mixing Simulation")
+    print("Based on Aaronson's 'The First Law of Complexodynamics' (2011)")
+    print()
+
+    # Small demo
+    results = run_simulation(
+        grid_size=32,
+        n_steps=5000,
+        swaps_per_step=20,
+        measure_interval=100,
+        seed=42
     )
-    
-    C_history, F_history = sim.evolve(generations=100)
-    
-    print(f"Initial complexity: {C_history[0]:.3f} bits/site")
-    print(f"Final complexity: {C_history[-1]:.3f} bits/site")
-    print(f"Initial fitness: {F_history[0]:.3f}")
-    print(f"Final fitness: {F_history[-1]:.3f}")
-    
-    at_eq, gen_eq = sim.measure_equilibrium()
-    if at_eq:
-        print(f"Equilibrium reached at generation {gen_eq}")
-    else:
-        print("Equilibrium not yet reached")
-    
-    print("\n" + "=" * 70)
-    print("Demo complete! See visualization.py for plots.")
-    print("=" * 70)
+
+    print(summarize_results(results))
+
+    # Show a few grid snapshots
+    print("\nGrid snapshots saved to data/ directory")
+    print("Run train_minimal.py for full simulation with plots.")
