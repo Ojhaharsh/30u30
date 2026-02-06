@@ -1,12 +1,12 @@
 # Day 16 Exercises: Order Matters (Pointer Networks)
 
-Welcome to the exercises for Day 16! 🎯
+Exercises for Day 16.
 
 These exercises will take you from basic pointer attention to a full working system for set-to-sequence problems.
 
 ---
 
-## 📝 Exercise Structure
+## Exercise Structure
 
 Each exercise builds on the previous one:
 
@@ -18,19 +18,19 @@ Each exercise builds on the previous one:
 
 ---
 
-## 🎯 Learning Objectives
+## Learning Objectives
 
 By completing these exercises, you will:
 
-- ✅ Understand how pointer attention works
-- ✅ Implement order-invariant encoders (sets vs sequences)
-- ✅ Train models for combinatorial problems
-- ✅ Visualize attention patterns
-- ✅ Compare set-aware vs order-aware models
+- Understand how pointer attention works
+- Implement order-invariant encoders (sets vs sequences)
+- Train models for combinatorial problems
+- Visualize attention patterns
+- Compare set-aware vs order-aware models
 
 ---
 
-## 🚀 Getting Started
+## Getting Started
 
 ### Prerequisites
 
@@ -60,19 +60,19 @@ python exercise_1.py --test
 
 ---
 
-## 📊 Exercise Difficulty
+## Exercise Difficulty
 
 | Exercise | Difficulty | Time | Key Concepts |
 |----------|------------|------|--------------|
-| 1 | ⭐⭐ Easy | 30 min | Pointer attention, argmax |
-| 2 | ⭐⭐⭐ Medium | 45 min | Self-attention, order invariance |
-| 3 | ⭐⭐⭐ Medium | 60 min | Training loop, loss functions |
-| 4 | ⭐⭐⭐⭐ Hard | 75 min | Geometric reasoning, convex hull |
-| 5 | ⭐⭐⭐⭐⭐ Expert | 90 min | Combinatorial optimization, TSP |
+| 1 | Easy (2/5) | 30 min | Pointer attention, argmax |
+| 2 | Medium (3/5) | 45 min | Self-attention, order invariance |
+| 3 | Medium (3/5) | 60 min | Training loop, loss functions |
+| 4 | Hard (4/5) | 75 min | Geometric reasoning, convex hull |
+| 5 | Expert (5/5) | 90 min | Combinatorial optimization, TSP |
 
 ---
 
-## 💡 Tips
+## Tips
 
 **Stuck?**
 1. Check the hints in the code comments
@@ -82,25 +82,25 @@ python exercise_1.py --test
 5. Compare your code with solutions/
 
 **Common Issues:**
-- **Attention produces NaN:** Check your masking! Inf values before softmax are fine, but check for divide-by-zero
+- **Attention produces NaN:** Check your masking. Inf values before softmax are fine, but check for divide-by-zero
 - **Model doesn't learn:** Try smaller set sizes first (5-10 elements)
 - **Memory issues:** Reduce batch size or use gradient accumulation
 - **Slow training:** Use GPU if available, or reduce hidden_dim
 
 ---
 
-## 🎓 What You'll Build
+## What You'll Build
 
 By the end, you'll have:
-- ✅ A working pointer network implementation
-- ✅ An order-invariant set encoder
-- ✅ Models trained on 3 different tasks
-- ✅ Visualizations of attention patterns
-- ✅ Understanding of when order matters and when it doesn't
+- A working pointer network implementation
+- An order-invariant set encoder
+- Models trained on 3 different tasks
+- Visualizations of attention patterns
+- Understanding of when order matters and when it doesn't
 
 ---
 
-## 📚 Resources
+## Resources
 
 - **Paper:** https://arxiv.org/abs/1511.06391
 - **Main README:** ../README.md
@@ -109,7 +109,7 @@ By the end, you'll have:
 
 ---
 
-## 🚦 Progress Tracker
+## Progress Tracker
 
 Track your progress:
 
@@ -121,4 +121,4 @@ Track your progress:
 
 ---
 
-Ready to start? Open **exercise_1.py** and let's build! 🚀
+Open **exercise_1.py** to begin.

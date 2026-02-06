@@ -4,7 +4,7 @@ Complete solutions for all 5 exercises with detailed explanations.
 
 ---
 
-## 📁 Solution Files
+## Solution Files
 
 Each solution is a fully working implementation that you can run directly:
 
@@ -16,17 +16,17 @@ Each solution is a fully working implementation that you can run directly:
 
 ---
 
-## 💡 How to Use Solutions
+## How to Use Solutions
 
 ### When to Look at Solutions
 
-**✅ Good reasons:**
+**Good reasons:**
 - You've tried for 30+ minutes and are stuck
 - You want to verify your implementation
 - You want to see alternative approaches
 - You finished and want to compare
 
-**❌ Avoid:**
+**Avoid:**
 - Looking before attempting the exercise
 - Copying without understanding
 - Skipping the learning process
@@ -37,11 +37,11 @@ Each solution is a fully working implementation that you can run directly:
 2. **Compare Approaches** - Even if yours works, see the solution
 3. **Understand Differences** - Why did the solution do X differently?
 4. **Run Both** - Test your version vs the solution
-5. **Experiment** - Modify the solution, break it, fix it!
+5. **Experiment** - Modify the solution, break it, fix it.
 
 ---
 
-## 🎯 Key Concepts Covered
+## Key Concepts Covered
 
 ### Solution 1: Pointer Attention
 - Attention score computation
@@ -75,19 +75,19 @@ Each solution is a fully working implementation that you can run directly:
 
 ---
 
-## 📊 Performance Expectations
+## Performance Expectations
 
 | Task | Small Set | Medium Set | Large Set | Notes |
 |------|-----------|------------|-----------|-------|
 | **Sorting** | 100% | 100% | 98% | Easiest task |
-| **Convex Hull** | 99% | 95% | 90% | Learns geometry! |
+| **Convex Hull** | 99% | 95% | 90% | Geometric task |
 | **TSP** | 90% | 80% | 70% | NP-hard problem |
 
 *Small = 5-10 elements, Medium = 20-30, Large = 50+*
 
 ---
 
-## 🐛 Common Issues & Fixes
+## Common Issues & Fixes
 
 ### Issue 1: NaN Loss
 **Symptom:** Loss becomes NaN after a few iterations
@@ -145,7 +145,7 @@ for i, batch in enumerate(dataloader):
 
 ---
 
-## 🔍 Solution Highlights
+## Solution Highlights
 
 ### Elegant Attention Implementation (Solution 1)
 
@@ -179,7 +179,7 @@ else:
 
 ---
 
-## 🎓 Going Beyond
+## Going Beyond
 
 ### Extensions to Try
 
@@ -198,7 +198,7 @@ else:
 
 ---
 
-## 📚 Additional Reading
+## Additional Reading
 
 - Original Paper: https://arxiv.org/abs/1511.06391
 - Pointer Networks Explained: https://arxiv.org/abs/1506.03134
@@ -207,7 +207,7 @@ else:
 
 ---
 
-## ✅ Solution Checklist
+## Solution Checklist
 
 Use this to track which solutions you've reviewed:
 
@@ -219,6 +219,6 @@ Use this to track which solutions you've reviewed:
 
 ---
 
-**Ready to check your work? Dive into the solution files!** 🚀
+**Solutions are in the files listed above.**
 
 *Remember: The goal is understanding, not just getting the right answer.*
