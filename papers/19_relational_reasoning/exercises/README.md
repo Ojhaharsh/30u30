@@ -7,27 +7,39 @@ Test your understanding of Relation Networks (Santoro et al., 2017).
 ## Exercise 1: Pairwise Broadcasting
 **File:** `exercise_01_pair_generator.py`  
 **Difficulty:** Medium  
-**Goal:** Implement the efficient $N^2$ pair generation logic without using any Python `for` loops. You must use PyTorch's `unsqueeze`, `repeat`, and `cat`.
+**Goal:** Implement efficient $N^2$ pair generation without loops.
 
-## Exercise 2: Proving Permutation Invariance
-**File:** `exercise_02_permutation.py`  
+## Exercise 2: The Relation Function (g_theta)
+**Files:** `exercise_02_g_theta.py`  
+**Difficulty:** Easy  
+**Goal:** Implement the MLP that processes each pair.
+
+## Exercise 3: Permutation Invariance
+**File:** `exercise_03_permutation.py`  
 **Difficulty:** Medium  
-**Goal:** Write a script that programmatically proves the RN is order-invariant. If you swap object 1 and object 5 in the input list, the output of the network should remain identical (within numerical precision).
+**Goal:** Prove that shuffling inputs doesn't change the output.
 
-## Exercise 3: Sort-of-CLEVR Logic
-**File:** `exercise_03_sort_of_clevr.py`  
+## Exercise 4: Contextual Questions (Sort-of-CLEVR)
+**File:** `exercise_04_sort_of_clevr.py`  
 **Difficulty:** Hard  
-**Goal:** Adapt the forward pass to handle a question embedding. You must concatenate the same question vector to *every* object pair before passing them through $g_{\theta}$.
+**Goal:** Inject a question vector into every pair to condition the reasoning.
 
-## Exercise 4: Relational Masking
-**File:** `exercise_04_masking.py`  
+## Exercise 5: Coordinate Injection
+**File:** `exercise_05_coordinates.py`  
+**Difficulty:** Easy  
+**Goal:** Append (x, y) coordinates to object features.
+
+## Exercise 6: Relational Masking
+**File:** `exercise_06_masking.py`  
 **Difficulty:** Hard  
-**Goal:** Modify the aggregation logic to ignore "self-relations" (where $i=j$). This requires creating a mask that zeros out the diagonal of the $N \times N$ relation grid before summing.
+**Goal:** Mask out self-relations (diagonal) before aggregation.
 
-## Exercise 5: Counting vs. Comparing
-**File:** `exercise_05_counting.py`  
+## Exercise 7: Counting Bias
+**File:** `exercise_07_counting.py`  
 **Difficulty:** Advanced  
-**Goal:** Prove that using `sum` as an aggregator allows the model to "count" objects, whereas `max` or `mean` aggregators struggle with set-size-dependent features.
+**Goal:** Prove that `sum` aggregation allows counting, while `mean` does not.
+
+
 
 ---
 
