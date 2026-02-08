@@ -2,14 +2,14 @@
 
 > *"ImageNet Classification with Deep Convolutional Neural Networks"* - Alex Krizhevsky, Ilya Sutskever, Geoffrey E. Hinton (2012)
 
-**📖 Original Paper:** https://papers.nips.cc/paper/2012/hash/c399862d3b9d6b76c8436e924a68c45b-Abstract.html
+**Original Paper:** https://papers.nips.cc/paper/2012/hash/c399862d3b9d6b76c8436e924a68c45b-Abstract.html
 
-**⏱️ Time to Complete:** 4-5 hours
+**Time to Complete:** 4-5 hours
 
-**🎯 What You'll Learn:**
-- How AlexNet sparked the deep learning revolution
-- Why ReLU activation changed everything
-- The power of dropout for regularization
+**What You'll Learn:**
+- How AlexNet demonstrated deep learning capabilities
+- Why ReLU activation improved training efficiency
+- The effectiveness of dropout for regularization
 - GPU parallelization techniques
 - Data augmentation strategies that still work today
 
@@ -125,7 +125,7 @@ Just like a child learning language through exposure rather than grammar rules, 
 
 ---
 
-## 📊 The Architecture
+## The Architecture
 
 ### The 8-Layer Structure
 
@@ -157,7 +157,7 @@ Layer 8: FC(1000) → Softmax
          [4096 → 1000]
 ```
 
-**Total Parameters:** ~60 million  
+**Total Parameters:** ~60 million
 **Memory Required:** ~240 MB (with float32)
 
 ### Key Innovations Explained
@@ -167,7 +167,7 @@ Layer 8: FC(1000) → Softmax
 **The Game Changer:**
 $$f(x) = \max(0, x)$$
 
-**Why it revolutionized deep learning:**
+**Why it improved deep learning:**
 
 Before ReLU (sigmoid/tanh):
 - Gradients vanish for large/small inputs
@@ -175,10 +175,10 @@ Before ReLU (sigmoid/tanh):
 - Slow to compute (exponentials)
 
 With ReLU:
-- ✅ **No vanishing gradient** for positive values
-- ✅ **Sparse activation** (many neurons = 0)
-- ✅ **Computationally efficient** (simple max operation)
-- ✅ **Biological plausibility** (neurons fire or don't)
+- **No vanishing gradient** for positive values
+- **Sparse activation** (many neurons = 0)
+- **Computationally efficient** (simple max operation)
+- **Biological plausibility** (neurons fire or don't)
 
 **Impact on training speed:**
 AlexNet paper showed ReLU networks train **6× faster** than tanh networks!
@@ -211,12 +211,12 @@ Traditional regularization:
 - Limited effectiveness on large networks
 
 Dropout:
-- ✅ Trains an **ensemble** of $2^n$ sub-networks
-- ✅ Prevents **co-adaptation** (neurons can't rely on others)
-- ✅ Forces **robust features** (must work without specific neurons)
-- ✅ Implicit **model averaging** at test time
+- Trains an **ensemble** of $2^n$ sub-networks
+- Prevents **co-adaptation** (neurons can't rely on others)
+- Forces **robust features** (must work without specific neurons)
+- Implicit **model averaging** at test time
 
-**The magic:** Each forward pass trains a different random sub-network!
+**The key insight:** Each forward pass trains a different random sub-network!
 
 ```python
 class Dropout(nn.Module):
@@ -265,7 +265,7 @@ AlexNet pooling: stride < pool size (overlap!)
 
 ---
 
-## 🔧 Implementation Guide
+## Implementation Guide
 
 ### Building AlexNet from Scratch
 
@@ -416,16 +416,17 @@ AlexNet used **manual learning rate decay**:
 # Initial learning rate
 lr = 0.01
 
+# Paper's approach: reduce LR by 10x when validation error plateaus
+# LR was reduced 3 times during ~90 epochs of training (0.01 → 0.001 → 0.0001 → 0.00001)
+scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(
+    optimizer, mode='min', factor=0.1, patience=5
+)
+
 # Training loop
 for epoch in range(90):
-    # Reduce learning rate manually
-    if epoch in [30, 60, 80]:
-        lr = lr * 0.1
-        for param_group in optimizer.param_groups:
-            param_group['lr'] = lr
-    
-    # Train epoch
     train_one_epoch(model, train_loader, optimizer)
+    val_error = validate(model, val_loader)
+    scheduler.step(val_error)  # Reduce LR when val error plateaus
 ```
 
 **Modern alternative (cosine annealing):**
@@ -441,20 +442,30 @@ scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(
 AlexNet used specific initialization:
 
 ```python
-def init_weights(m):
-    """AlexNet's initialization strategy"""
-    if isinstance(m, nn.Conv2d):
-        nn.init.normal_(m.weight, mean=0, std=0.01)
-        if m.bias is not None:
-            nn.init.constant_(m.bias, 0)
-    elif isinstance(m, nn.Linear):
-        nn.init.normal_(m.weight, mean=0, std=0.01)
-        nn.init.constant_(m.bias, 1)  # Bias = 1 for FC layers!
+def init_weights(model):
+    """AlexNet's initialization strategy (Section 5).
+    
+    Paper uses bias=1 for conv2, conv4, conv5 and all FC layers
+    to ensure ReLUs start in the active region. Bias=0 for conv1, conv3.
+    """
+    for name, m in model.named_modules():
+        if isinstance(m, nn.Conv2d):
+            nn.init.normal_(m.weight, mean=0, std=0.01)
+            if m.bias is not None:
+                # Bias=1 for conv layers 2, 4, 5; bias=0 for conv layers 1, 3
+                nn.init.constant_(m.bias, 0)
+        elif isinstance(m, nn.Linear):
+            nn.init.normal_(m.weight, mean=0, std=0.01)
+            nn.init.constant_(m.bias, 1)
 
-model.apply(init_weights)
+    # Paper-specific per-layer bias override (conv2, conv4, conv5 → bias=1)
+    # In our nn.Sequential: features[3]=conv2, features[6]=conv4, features[8]=conv5
+    for idx in [3, 6, 8]:  # conv2, conv4, conv5 indices
+        if hasattr(model, 'features') and isinstance(model.features[idx], nn.Conv2d):
+            nn.init.constant_(model.features[idx].bias, 1)
 ```
 
-**Why bias=1 for FC layers?** Ensures ReLU neurons start in "active" region.
+**Why bias=1 for certain layers?** The paper initialized biases to 1 in conv2, conv4, conv5, and all FC layers to ensure ReLU neurons start in the "active" region,accelerating early training.
 
 ### 3. **Batch Size and Momentum**
 
@@ -614,14 +625,14 @@ def plot_training_curves(train_losses, val_losses, val_accs):
 
 ---
 
-## 🏋️ Exercises
+## Exercises
 
-### Exercise 1: Build AlexNet from Scratch (⏱️⏱️⏱️)
+### Exercise 1: Build AlexNet from Scratch (Medium)
 Implement AlexNet in PyTorch without looking at the code. Train on CIFAR-10 (smaller dataset). Compare with a shallow baseline.
 
 **Key learning:** Understanding each layer's role and how depth helps.
 
-### Exercise 2: Ablation Study (⏱️⏱️⏱️⏱️)
+### Exercise 2: Ablation Study (Hard)
 Remove one innovation at a time and measure impact:
 - Replace ReLU with sigmoid
 - Remove dropout
@@ -630,14 +641,14 @@ Remove one innovation at a time and measure impact:
 
 Which innovation matters most?
 
-### Exercise 3: Feature Visualization (⏱️⏱️)
+### Exercise 3: Feature Visualization (Easy)
 Extract and visualize features from each layer. Observe:
 - Layer 1: Edge detectors
 - Layer 2: Texture patterns
 - Layer 3-5: Object parts
 - FC layers: High-level concepts
 
-### Exercise 4: Transfer Learning (⏱️⏱️⏱️)
+### Exercise 4: Transfer Learning (Medium)
 Use pretrained AlexNet for a new task:
 1. Load ImageNet weights
 2. Freeze early layers
@@ -645,7 +656,7 @@ Use pretrained AlexNet for a new task:
 
 Compare with training from scratch.
 
-### Exercise 5: Modern Improvements (⏱️⏱️⏱️⏱️)
+### Exercise 5: Modern Improvements (Hard)
 Upgrade AlexNet with modern techniques:
 - Replace LRN with Batch Normalization
 - Add residual connections
@@ -656,7 +667,7 @@ How much can you improve accuracy?
 
 ---
 
-## 🚀 Going Further
+## Going Further
 
 ### AlexNet's Legacy
 
@@ -674,11 +685,11 @@ How much can you improve accuracy?
 ### Modern Context
 
 **What AlexNet Got Right (Still Used Today):**
-- ✅ ReLU activations
-- ✅ Dropout regularization
-- ✅ Data augmentation
-- ✅ GPU acceleration
-- ✅ End-to-end learning
+- ReLU activations
+- Dropout regularization
+- Data augmentation
+- GPU acceleration
+- End-to-end learning
 
 **What We've Improved:**
 - Batch Normalization > LRN
@@ -703,30 +714,30 @@ How much can you improve accuracy?
 
 ---
 
-## 📚 Resources
+## Resources
 
 ### Must-Read
-- 📄 [Original Paper](https://papers.nips.cc/paper/2012/hash/c399862d3b9d6b76c8436e924a68c45b-Abstract.html) - AlexNet (2012)
-- 📖 [ImageNet](http://www.image-net.org/) - The dataset that changed everything
-- 📄 [Dropout Paper](https://jmlr.org/papers/v15/srivastava14a.html) - Hinton et al. (2014)
+- [Original Paper](https://papers.nips.cc/paper/2012/hash/c399862d3b9d6b76c8436e924a68c45b-Abstract.html) - AlexNet (2012)
+- [ImageNet](http://www.image-net.org/) - The dataset that changed everything
+- [Dropout Paper](https://jmlr.org/papers/v15/srivastava14a.html) - Hinton et al. (2014)
 
 ### Implementations
-- 💻 [PyTorch AlexNet](https://pytorch.org/vision/stable/_modules/torchvision/models/alexnet.html) - Official implementation
-- 💻 [TensorFlow AlexNet](https://github.com/tensorflow/models/tree/master/research/slim/nets) - TF-Slim version
-- 💻 [Original Code](https://code.google.com/archive/p/cuda-convnet/) - Krizhevsky's CUDA implementation
+- [PyTorch AlexNet](https://pytorch.org/vision/stable/_modules/torchvision/models/alexnet.html) - Official implementation
+- [TensorFlow AlexNet](https://github.com/tensorflow/models/tree/master/research/slim/nets) - TF-Slim version
+- [Original Code](https://code.google.com/archive/p/cuda-convnet/) - Krizhevsky's CUDA implementation
 
 ### Visualizations
-- 🎥 [CNN Explainer](https://poloclub.github.io/cnn-explainer/) - Interactive CNN visualization
-- 📊 [Distill: Feature Visualization](https://distill.pub/2017/feature-visualization/) - Understanding what CNNs learn
-- 🎥 [Andrej Karpathy's lecture](https://www.youtube.com/watch?v=NfnWJUyUJYU) - CNNs for Visual Recognition
+- [CNN Explainer](https://poloclub.github.io/cnn-explainer/) - Interactive CNN visualization
+- [Distill: Feature Visualization](https://distill.pub/2017/feature-visualization/) - Understanding what CNNs learn
+- [Andrej Karpathy's lecture](https://www.youtube.com/watch?v=NfnWJUyUJYU) - CNNs for Visual Recognition
 
 ### Historical Context
-- 📖 [The ImageNet Moment](https://qz.com/1034972/the-data-that-changed-the-direction-of-ai-research-and-possibly-the-world/) - When deep learning took over
-- 📄 [LeNet-5](http://yann.lecun.com/exdb/lenet/) - The predecessor (Yann LeCun, 1998)
+- [The ImageNet Moment](https://qz.com/1034972/the-data-that-changed-the-direction-of-ai-research-and-possibly-the-world/) - When deep learning took over
+- [LeNet-5](http://yann.lecun.com/exdb/lenet/) - The predecessor (Yann LeCun, 1998)
 
 ---
 
-## 🎓 Key Takeaways
+## Key Takeaways
 
 1. **End-to-end learning beats hand-crafted features** - Let the network learn!
 2. **ReLU solved vanishing gradients** - Simple but revolutionary
@@ -739,8 +750,8 @@ How much can you improve accuracy?
 
 AlexNet didn't just win ImageNet—it proved a paradigm:
 
-**Before:** "Neural networks don't work for real vision tasks"  
-**After:** "Neural networks are the ONLY way to do vision"
+**Before:** "Neural networks don't work for real vision tasks"
+**After:** "Neural networks are the preferred approach for vision"
 
 This single paper:
 - Started the deep learning revolution
@@ -761,7 +772,7 @@ Every modern vision system owes a debt to AlexNet.
 
 ---
 
-**Completed Day 8?** Move on to **[Day 9: ResNet](../day9_resnet/)** where skip connections enable networks 10× deeper than AlexNet!
+**Completed Day 8?** Move on to **[Day 9: ResNet](../09_resnet/)** where skip connections enable networks 10× deeper than AlexNet!
 
 **Questions?** Check the [notebook.ipynb](notebook.ipynb) for interactive code and visualizations.
 
