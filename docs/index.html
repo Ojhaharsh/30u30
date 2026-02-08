@@ -1,16 +1,21 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>30u30 — 30 Foundational AI Papers in 30 Days</title>
-    <meta name="description" content="Master 30 foundational AI papers in 30 days with complete implementations, exercises, and interactive notebooks. From RNNs to Transformers.">
+    <meta name="description"
+        content="Master 30 foundational AI papers in 30 days with complete implementations, exercises, and interactive notebooks. From RNNs to Transformers.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="css/style.css">
 </head>
+
 <body>
     <!-- Floating Navigation -->
     <nav class="nav">
@@ -39,13 +44,13 @@
             <div class="hero-grid"></div>
             <div class="hero-particles" id="particles"></div>
         </div>
-        
+
         <div class="hero-content">
             <div class="hero-badge">
                 <span class="badge-dot"></span>
-                <span>18 Papers Live • Open Source</span>
+                <span>19 Papers Live • Open Source</span>
             </div>
-            
+
             <h1 class="hero-title">
                 <span class="title-line">
                     <span class="title-number">30</span>
@@ -57,23 +62,23 @@
                     <span class="title-text">Days</span>
                 </span>
             </h1>
-            
+
             <p class="hero-subtitle">
-                From RNNs to Transformers — complete implementations you can run, 
+                From RNNs to Transformers — complete implementations you can run,
                 learn from, and build upon. Every paper, every line of code, explained.
             </p>
-            
+
             <div class="hero-quote">
                 <span class="quote-mark">"</span>
                 <p>If you really learn all of these, you'll know 90% of what matters today</p>
                 <cite>— Ilya Sutskever</cite>
             </div>
-            
+
             <div class="hero-actions">
                 <a href="#papers" class="btn btn-primary">
                     <span>Explore Papers</span>
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M5 12h14M12 5l7 7-7 7"/>
+                        <path d="M5 12h14M12 5l7 7-7 7" />
                     </svg>
                 </a>
                 <a href="https://github.com/ojhaharsh/30u30" target="_blank" class="btn btn-secondary">
@@ -81,50 +86,52 @@
                     <span>View on GitHub</span>
                 </a>
             </div>
-            
+
             <div class="hero-stats">
                 <div class="stat">
-                    <span class="stat-value" data-count="18">0</span>
+                    <span class="stat-value" data-count="19">0</span>
                     <span class="stat-label">Papers Live</span>
                 </div>
                 <div class="stat-divider"></div>
                 <div class="stat">
-                    <span class="stat-value" data-count="90">0</span>
+                    <span class="stat-value" data-count="97">0</span>
                     <span class="stat-label">Exercises</span>
                 </div>
                 <div class="stat-divider"></div>
                 <div class="stat">
-                    <span class="stat-value">22K+</span>
+                    <span class="stat-value">24K+</span>
                     <span class="stat-label">Lines of Code</span>
                 </div>
             </div>
         </div>
-        
+
         <!-- Floating paper symbols representing neural networks -->
         <div class="hero-symbols">
             <div class="symbol symbol-1" title="Neural Networks">
                 <svg viewBox="0 0 100 100">
-                    <circle cx="50" cy="20" r="8" fill="currentColor" opacity="0.6"/>
-                    <circle cx="25" cy="50" r="8" fill="currentColor" opacity="0.6"/>
-                    <circle cx="75" cy="50" r="8" fill="currentColor" opacity="0.6"/>
-                    <circle cx="50" cy="80" r="8" fill="currentColor" opacity="0.6"/>
-                    <line x1="50" y1="28" x2="25" y2="42" stroke="currentColor" stroke-width="2" opacity="0.4"/>
-                    <line x1="50" y1="28" x2="75" y2="42" stroke="currentColor" stroke-width="2" opacity="0.4"/>
-                    <line x1="25" y1="58" x2="50" y2="72" stroke="currentColor" stroke-width="2" opacity="0.4"/>
-                    <line x1="75" y1="58" x2="50" y2="72" stroke="currentColor" stroke-width="2" opacity="0.4"/>
+                    <circle cx="50" cy="20" r="8" fill="currentColor" opacity="0.6" />
+                    <circle cx="25" cy="50" r="8" fill="currentColor" opacity="0.6" />
+                    <circle cx="75" cy="50" r="8" fill="currentColor" opacity="0.6" />
+                    <circle cx="50" cy="80" r="8" fill="currentColor" opacity="0.6" />
+                    <line x1="50" y1="28" x2="25" y2="42" stroke="currentColor" stroke-width="2" opacity="0.4" />
+                    <line x1="50" y1="28" x2="75" y2="42" stroke="currentColor" stroke-width="2" opacity="0.4" />
+                    <line x1="25" y1="58" x2="50" y2="72" stroke="currentColor" stroke-width="2" opacity="0.4" />
+                    <line x1="75" y1="58" x2="50" y2="72" stroke="currentColor" stroke-width="2" opacity="0.4" />
                 </svg>
             </div>
             <div class="symbol symbol-2" title="Attention Mechanism">
                 <svg viewBox="0 0 100 100">
-                    <path d="M50 10 L90 50 L50 90 L10 50 Z" fill="none" stroke="currentColor" stroke-width="2" opacity="0.5"/>
-                    <circle cx="50" cy="50" r="15" fill="currentColor" opacity="0.3"/>
-                    <circle cx="50" cy="50" r="8" fill="currentColor" opacity="0.6"/>
+                    <path d="M50 10 L90 50 L50 90 L10 50 Z" fill="none" stroke="currentColor" stroke-width="2"
+                        opacity="0.5" />
+                    <circle cx="50" cy="50" r="15" fill="currentColor" opacity="0.3" />
+                    <circle cx="50" cy="50" r="8" fill="currentColor" opacity="0.6" />
                 </svg>
             </div>
             <div class="symbol symbol-3" title="Recurrence">
                 <svg viewBox="0 0 100 100">
-                    <path d="M30 50 C30 25, 70 25, 70 50 C70 75, 30 75, 30 50" fill="none" stroke="currentColor" stroke-width="3" opacity="0.5"/>
-                    <polygon points="35,45 25,50 35,55" fill="currentColor" opacity="0.6"/>
+                    <path d="M30 50 C30 25, 70 25, 70 50 C70 75, 30 75, 30 50" fill="none" stroke="currentColor"
+                        stroke-width="3" opacity="0.5" />
+                    <polygon points="35,45 25,50 35,55" fill="currentColor" opacity="0.6" />
                 </svg>
             </div>
         </div>
@@ -135,10 +142,11 @@
         <div class="container">
             <div class="section-header">
                 <span class="section-tag">The Collection</span>
-                <h2 class="section-title">18 Papers, Fully Implemented</h2>
-                <p class="section-desc">Each paper comes with deep explanations, clean code, visualizations, and exercises. Click any card to explore.</p>
+                <h2 class="section-title">19 Papers, Fully Implemented</h2>
+                <p class="section-desc">Each paper comes with deep explanations, clean code, visualizations, and
+                    exercises. Click any card to explore.</p>
             </div>
-            
+
             <!-- Filter Buttons -->
             <div class="papers-filter">
                 <button class="filter-btn active" data-filter="all">All Papers</button>
@@ -147,15 +155,17 @@
                 <button class="filter-btn" data-filter="transformers">Transformers</button>
                 <button class="filter-btn" data-filter="specialized">Specialized</button>
             </div>
-            
+
             <div class="papers-grid">
                 <!-- Day 1: RNNs -->
-                <a href="https://github.com/Ojhaharsh/30u30/tree/main/papers/01_Unreasonable_Effectiveness" target="_blank" class="paper-card" data-day="1" data-unit="foundations">
+                <a href="https://github.com/Ojhaharsh/30u30/tree/main/papers/01_Unreasonable_Effectiveness"
+                    target="_blank" class="paper-card" data-day="1" data-unit="foundations">
                     <div class="paper-symbol">
                         <svg viewBox="0 0 80 80">
-                            <path d="M15 40 Q30 15, 40 40 T65 40" fill="none" stroke="currentColor" stroke-width="3"/>
-                            <circle cx="40" cy="40" r="6" fill="currentColor"/>
-                            <path d="M25 55 L55 55" stroke="currentColor" stroke-width="2" stroke-dasharray="4 3" opacity="0.5"/>
+                            <path d="M15 40 Q30 15, 40 40 T65 40" fill="none" stroke="currentColor" stroke-width="3" />
+                            <circle cx="40" cy="40" r="6" fill="currentColor" />
+                            <path d="M25 55 L55 55" stroke="currentColor" stroke-width="2" stroke-dasharray="4 3"
+                                opacity="0.5" />
                         </svg>
                     </div>
                     <div class="paper-content">
@@ -169,23 +179,28 @@
                     </div>
                     <div class="paper-arrow">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M5 12h14M12 5l7 7-7 7"/>
+                            <path d="M5 12h14M12 5l7 7-7 7" />
                         </svg>
                     </div>
                 </a>
 
                 <!-- Day 2: LSTM -->
-                <a href="https://github.com/Ojhaharsh/30u30/tree/main/papers/02_Understanding_LSTM" target="_blank" class="paper-card" data-day="2" data-unit="foundations">
+                <a href="https://github.com/Ojhaharsh/30u30/tree/main/papers/02_Understanding_LSTM" target="_blank"
+                    class="paper-card" data-day="2" data-unit="foundations">
                     <div class="paper-symbol">
                         <svg viewBox="0 0 80 80">
-                            <rect x="15" y="25" width="50" height="30" rx="4" fill="none" stroke="currentColor" stroke-width="2.5"/>
-                            <line x1="28" y1="25" x2="28" y2="55" stroke="currentColor" stroke-width="2" opacity="0.4"/>
-                            <line x1="41" y1="25" x2="41" y2="55" stroke="currentColor" stroke-width="2" opacity="0.4"/>
-                            <line x1="54" y1="25" x2="54" y2="55" stroke="currentColor" stroke-width="2" opacity="0.4"/>
-                            <circle cx="22" cy="40" r="4" fill="currentColor" opacity="0.7"/>
-                            <circle cx="35" cy="40" r="4" fill="currentColor" opacity="0.7"/>
-                            <circle cx="48" cy="40" r="4" fill="currentColor" opacity="0.7"/>
-                            <circle cx="60" cy="40" r="4" fill="currentColor" opacity="0.7"/>
+                            <rect x="15" y="25" width="50" height="30" rx="4" fill="none" stroke="currentColor"
+                                stroke-width="2.5" />
+                            <line x1="28" y1="25" x2="28" y2="55" stroke="currentColor" stroke-width="2"
+                                opacity="0.4" />
+                            <line x1="41" y1="25" x2="41" y2="55" stroke="currentColor" stroke-width="2"
+                                opacity="0.4" />
+                            <line x1="54" y1="25" x2="54" y2="55" stroke="currentColor" stroke-width="2"
+                                opacity="0.4" />
+                            <circle cx="22" cy="40" r="4" fill="currentColor" opacity="0.7" />
+                            <circle cx="35" cy="40" r="4" fill="currentColor" opacity="0.7" />
+                            <circle cx="48" cy="40" r="4" fill="currentColor" opacity="0.7" />
+                            <circle cx="60" cy="40" r="4" fill="currentColor" opacity="0.7" />
                         </svg>
                     </div>
                     <div class="paper-content">
@@ -199,18 +214,20 @@
                     </div>
                     <div class="paper-arrow">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M5 12h14M12 5l7 7-7 7"/>
+                            <path d="M5 12h14M12 5l7 7-7 7" />
                         </svg>
                     </div>
                 </a>
 
                 <!-- Day 3: Regularization -->
-                <a href="https://github.com/Ojhaharsh/30u30/tree/main/papers/03_RNN_Regularization" target="_blank" class="paper-card" data-day="3" data-unit="foundations">
+                <a href="https://github.com/Ojhaharsh/30u30/tree/main/papers/03_RNN_Regularization" target="_blank"
+                    class="paper-card" data-day="3" data-unit="foundations">
                     <div class="paper-symbol">
                         <svg viewBox="0 0 80 80">
-                            <circle cx="40" cy="40" r="22" fill="none" stroke="currentColor" stroke-width="2.5" stroke-dasharray="6 4"/>
-                            <circle cx="40" cy="40" r="12" fill="currentColor" opacity="0.3"/>
-                            <path d="M28 40 L52 40 M40 28 L40 52" stroke="currentColor" stroke-width="2.5"/>
+                            <circle cx="40" cy="40" r="22" fill="none" stroke="currentColor" stroke-width="2.5"
+                                stroke-dasharray="6 4" />
+                            <circle cx="40" cy="40" r="12" fill="currentColor" opacity="0.3" />
+                            <path d="M28 40 L52 40 M40 28 L40 52" stroke="currentColor" stroke-width="2.5" />
                         </svg>
                     </div>
                     <div class="paper-content">
@@ -224,19 +241,22 @@
                     </div>
                     <div class="paper-arrow">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M5 12h14M12 5l7 7-7 7"/>
+                            <path d="M5 12h14M12 5l7 7-7 7" />
                         </svg>
                     </div>
                 </a>
 
                 <!-- Day 4: MDL -->
-                <a href="https://github.com/Ojhaharsh/30u30/tree/main/papers/04_Minimizing_Description_Length" target="_blank" class="paper-card" data-day="4" data-unit="foundations">
+                <a href="https://github.com/Ojhaharsh/30u30/tree/main/papers/04_Minimizing_Description_Length"
+                    target="_blank" class="paper-card" data-day="4" data-unit="foundations">
                     <div class="paper-symbol">
                         <svg viewBox="0 0 80 80">
-                            <rect x="15" y="20" width="50" height="40" rx="3" fill="none" stroke="currentColor" stroke-width="2"/>
-                            <path d="M22 32 L58 32 M22 40 L48 40 M22 48 L52 48" stroke="currentColor" stroke-width="2" opacity="0.5"/>
-                            <circle cx="58" cy="52" r="10" fill="none" stroke="currentColor" stroke-width="2"/>
-                            <path d="M55 52 L61 52 M58 49 L58 55" stroke="currentColor" stroke-width="2"/>
+                            <rect x="15" y="20" width="50" height="40" rx="3" fill="none" stroke="currentColor"
+                                stroke-width="2" />
+                            <path d="M22 32 L58 32 M22 40 L48 40 M22 48 L52 48" stroke="currentColor" stroke-width="2"
+                                opacity="0.5" />
+                            <circle cx="58" cy="52" r="10" fill="none" stroke="currentColor" stroke-width="2" />
+                            <path d="M55 52 L61 52 M58 49 L58 55" stroke="currentColor" stroke-width="2" />
                         </svg>
                     </div>
                     <div class="paper-content">
@@ -250,21 +270,23 @@
                     </div>
                     <div class="paper-arrow">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M5 12h14M12 5l7 7-7 7"/>
+                            <path d="M5 12h14M12 5l7 7-7 7" />
                         </svg>
                     </div>
                 </a>
 
                 <!-- Day 5: MDL Tutorial -->
-                <a href="https://github.com/Ojhaharsh/30u30/tree/main/papers/05_MDL_Principle" target="_blank" class="paper-card" data-day="5" data-unit="foundations">
+                <a href="https://github.com/Ojhaharsh/30u30/tree/main/papers/05_MDL_Principle" target="_blank"
+                    class="paper-card" data-day="5" data-unit="foundations">
                     <div class="paper-symbol">
                         <svg viewBox="0 0 80 80">
-                            <path d="M20 55 L30 35 L42 45 L55 20 L65 30" fill="none" stroke="currentColor" stroke-width="2.5"/>
-                            <circle cx="20" cy="55" r="4" fill="currentColor"/>
-                            <circle cx="30" cy="35" r="4" fill="currentColor"/>
-                            <circle cx="42" cy="45" r="4" fill="currentColor"/>
-                            <circle cx="55" cy="20" r="4" fill="currentColor"/>
-                            <circle cx="65" cy="30" r="4" fill="currentColor"/>
+                            <path d="M20 55 L30 35 L42 45 L55 20 L65 30" fill="none" stroke="currentColor"
+                                stroke-width="2.5" />
+                            <circle cx="20" cy="55" r="4" fill="currentColor" />
+                            <circle cx="30" cy="35" r="4" fill="currentColor" />
+                            <circle cx="42" cy="45" r="4" fill="currentColor" />
+                            <circle cx="55" cy="20" r="4" fill="currentColor" />
+                            <circle cx="65" cy="30" r="4" fill="currentColor" />
                         </svg>
                     </div>
                     <div class="paper-content">
@@ -278,19 +300,23 @@
                     </div>
                     <div class="paper-arrow">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M5 12h14M12 5l7 7-7 7"/>
+                            <path d="M5 12h14M12 5l7 7-7 7" />
                         </svg>
                     </div>
                 </a>
 
                 <!-- Day 6: Complexodynamics -->
-                <a href="https://github.com/Ojhaharsh/30u30/tree/main/papers/06_Complexodynamics" target="_blank" class="paper-card" data-day="6" data-unit="foundations">
+                <a href="https://github.com/Ojhaharsh/30u30/tree/main/papers/06_Complexodynamics" target="_blank"
+                    class="paper-card" data-day="6" data-unit="foundations">
                     <div class="paper-symbol">
                         <svg viewBox="0 0 80 80">
-                            <circle cx="40" cy="40" r="25" fill="none" stroke="currentColor" stroke-width="1.5" opacity="0.3"/>
-                            <circle cx="40" cy="40" r="16" fill="none" stroke="currentColor" stroke-width="2" opacity="0.5"/>
-                            <circle cx="40" cy="40" r="7" fill="currentColor" opacity="0.7"/>
-                            <path d="M40 15 L40 20 M40 60 L40 65 M15 40 L20 40 M60 40 L65 40" stroke="currentColor" stroke-width="2"/>
+                            <circle cx="40" cy="40" r="25" fill="none" stroke="currentColor" stroke-width="1.5"
+                                opacity="0.3" />
+                            <circle cx="40" cy="40" r="16" fill="none" stroke="currentColor" stroke-width="2"
+                                opacity="0.5" />
+                            <circle cx="40" cy="40" r="7" fill="currentColor" opacity="0.7" />
+                            <path d="M40 15 L40 20 M40 60 L40 65 M15 40 L20 40 M60 40 L65 40" stroke="currentColor"
+                                stroke-width="2" />
                         </svg>
                     </div>
                     <div class="paper-content">
@@ -304,24 +330,25 @@
                     </div>
                     <div class="paper-arrow">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M5 12h14M12 5l7 7-7 7"/>
+                            <path d="M5 12h14M12 5l7 7-7 7" />
                         </svg>
                     </div>
                 </a>
 
                 <!-- Day 7: Coffee Automaton -->
-                <a href="https://github.com/Ojhaharsh/30u30/tree/main/papers/07_coffee_automaton" target="_blank" class="paper-card" data-day="7" data-unit="foundations">
+                <a href="https://github.com/Ojhaharsh/30u30/tree/main/papers/07_coffee_automaton" target="_blank"
+                    class="paper-card" data-day="7" data-unit="foundations">
                     <div class="paper-symbol">
                         <svg viewBox="0 0 80 80">
-                            <rect x="18" y="18" width="12" height="12" fill="currentColor" opacity="0.3"/>
-                            <rect x="34" y="18" width="12" height="12" fill="currentColor" opacity="0.6"/>
-                            <rect x="50" y="18" width="12" height="12" fill="currentColor" opacity="0.4"/>
-                            <rect x="18" y="34" width="12" height="12" fill="currentColor" opacity="0.7"/>
-                            <rect x="34" y="34" width="12" height="12" fill="currentColor" opacity="0.9"/>
-                            <rect x="50" y="34" width="12" height="12" fill="currentColor" opacity="0.5"/>
-                            <rect x="18" y="50" width="12" height="12" fill="currentColor" opacity="0.5"/>
-                            <rect x="34" y="50" width="12" height="12" fill="currentColor" opacity="0.3"/>
-                            <rect x="50" y="50" width="12" height="12" fill="currentColor" opacity="0.8"/>
+                            <rect x="18" y="18" width="12" height="12" fill="currentColor" opacity="0.3" />
+                            <rect x="34" y="18" width="12" height="12" fill="currentColor" opacity="0.6" />
+                            <rect x="50" y="18" width="12" height="12" fill="currentColor" opacity="0.4" />
+                            <rect x="18" y="34" width="12" height="12" fill="currentColor" opacity="0.7" />
+                            <rect x="34" y="34" width="12" height="12" fill="currentColor" opacity="0.9" />
+                            <rect x="50" y="34" width="12" height="12" fill="currentColor" opacity="0.5" />
+                            <rect x="18" y="50" width="12" height="12" fill="currentColor" opacity="0.5" />
+                            <rect x="34" y="50" width="12" height="12" fill="currentColor" opacity="0.3" />
+                            <rect x="50" y="50" width="12" height="12" fill="currentColor" opacity="0.8" />
                         </svg>
                     </div>
                     <div class="paper-content">
@@ -335,20 +362,22 @@
                     </div>
                     <div class="paper-arrow">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M5 12h14M12 5l7 7-7 7"/>
+                            <path d="M5 12h14M12 5l7 7-7 7" />
                         </svg>
                     </div>
                 </a>
 
                 <!-- Day 8: AlexNet -->
-                <a href="https://github.com/Ojhaharsh/30u30/tree/main/papers/08_alexnet" target="_blank" class="paper-card" data-day="8" data-unit="vision">
+                <a href="https://github.com/Ojhaharsh/30u30/tree/main/papers/08_alexnet" target="_blank"
+                    class="paper-card" data-day="8" data-unit="vision">
                     <div class="paper-symbol">
                         <svg viewBox="0 0 80 80">
-                            <rect x="12" y="12" width="56" height="56" rx="5" fill="none" stroke="currentColor" stroke-width="2"/>
-                            <rect x="18" y="18" width="18" height="18" fill="currentColor" opacity="0.4"/>
-                            <rect x="44" y="18" width="18" height="18" fill="currentColor" opacity="0.6"/>
-                            <rect x="18" y="44" width="18" height="18" fill="currentColor" opacity="0.5"/>
-                            <rect x="44" y="44" width="18" height="18" fill="currentColor" opacity="0.8"/>
+                            <rect x="12" y="12" width="56" height="56" rx="5" fill="none" stroke="currentColor"
+                                stroke-width="2" />
+                            <rect x="18" y="18" width="18" height="18" fill="currentColor" opacity="0.4" />
+                            <rect x="44" y="18" width="18" height="18" fill="currentColor" opacity="0.6" />
+                            <rect x="18" y="44" width="18" height="18" fill="currentColor" opacity="0.5" />
+                            <rect x="44" y="44" width="18" height="18" fill="currentColor" opacity="0.8" />
                         </svg>
                     </div>
                     <div class="paper-content">
@@ -362,20 +391,25 @@
                     </div>
                     <div class="paper-arrow">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M5 12h14M12 5l7 7-7 7"/>
+                            <path d="M5 12h14M12 5l7 7-7 7" />
                         </svg>
                     </div>
                 </a>
 
                 <!-- Day 9: ResNet -->
-                <a href="https://github.com/Ojhaharsh/30u30/tree/main/papers/09_resnet" target="_blank" class="paper-card" data-day="9" data-unit="vision">
+                <a href="https://github.com/Ojhaharsh/30u30/tree/main/papers/09_resnet" target="_blank"
+                    class="paper-card" data-day="9" data-unit="vision">
                     <div class="paper-symbol">
                         <svg viewBox="0 0 80 80">
-                            <rect x="15" y="25" width="20" height="30" rx="3" fill="none" stroke="currentColor" stroke-width="2"/>
-                            <rect x="45" y="25" width="20" height="30" rx="3" fill="none" stroke="currentColor" stroke-width="2"/>
-                            <path d="M35 35 L45 40 L35 45" fill="none" stroke="currentColor" stroke-width="2.5"/>
-                            <path d="M25 18 Q40 10 55 18" fill="none" stroke="currentColor" stroke-width="2" stroke-dasharray="4 3"/>
-                            <path d="M25 62 Q40 70 55 62" fill="none" stroke="currentColor" stroke-width="2" stroke-dasharray="4 3"/>
+                            <rect x="15" y="25" width="20" height="30" rx="3" fill="none" stroke="currentColor"
+                                stroke-width="2" />
+                            <rect x="45" y="25" width="20" height="30" rx="3" fill="none" stroke="currentColor"
+                                stroke-width="2" />
+                            <path d="M35 35 L45 40 L35 45" fill="none" stroke="currentColor" stroke-width="2.5" />
+                            <path d="M25 18 Q40 10 55 18" fill="none" stroke="currentColor" stroke-width="2"
+                                stroke-dasharray="4 3" />
+                            <path d="M25 62 Q40 70 55 62" fill="none" stroke="currentColor" stroke-width="2"
+                                stroke-dasharray="4 3" />
                         </svg>
                     </div>
                     <div class="paper-content">
@@ -389,21 +423,25 @@
                     </div>
                     <div class="paper-arrow">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M5 12h14M12 5l7 7-7 7"/>
+                            <path d="M5 12h14M12 5l7 7-7 7" />
                         </svg>
                     </div>
                 </a>
 
                 <!-- Day 10: ResNet V2 -->
-                <a href="https://github.com/Ojhaharsh/30u30/tree/main/papers/10_resnet_v2" target="_blank" class="paper-card" data-day="10" data-unit="vision">
+                <a href="https://github.com/Ojhaharsh/30u30/tree/main/papers/10_resnet_v2" target="_blank"
+                    class="paper-card" data-day="10" data-unit="vision">
                     <div class="paper-symbol">
                         <svg viewBox="0 0 80 80">
-                            <rect x="20" y="28" width="40" height="24" rx="3" fill="none" stroke="currentColor" stroke-width="2.5"/>
-                            <line x1="33" y1="28" x2="33" y2="52" stroke="currentColor" stroke-width="2" opacity="0.4"/>
-                            <line x1="47" y1="28" x2="47" y2="52" stroke="currentColor" stroke-width="2" opacity="0.4"/>
-                            <path d="M40 15 L40 28 M40 52 L40 65" stroke="currentColor" stroke-width="2.5"/>
-                            <circle cx="40" cy="15" r="4" fill="currentColor"/>
-                            <circle cx="40" cy="65" r="4" fill="currentColor"/>
+                            <rect x="20" y="28" width="40" height="24" rx="3" fill="none" stroke="currentColor"
+                                stroke-width="2.5" />
+                            <line x1="33" y1="28" x2="33" y2="52" stroke="currentColor" stroke-width="2"
+                                opacity="0.4" />
+                            <line x1="47" y1="28" x2="47" y2="52" stroke="currentColor" stroke-width="2"
+                                opacity="0.4" />
+                            <path d="M40 15 L40 28 M40 52 L40 65" stroke="currentColor" stroke-width="2.5" />
+                            <circle cx="40" cy="15" r="4" fill="currentColor" />
+                            <circle cx="40" cy="65" r="4" fill="currentColor" />
                         </svg>
                     </div>
                     <div class="paper-content">
@@ -417,19 +455,22 @@
                     </div>
                     <div class="paper-arrow">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M5 12h14M12 5l7 7-7 7"/>
+                            <path d="M5 12h14M12 5l7 7-7 7" />
                         </svg>
                     </div>
                 </a>
 
                 <!-- Day 11: Dilated Convolutions -->
-                <a href="https://github.com/Ojhaharsh/30u30/tree/main/papers/11_dilated_convolutions" target="_blank" class="paper-card" data-day="11" data-unit="vision">
+                <a href="https://github.com/Ojhaharsh/30u30/tree/main/papers/11_dilated_convolutions" target="_blank"
+                    class="paper-card" data-day="11" data-unit="vision">
                     <div class="paper-symbol">
                         <svg viewBox="0 0 80 80">
-                            <circle cx="40" cy="40" r="10" fill="none" stroke="currentColor" stroke-width="2.5"/>
-                            <circle cx="40" cy="40" r="20" fill="none" stroke="currentColor" stroke-width="2" opacity="0.5"/>
-                            <circle cx="40" cy="40" r="30" fill="none" stroke="currentColor" stroke-width="1.5" opacity="0.3"/>
-                            <circle cx="40" cy="40" r="4" fill="currentColor"/>
+                            <circle cx="40" cy="40" r="10" fill="none" stroke="currentColor" stroke-width="2.5" />
+                            <circle cx="40" cy="40" r="20" fill="none" stroke="currentColor" stroke-width="2"
+                                opacity="0.5" />
+                            <circle cx="40" cy="40" r="30" fill="none" stroke="currentColor" stroke-width="1.5"
+                                opacity="0.3" />
+                            <circle cx="40" cy="40" r="4" fill="currentColor" />
                         </svg>
                     </div>
                     <div class="paper-content">
@@ -443,24 +484,27 @@
                     </div>
                     <div class="paper-arrow">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M5 12h14M12 5l7 7-7 7"/>
+                            <path d="M5 12h14M12 5l7 7-7 7" />
                         </svg>
                     </div>
                 </a>
 
                 <!-- Day 12: Dropout -->
-                <a href="https://github.com/Ojhaharsh/30u30/tree/main/papers/12_dropout" target="_blank" class="paper-card" data-day="12" data-unit="foundations">
+                <a href="https://github.com/Ojhaharsh/30u30/tree/main/papers/12_dropout" target="_blank"
+                    class="paper-card" data-day="12" data-unit="foundations">
                     <div class="paper-symbol">
                         <svg viewBox="0 0 80 80">
                             <!-- Dropout visualization: some neurons crossed out -->
-                            <circle cx="20" cy="30" r="6" fill="currentColor" opacity="0.8"/>
-                            <circle cx="40" cy="20" r="6" fill="currentColor" opacity="0.3"/>
-                            <line x1="35" y1="15" x2="45" y2="25" stroke="currentColor" stroke-width="2" opacity="0.5"/>
-                            <circle cx="60" cy="30" r="6" fill="currentColor" opacity="0.8"/>
-                            <circle cx="30" cy="50" r="6" fill="currentColor" opacity="0.3"/>
-                            <line x1="25" y1="45" x2="35" y2="55" stroke="currentColor" stroke-width="2" opacity="0.5"/>
-                            <circle cx="50" cy="50" r="6" fill="currentColor" opacity="0.8"/>
-                            <circle cx="40" cy="65" r="6" fill="currentColor" opacity="0.8"/>
+                            <circle cx="20" cy="30" r="6" fill="currentColor" opacity="0.8" />
+                            <circle cx="40" cy="20" r="6" fill="currentColor" opacity="0.3" />
+                            <line x1="35" y1="15" x2="45" y2="25" stroke="currentColor" stroke-width="2"
+                                opacity="0.5" />
+                            <circle cx="60" cy="30" r="6" fill="currentColor" opacity="0.8" />
+                            <circle cx="30" cy="50" r="6" fill="currentColor" opacity="0.3" />
+                            <line x1="25" y1="45" x2="35" y2="55" stroke="currentColor" stroke-width="2"
+                                opacity="0.5" />
+                            <circle cx="50" cy="50" r="6" fill="currentColor" opacity="0.8" />
+                            <circle cx="40" cy="65" r="6" fill="currentColor" opacity="0.8" />
                         </svg>
                     </div>
                     <div class="paper-content">
@@ -474,26 +518,33 @@
                     </div>
                     <div class="paper-arrow">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M5 12h14M12 5l7 7-7 7"/>
+                            <path d="M5 12h14M12 5l7 7-7 7" />
                         </svg>
                     </div>
                 </a>
 
                 <!-- Day 13: Attention (Featured) -->
-                <a href="https://github.com/Ojhaharsh/30u30/tree/main/papers/13_attention" target="_blank" class="paper-card featured" data-day="13" data-unit="transformers">
+                <a href="https://github.com/Ojhaharsh/30u30/tree/main/papers/13_attention" target="_blank"
+                    class="paper-card featured" data-day="13" data-unit="transformers">
                     <div class="paper-featured-badge">Landmark Paper</div>
                     <div class="paper-symbol">
                         <svg viewBox="0 0 80 80">
-                            <circle cx="25" cy="25" r="8" fill="currentColor" opacity="0.6"/>
-                            <circle cx="55" cy="25" r="8" fill="currentColor" opacity="0.6"/>
-                            <circle cx="25" cy="55" r="8" fill="currentColor" opacity="0.6"/>
-                            <circle cx="55" cy="55" r="8" fill="currentColor" opacity="0.6"/>
-                            <line x1="25" y1="25" x2="55" y2="25" stroke="currentColor" stroke-width="2.5" opacity="0.8"/>
-                            <line x1="25" y1="25" x2="25" y2="55" stroke="currentColor" stroke-width="2.5" opacity="0.8"/>
-                            <line x1="55" y1="25" x2="55" y2="55" stroke="currentColor" stroke-width="2.5" opacity="0.8"/>
-                            <line x1="25" y1="55" x2="55" y2="55" stroke="currentColor" stroke-width="2.5" opacity="0.8"/>
-                            <line x1="25" y1="25" x2="55" y2="55" stroke="currentColor" stroke-width="2" opacity="0.4"/>
-                            <line x1="55" y1="25" x2="25" y2="55" stroke="currentColor" stroke-width="2" opacity="0.4"/>
+                            <circle cx="25" cy="25" r="8" fill="currentColor" opacity="0.6" />
+                            <circle cx="55" cy="25" r="8" fill="currentColor" opacity="0.6" />
+                            <circle cx="25" cy="55" r="8" fill="currentColor" opacity="0.6" />
+                            <circle cx="55" cy="55" r="8" fill="currentColor" opacity="0.6" />
+                            <line x1="25" y1="25" x2="55" y2="25" stroke="currentColor" stroke-width="2.5"
+                                opacity="0.8" />
+                            <line x1="25" y1="25" x2="25" y2="55" stroke="currentColor" stroke-width="2.5"
+                                opacity="0.8" />
+                            <line x1="55" y1="25" x2="55" y2="55" stroke="currentColor" stroke-width="2.5"
+                                opacity="0.8" />
+                            <line x1="25" y1="55" x2="55" y2="55" stroke="currentColor" stroke-width="2.5"
+                                opacity="0.8" />
+                            <line x1="25" y1="25" x2="55" y2="55" stroke="currentColor" stroke-width="2"
+                                opacity="0.4" />
+                            <line x1="55" y1="25" x2="25" y2="55" stroke="currentColor" stroke-width="2"
+                                opacity="0.4" />
                         </svg>
                     </div>
                     <div class="paper-content">
@@ -507,22 +558,27 @@
                     </div>
                     <div class="paper-arrow">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M5 12h14M12 5l7 7-7 7"/>
+                            <path d="M5 12h14M12 5l7 7-7 7" />
                         </svg>
                     </div>
                 </a>
 
                 <!-- Day 14: The Annotated Transformer -->
-                <a href="https://github.com/Ojhaharsh/30u30/tree/main/papers/14_annotated_transformer" target="_blank" class="paper-card" data-day="14" data-unit="transformers">
+                <a href="https://github.com/Ojhaharsh/30u30/tree/main/papers/14_annotated_transformer" target="_blank"
+                    class="paper-card" data-day="14" data-unit="transformers">
                     <div class="paper-symbol">
                         <svg viewBox="0 0 80 80">
                             <!-- Code/annotation visualization -->
-                            <rect x="15" y="15" width="50" height="50" rx="4" fill="none" stroke="currentColor" stroke-width="2"/>
-                            <line x1="22" y1="28" x2="50" y2="28" stroke="currentColor" stroke-width="2" opacity="0.8"/>
-                            <line x1="22" y1="38" x2="58" y2="38" stroke="currentColor" stroke-width="2" opacity="0.6"/>
-                            <line x1="22" y1="48" x2="45" y2="48" stroke="currentColor" stroke-width="2" opacity="0.8"/>
-                            <circle cx="55" cy="28" r="4" fill="currentColor" opacity="0.6"/>
-                            <circle cx="55" cy="48" r="4" fill="currentColor" opacity="0.6"/>
+                            <rect x="15" y="15" width="50" height="50" rx="4" fill="none" stroke="currentColor"
+                                stroke-width="2" />
+                            <line x1="22" y1="28" x2="50" y2="28" stroke="currentColor" stroke-width="2"
+                                opacity="0.8" />
+                            <line x1="22" y1="38" x2="58" y2="38" stroke="currentColor" stroke-width="2"
+                                opacity="0.6" />
+                            <line x1="22" y1="48" x2="45" y2="48" stroke="currentColor" stroke-width="2"
+                                opacity="0.8" />
+                            <circle cx="55" cy="28" r="4" fill="currentColor" opacity="0.6" />
+                            <circle cx="55" cy="48" r="4" fill="currentColor" opacity="0.6" />
                         </svg>
                     </div>
                     <div class="paper-content">
@@ -536,24 +592,25 @@
                     </div>
                     <div class="paper-arrow">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M5 12h14M12 5l7 7-7 7"/>
+                            <path d="M5 12h14M12 5l7 7-7 7" />
                         </svg>
                     </div>
                 </a>
 
                 <!-- Day 15: Bahdanau Attention -->
-                <a href="https://github.com/Ojhaharsh/30u30/tree/main/papers/15_bahdanau_attention" target="_blank" class="paper-card" data-day="15" data-unit="transformers">
+                <a href="https://github.com/Ojhaharsh/30u30/tree/main/papers/15_bahdanau_attention" target="_blank"
+                    class="paper-card" data-day="15" data-unit="transformers">
                     <div class="paper-symbol">
                         <svg viewBox="0 0 80 80">
                             <!-- Attention spotlight visualization -->
-                            <circle cx="40" cy="20" r="8" fill="currentColor" opacity="0.8"/>
-                            <circle cx="20" cy="50" r="7" fill="currentColor" opacity="0.5"/>
-                            <circle cx="40" cy="60" r="7" fill="currentColor" opacity="0.5"/>
-                            <circle cx="60" cy="50" r="7" fill="currentColor" opacity="0.5"/>
-                            <path d="M40 28 L20 43" stroke="currentColor" stroke-width="2" opacity="0.7"/>
-                            <path d="M40 28 L40 53" stroke="currentColor" stroke-width="2.5" opacity="0.9"/>
-                            <path d="M40 28 L60 43" stroke="currentColor" stroke-width="2" opacity="0.7"/>
-                            <circle cx="40" cy="28" r="3" fill="currentColor"/>
+                            <circle cx="40" cy="20" r="8" fill="currentColor" opacity="0.8" />
+                            <circle cx="20" cy="50" r="7" fill="currentColor" opacity="0.5" />
+                            <circle cx="40" cy="60" r="7" fill="currentColor" opacity="0.5" />
+                            <circle cx="60" cy="50" r="7" fill="currentColor" opacity="0.5" />
+                            <path d="M40 28 L20 43" stroke="currentColor" stroke-width="2" opacity="0.7" />
+                            <path d="M40 28 L40 53" stroke="currentColor" stroke-width="2.5" opacity="0.9" />
+                            <path d="M40 28 L60 43" stroke="currentColor" stroke-width="2" opacity="0.7" />
+                            <circle cx="40" cy="28" r="3" fill="currentColor" />
                         </svg>
                     </div>
                     <div class="paper-content">
@@ -567,27 +624,31 @@
                     </div>
                     <div class="paper-arrow">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M5 12h14M12 5l7 7-7 7"/>
+                            <path d="M5 12h14M12 5l7 7-7 7" />
                         </svg>
                     </div>
                 </a>
 
                 <!-- Day 16: Order Matters (Seq2Seq for Sets) -->
-                <a href="https://github.com/Ojhaharsh/30u30/tree/main/papers/16_order_matters" target="_blank" class="paper-card" data-day="16" data-unit="transformers">
+                <a href="https://github.com/Ojhaharsh/30u30/tree/main/papers/16_order_matters" target="_blank"
+                    class="paper-card" data-day="16" data-unit="transformers">
                     <div class="paper-symbol">
                         <svg viewBox="0 0 80 80">
                             <!-- Set to sequence visualization -->
-                            <circle cx="20" cy="30" r="6" fill="currentColor" opacity="0.5"/>
-                            <circle cx="40" cy="25" r="6" fill="currentColor" opacity="0.5"/>
-                            <circle cx="60" cy="30" r="6" fill="currentColor" opacity="0.5"/>
-                            <circle cx="30" cy="45" r="6" fill="currentColor" opacity="0.5"/>
+                            <circle cx="20" cy="30" r="6" fill="currentColor" opacity="0.5" />
+                            <circle cx="40" cy="25" r="6" fill="currentColor" opacity="0.5" />
+                            <circle cx="60" cy="30" r="6" fill="currentColor" opacity="0.5" />
+                            <circle cx="30" cy="45" r="6" fill="currentColor" opacity="0.5" />
                             <!-- Sequence arrows -->
-                            <path d="M15 55 L20 30" stroke="currentColor" stroke-width="2.5" marker-end="url(#arrowhead)"/>
-                            <path d="M25 60 L40 25" stroke="currentColor" stroke-width="2.5" marker-end="url(#arrowhead)"/>
-                            <path d="M35 65 L30 45" stroke="currentColor" stroke-width="2.5" marker-end="url(#arrowhead)"/>
-                            <circle cx="15" cy="55" r="3" fill="#ff6b6b"/>
-                            <circle cx="25" cy="60" r="3" fill="#ff6b6b"/>
-                            <circle cx="35" cy="65" r="3" fill="#ff6b6b"/>
+                            <path d="M15 55 L20 30" stroke="currentColor" stroke-width="2.5"
+                                marker-end="url(#arrowhead)" />
+                            <path d="M25 60 L40 25" stroke="currentColor" stroke-width="2.5"
+                                marker-end="url(#arrowhead)" />
+                            <path d="M35 65 L30 45" stroke="currentColor" stroke-width="2.5"
+                                marker-end="url(#arrowhead)" />
+                            <circle cx="15" cy="55" r="3" fill="#ff6b6b" />
+                            <circle cx="25" cy="60" r="3" fill="#ff6b6b" />
+                            <circle cx="35" cy="65" r="3" fill="#ff6b6b" />
                         </svg>
                     </div>
                     <div class="paper-content">
@@ -601,24 +662,31 @@
                     </div>
                     <div class="paper-arrow">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M5 12h14M12 5l7 7-7 7"/>
+                            <path d="M5 12h14M12 5l7 7-7 7" />
                         </svg>
                     </div>
                 </a>
 
                 <!-- Day 17: Neural Turing Machines -->
-                <a href="https://github.com/Ojhaharsh/30u30/tree/main/papers/17_neural_turing_machines" target="_blank" class="paper-card" data-day="17" data-unit="specialized">
+                <a href="https://github.com/Ojhaharsh/30u30/tree/main/papers/17_neural_turing_machines" target="_blank"
+                    class="paper-card" data-day="17" data-unit="specialized">
                     <div class="paper-symbol">
                         <svg viewBox="0 0 80 80">
                             <!-- Memory bank + controller visualization -->
-                            <rect x="10" y="20" width="60" height="25" rx="3" fill="none" stroke="currentColor" stroke-width="2"/>
-                            <line x1="22" y1="20" x2="22" y2="45" stroke="currentColor" stroke-width="1.5" opacity="0.3"/>
-                            <line x1="34" y1="20" x2="34" y2="45" stroke="currentColor" stroke-width="1.5" opacity="0.3"/>
-                            <line x1="46" y1="20" x2="46" y2="45" stroke="currentColor" stroke-width="1.5" opacity="0.3"/>
-                            <line x1="58" y1="20" x2="58" y2="45" stroke="currentColor" stroke-width="1.5" opacity="0.3"/>
-                            <circle cx="40" cy="60" r="10" fill="none" stroke="currentColor" stroke-width="2.5"/>
-                            <path d="M40 50 L40 45" stroke="currentColor" stroke-width="2" marker-end="url(#arrowhead)"/>
-                            <circle cx="28" cy="32" r="3" fill="currentColor" opacity="0.8"/>
+                            <rect x="10" y="20" width="60" height="25" rx="3" fill="none" stroke="currentColor"
+                                stroke-width="2" />
+                            <line x1="22" y1="20" x2="22" y2="45" stroke="currentColor" stroke-width="1.5"
+                                opacity="0.3" />
+                            <line x1="34" y1="20" x2="34" y2="45" stroke="currentColor" stroke-width="1.5"
+                                opacity="0.3" />
+                            <line x1="46" y1="20" x2="46" y2="45" stroke="currentColor" stroke-width="1.5"
+                                opacity="0.3" />
+                            <line x1="58" y1="20" x2="58" y2="45" stroke="currentColor" stroke-width="1.5"
+                                opacity="0.3" />
+                            <circle cx="40" cy="60" r="10" fill="none" stroke="currentColor" stroke-width="2.5" />
+                            <path d="M40 50 L40 45" stroke="currentColor" stroke-width="2"
+                                marker-end="url(#arrowhead)" />
+                            <circle cx="28" cy="32" r="3" fill="currentColor" opacity="0.8" />
                         </svg>
                     </div>
                     <div class="paper-content">
@@ -632,22 +700,25 @@
                     </div>
                     <div class="paper-arrow">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M5 12h14M12 5l7 7-7 7"/>
+                            <path d="M5 12h14M12 5l7 7-7 7" />
                         </svg>
                     </div>
                 </a>
 
                 <!-- Day 18: Pointer Networks -->
-                <a href="https://github.com/Ojhaharsh/30u30/tree/main/papers/18_pointer_networks" target="_blank" class="paper-card" data-day="18" data-unit="specialized">
+                <a href="https://github.com/Ojhaharsh/30u30/tree/main/papers/18_pointer_networks" target="_blank"
+                    class="paper-card" data-day="18" data-unit="specialized">
                     <div class="paper-symbol">
                         <svg viewBox="0 0 80 80">
                             <!-- Pointer: input nodes with arrow pointing to one -->
-                            <circle cx="15" cy="25" r="6" fill="none" stroke="currentColor" stroke-width="2" opacity="0.5"/>
-                            <circle cx="40" cy="25" r="6" fill="none" stroke="currentColor" stroke-width="2" opacity="0.5"/>
-                            <circle cx="65" cy="25" r="6" fill="currentColor" opacity="0.8"/>
-                            <circle cx="40" cy="60" r="8" fill="none" stroke="currentColor" stroke-width="2.5"/>
-                            <path d="M40 52 L63 31" stroke="currentColor" stroke-width="2.5" opacity="0.8"/>
-                            <polygon points="63,31 56,30 59,36" fill="currentColor" opacity="0.8"/>
+                            <circle cx="15" cy="25" r="6" fill="none" stroke="currentColor" stroke-width="2"
+                                opacity="0.5" />
+                            <circle cx="40" cy="25" r="6" fill="none" stroke="currentColor" stroke-width="2"
+                                opacity="0.5" />
+                            <circle cx="65" cy="25" r="6" fill="currentColor" opacity="0.8" />
+                            <circle cx="40" cy="60" r="8" fill="none" stroke="currentColor" stroke-width="2.5" />
+                            <path d="M40 52 L63 31" stroke="currentColor" stroke-width="2.5" opacity="0.8" />
+                            <polygon points="63,31 56,30 59,36" fill="currentColor" opacity="0.8" />
                         </svg>
                     </div>
                     <div class="paper-content">
@@ -661,26 +732,57 @@
                     </div>
                     <div class="paper-arrow">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M5 12h14M12 5l7 7-7 7"/>
+                            <path d="M5 12h14M12 5l7 7-7 7" />
+                        </svg>
+                    </div>
+                </a>
+                <!-- Day 19: Relational Reasoning -->
+                <a href="https://github.com/Ojhaharsh/30u30/tree/main/papers/19_relational_reasoning" target="_blank"
+                    class="paper-card" data-day="19" data-unit="specialized">
+                    <div class="paper-symbol">
+                        <svg viewBox="0 0 80 80">
+                            <!-- Fully connected graph (Relation Network) -->
+                            <circle cx="40" cy="20" r="6" fill="currentColor" />
+                            <circle cx="20" cy="60" r="6" fill="currentColor" />
+                            <circle cx="60" cy="60" r="6" fill="currentColor" />
+                            <line x1="40" y1="20" x2="20" y2="60" stroke="currentColor" stroke-width="2" />
+                            <line x1="40" y1="20" x2="60" y2="60" stroke="currentColor" stroke-width="2" />
+                            <line x1="20" y1="60" x2="60" y2="60" stroke="currentColor" stroke-width="2" />
+                            <circle cx="40" cy="45" r="25" fill="none" stroke="currentColor" stroke-width="1.5"
+                                opacity="0.3" stroke-dasharray="4 2" />
+                        </svg>
+                    </div>
+                    <div class="paper-content">
+                        <span class="paper-day">Day 19</span>
+                        <h3>Relational Reasoning</h3>
+                        <p>Learning relationships between objects (Sort-of-CLEVR, Relation Networks)</p>
+                        <div class="paper-meta">
+                            <span class="meta-item"><i class="fas fa-code"></i> PyTorch</span>
+                            <span class="meta-item"><i class="fas fa-dumbbell"></i> 7 exercises</span>
+                        </div>
+                    </div>
+                    <div class="paper-arrow">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M5 12h14M12 5l7 7-7 7" />
                         </svg>
                     </div>
                 </a>
             </div>
-            
+
             <!-- Coming Soon -->
             <div class="papers-coming">
                 <h3>Coming Next</h3>
                 <div class="coming-grid">
                     <div class="coming-card">
-                        <span class="coming-day">Day 19</span>
-                        <span class="coming-title">Relational Reasoning</span>
+                        <span class="coming-day">Day 20</span>
+                        <span class="coming-title">Relational RNNs</span>
                     </div>
                     <div class="coming-card">
-                        <span class="coming-day">Day 20</span>
-                        <span class="coming-title">Knowledge Distillation</span>
+                        <span class="coming-day">Day 21</span>
+                        <span class="coming-title">Graph Neural Networks</span>
                     </div>
                     <div class="coming-card more">
-                        <span>+10 more</span>
+                        <span>+9 more</span>
                     </div>
                 </div>
             </div>
@@ -695,7 +797,7 @@
                 <h2 class="section-title">Your 30-Day Journey</h2>
                 <p class="section-desc">From sequence models to modern architectures — a complete curriculum.</p>
             </div>
-            
+
             <div class="timeline">
                 <div class="timeline-unit complete">
                     <div class="unit-marker">
@@ -718,7 +820,7 @@
                         </div>
                     </div>
                 </div>
-                
+
                 <div class="timeline-unit complete">
                     <div class="unit-marker">
                         <span class="unit-number">02</span>
@@ -739,7 +841,7 @@
                         </div>
                     </div>
                 </div>
-                
+
                 <div class="timeline-unit complete">
                     <div class="unit-marker">
                         <span class="unit-number">03</span>
@@ -759,7 +861,7 @@
                         </div>
                     </div>
                 </div>
-                
+
                 <div class="timeline-unit active">
                     <div class="unit-marker">
                         <span class="unit-number">04</span>
@@ -774,10 +876,11 @@
                         <div class="unit-papers">
                             <span>Neural Turing Machines</span>
                             <span>Pointer Networks</span>
+                            <span>Relational Reasoning</span>
                         </div>
                     </div>
                 </div>
-                
+
                 <div class="timeline-unit upcoming">
                     <div class="unit-marker">
                         <span class="unit-number">05</span>
@@ -791,7 +894,7 @@
                         <p>Days 22-27 · GANs, VAEs, diffusion, and scaling laws</p>
                     </div>
                 </div>
-                
+
                 <div class="timeline-unit upcoming">
                     <div class="unit-marker">
                         <span class="unit-number">06</span>
@@ -817,15 +920,16 @@
                     <span class="section-tag">Why 30u30</span>
                     <h2 class="section-title">Learn by Building</h2>
                     <p class="about-text">
-                        Every paper comes with complete, runnable implementations. 
-                        No "left as an exercise" — we build everything from scratch so you 
+                        Every paper comes with complete, runnable implementations.
+                        No "left as an exercise" — we build everything from scratch so you
                         truly understand how these systems work.
                     </p>
                     <div class="about-features">
                         <div class="feature">
                             <div class="feature-icon">
                                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/>
+                                    <path
+                                        d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z" />
                                 </svg>
                             </div>
                             <div class="feature-text">
@@ -836,9 +940,9 @@
                         <div class="feature">
                             <div class="feature-icon">
                                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <circle cx="12" cy="12" r="10"/>
-                                    <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/>
-                                    <line x1="12" y1="17" x2="12.01" y2="17"/>
+                                    <circle cx="12" cy="12" r="10" />
+                                    <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" />
+                                    <line x1="12" y1="17" x2="12.01" y2="17" />
                                 </svg>
                             </div>
                             <div class="feature-text">
@@ -849,9 +953,9 @@
                         <div class="feature">
                             <div class="feature-icon">
                                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <rect x="2" y="3" width="20" height="14" rx="2" ry="2"/>
-                                    <line x1="8" y1="21" x2="16" y2="21"/>
-                                    <line x1="12" y1="17" x2="12" y2="21"/>
+                                    <rect x="2" y="3" width="20" height="14" rx="2" ry="2" />
+                                    <line x1="8" y1="21" x2="16" y2="21" />
+                                    <line x1="12" y1="17" x2="12" y2="21" />
                                 </svg>
                             </div>
                             <div class="feature-text">
@@ -862,8 +966,8 @@
                         <div class="feature">
                             <div class="feature-icon">
                                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/>
-                                    <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>
+                                    <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" />
+                                    <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" />
                                 </svg>
                             </div>
                             <div class="feature-text">
@@ -953,17 +1057,18 @@
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>&copy; 2026 30u30 by Harsh Ojha. <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank" style="color: var(--color-primary);">CC BY-NC-ND 4.0</a> — Learn freely, but no copying or commercial use.</p>
+                <p>&copy; 2026 30u30 by Harsh Ojha. <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/"
+                        target="_blank" style="color: var(--color-primary);">CC BY-NC-ND 4.0</a> — Learn freely, but no
+                    copying or commercial use.</p>
             </div>
         </div>
     </footer>
 
     <script src="js/script.js"></script>
-    
+
     <!-- GoatCounter Analytics - Privacy-friendly visitor tracking -->
-    <script data-goatcounter="https://30u30.goatcounter.com/count"
-            async src="//gc.zgo.at/count.js"></script>
-    
+    <script data-goatcounter="https://30u30.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+
     <!-- Fetch and display analytics -->
     <script>
         // Fetch GoatCounter stats
@@ -981,7 +1086,7 @@
                 animateStatPlaceholders();
             }
         }
-        
+
         function animateStatPlaceholders() {
             // Animate placeholder numbers for visual appeal
             const stats = {
@@ -990,14 +1095,14 @@
                 pageViews: 3891,
                 liveVisitors: 3
             };
-            
+
             Object.keys(stats).forEach(id => {
                 const el = document.getElementById(id);
                 if (el) {
                     animateNumber(el, 0, stats[id], 2000);
                 }
             });
-            
+
             // Show sample countries
             const countries = ['🇮🇳 India', '🇺🇸 USA', '🇬🇧 UK', '🇩🇪 Germany', '🇨🇦 Canada', '🇦🇺 Australia', '🇫🇷 France', '🇯🇵 Japan', '🇧🇷 Brazil', '🇳🇱 Netherlands'];
             const container = document.getElementById('visitorCountries');
@@ -1005,7 +1110,7 @@
                 container.innerHTML = countries.map(c => `<span class="country-badge">${c}</span>`).join('');
             }
         }
-        
+
         function animateNumber(el, start, end, duration) {
             const startTime = performance.now();
             const update = (currentTime) => {
@@ -1018,11 +1123,12 @@
             };
             requestAnimationFrame(update);
         }
-        
+
         // Initialize on load
         document.addEventListener('DOMContentLoaded', () => {
             setTimeout(fetchAnalytics, 1000);
         });
     </script>
 </body>
+
 </html>
