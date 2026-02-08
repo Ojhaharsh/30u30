@@ -120,11 +120,17 @@
 - 5 exercises: addressing logic, circular convolution, memory updates  
 **[Start Day 17 →](papers/17_neural_turing_machines/)**
 
-**Day 18: "Pointer Networks"** 🆕
+**Day 18: "Pointer Networks"**
 - Networks that can "point" to their input (essential for combinatorial problems)
 - Laser pointer attention, sampling without replacement, combinatorial optimization
 - 5 exercises: pointer attention, convex hull formatting, TSP cost analysis  
 **[Start Day 18 →](papers/18_pointer_networks/)**
+
+**Day 19: "Relational Reasoning"** [NEW]
+- Pairwise object processing for VQA and physical reasoning
+- g_theta and f_phi modules, set-based inductive bias
+- 5 exercises: pair generation, sort-of-CLEVR logic, masking  
+**[Start Day 19 →](papers/19_relational_reasoning/)**
 
 ---
 
@@ -186,6 +192,7 @@ Each paper gets the full treatment:
 |-----|-------|--------|-------------|
 | 17 | [Neural Turing Machines](papers/17_neural_turing_machines/) | 🚀 **LIVE** | Differentiable external memory |
 | 18 | [Pointer Networks](papers/18_pointer_networks/) | 🚀 **LIVE** | Selecting input via attention |
+| 19 | [Relational Reasoning](papers/19_relational_reasoning/) | 🚀 **LIVE** | Pairwise object relations; g_theta & f_phi modules |
 
 ### Unit 5: Generative Models & Scaling (Days 22-27)
 *From theory to massive models*
@@ -292,7 +299,8 @@ MIT License - Free to use, learn, and share.
 → **[Day 14: The Annotated Transformer](papers/14_annotated_transformer/)**  
 → **[Day 15: Bahdanau Attention (NMT)](papers/15_bahdanau_attention/)**  
 → **[Day 16: Order Matters (Pointer Networks)](papers/16_order_matters/)**  
-→ **[Day 17: Neural Turing Machines](papers/17_neural_turing_machines/)**
-→ **[Day 18: Pointer Networks](papers/18_pointer_networks/)** 🆕 **← START HERE!**
+→ **[Day 17: Neural Turing Machines](papers/17_neural_turing_machines/)**  
+→ **[Day 18: Pointer Networks](papers/18_pointer_networks/)**  
+→ **[Day 19: Relational Reasoning](papers/19_relational_reasoning/)** 🆕 **← START HERE!**
 
 Let's build something amazing together! 🚀
