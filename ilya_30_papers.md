@@ -48,7 +48,10 @@ https://arxiv.org/abs/1405.6903
 **8. ImageNet Classification with Deep Convolutional Neural Networks (AlexNet)**  
 *Krizhevsky, Sutskever, Hinton (2012)*  
 The Big Bang of Deep Learning.  
+https://papers.nips.cc/paper/2012/hash/c399862d3b9d6b76c8436e924a68c45b-Abstract.html
+
 https://arxiv.org/abs/1211.5063
+
 
 **9. Deep Residual Learning for Image Recognition (ResNet)**  
 *He et al. (2015)*  

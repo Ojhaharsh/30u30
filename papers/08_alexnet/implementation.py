@@ -13,7 +13,7 @@ This implementation demonstrates:
 
 Author: 30u30 Project
 Based on: "ImageNet Classification with Deep Convolutional Neural Networks"
-         by Krizhevsky, Sutskever, Hinton (2012) - https://arxiv.org/abs/1211.5063
+         by Krizhevsky, Sutskever, Hinton (2012) - https://papers.nips.cc/paper/2012/hash/c399862d3b9d6b76c8436e924a68c45b-Abstract.html
 """
 
 import torch
