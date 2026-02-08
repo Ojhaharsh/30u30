@@ -11,7 +11,6 @@ A **Relation Network (RN)** is a set-processing module that forces a relational 
 ---
 
 ## Quick Start
-
 ```bash
 # Verify environment and permutation invariance
 python setup.py
@@ -107,10 +106,9 @@ pairs = torch.cat([objs_i, objs_j], dim=-1)
 |:---|:---|
 | `implementation.py` | Core RN class and pairwise broadcasting logic. |
 | `train_minimal.py` | Training CLI and relational task variants. |
-| `visualization.py` | g_theta heatmaps and spatial distribution plots. |
+| `visualization.py` | $g_{\theta}$ heatmaps and spatial distribution plots. |
 | `setup.py` | Architectural diagnostics and dependency checks. |
 
 ---
 
-**Previous:** [Day 18 - Pointer Networks](../18_pointer_networks/)  
 **Next:** [Day 20 - Relational Recurrent Neural Networks](../20_relational_rnn/)
