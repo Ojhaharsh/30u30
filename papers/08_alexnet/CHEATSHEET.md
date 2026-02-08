@@ -1,4 +1,4 @@
-# AlexNet Cheatsheet 📋
+# AlexNet Cheatsheet
 
 Quick reference for ImageNet Classification with Deep Convolutional Neural Networks
 
@@ -111,15 +111,17 @@ momentum = 0.9              # SGD momentum
 weight_decay = 0.0005       # L2 regularization
 batch_size = 128            # Mini-batch size
 epochs = 90                 # Training epochs
-lr_schedule = [30, 60]      # Decay at epochs 30, 60
+lr_decay_factor = 0.1       # Divide LR by 10 when val error plateaus
+lr_reductions = 3            # Paper reduced LR 3 times total (0.01 → 1e-5)
 ```
 
 ### Learning Rate Schedule
 ```python
-# Reduce LR by 10x at specific epochs
-if epoch in [30, 60]:
-    lr *= 0.1
-    optimizer = torch.optim.SGD(params, lr=lr)
+# Paper's approach: reduce LR by 10x when validation error stops improving
+# (NOT at fixed epochs — manually monitored during training)
+scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(
+    optimizer, mode='min', factor=0.1, patience=5
+)
 ```
 
 ### Data Augmentation Pipeline
@@ -239,10 +241,10 @@ if (i + 1) % accumulation_steps == 0:
 
 ## Performance Benchmarks
 
-### Original Results (2012)
-- **Top-1 Error**: 37.5% (ImageNet validation)
-- **Top-5 Error**: 17.0% (ImageNet validation)  
-- **Training Time**: 5-6 days on 2 GTX 580 GPUs
+### Original Results
+- **ILSVRC-2010** (single CNN, 10-crop): Top-1 Error 37.5%, Top-5 Error 17.0%
+- **ILSVRC-2012** (ensemble of 5 CNNs): Top-5 Error **15.3%** (won by 10.9% over 2nd place)
+- **Training Time**: 5-6 days on 2 GTX 580 3GB GPUs
 
 ### Modern Improvements
 ```python
@@ -335,4 +337,4 @@ def print_activation_stats(module, input, output):
 Today: Vision Transformers → Attention-based vision
 ```
 
-*AlexNet didn't just win a competition - it launched the deep learning revolution! 🚀*
+*AlexNet didn't just win a competition - it launched the deep learning revolution!*
