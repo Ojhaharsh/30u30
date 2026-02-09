@@ -146,17 +146,17 @@
 
             <div class="hero-stats">
                 <div class="stat">
-                    <span class="stat-value" data-count="20">0</span>
+                    <span class="stat-value">20</span>
                     <span class="stat-label">PAPERS LIVE</span>
                 </div>
                 <div class="stat-divider"></div>
                 <div class="stat">
-                    <span class="stat-value" data-count="200">0</span>
+                    <span class="stat-value">240+</span>
                     <span class="stat-label">ACTIVE USERS</span>
                 </div>
                 <div class="stat-divider"></div>
                 <div class="stat">
-                    <span class="stat-value" data-count="12">0</span>
+                    <span class="stat-value">13+</span>
                     <span class="stat-label">COUNTRIES</span>
                 </div>
                 <div class="stat-divider"></div>
@@ -1129,63 +1129,33 @@
     <script data-goatcounter="https://30u30.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
 
     <script>
-        // Fetch GoatCounter stats
-        async function fetchAnalytics() {
-            try {
-                // Using GoatCounter's public JSON API
-                const response = await fetch('https://30u30.goatcounter.com/counter/.json');
-                if (response.ok) {
-                    const data = await response.json();
-                    document.getElementById('visitorCount').textContent = data.count_unique || '0';
-                    document.getElementById('pageViews').textContent = data.count || '0';
-                }
-            } catch (e) {
-                // If API not available, show placeholder
-                animateStatPlaceholders();
-            }
-        }
+        document.addEventListener('DOMContentLoaded', () => {
+            const stats = document.querySelectorAll('.stat-value');
 
-        function animateStatPlaceholders() {
-            // Animate placeholder numbers for visual appeal
-            const stats = {
-                visitorCount: 200, // Updated to 200+
-                countryCount: 12,  // Updated to 12+
-                pageViews: 3891,
-                liveVisitors: 3
-            };
-
-            Object.keys(stats).forEach(id => {
-                const el = document.getElementById(id);
-                if (el) {
-                    animateNumber(el, 0, stats[id], 2000);
+            stats.forEach(stat => {
+                const rawText = stat.innerText;
+                const value = parseInt(rawText.replace(/,/g, ''));
+                const suffix = rawText.replace(/[0-9,\.]/g, '');
+                if (!isNaN(value)) {
+                    animateNumber(stat, 0, value, 2000, suffix);
                 }
             });
-
-            // Show sample countries
-            const countries = ['🇮🇳 India', '🇺🇸 USA', '🇬🇧 UK', '🇩🇪 Germany', '🇨🇦 Canada', '🇦🇺 Australia', '🇫🇷 France', '🇯🇵 Japan', '🇧🇷 Brazil', '🇳🇱 Netherlands'];
-            const container = document.getElementById('visitorCountries');
-            if (container) {
-                container.innerHTML = countries.map(c => `<span class="country-badge">${c}</span>`).join('');
-            }
-        }
-
-        function animateNumber(el, start, end, duration) {
+        });
+        function animateNumber(el, start, end, duration, suffix) {
             const startTime = performance.now();
             const update = (currentTime) => {
                 const elapsed = currentTime - startTime;
                 const progress = Math.min(elapsed / duration, 1);
                 const eased = 1 - Math.pow(1 - progress, 3);
+
                 const current = Math.floor(start + (end - start) * eased);
-                el.textContent = current.toLocaleString();
+
+                el.innerText = current.toLocaleString() + (suffix || '');
+
                 if (progress < 1) requestAnimationFrame(update);
             };
             requestAnimationFrame(update);
         }
-
-        // Initialize on load
-        document.addEventListener('DOMContentLoaded', () => {
-            setTimeout(fetchAnalytics, 1000);
-        });
     </script>
 </body>
 
