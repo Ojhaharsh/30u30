@@ -1,0 +1,4 @@
+torch>=1.9.0
+numpy>=1.20.0
+matplotlib>=3.4.0
+networkx>=2.6
