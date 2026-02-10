@@ -71,7 +71,8 @@ lstm_analysis/
 
 # Visualization outputs (keep examples, ignore generated)
 papers/*/visualizations/*.png
-papers/*/plots/*.png
+# Allow curated plots to be tracked (overrides training_*.png for plots/ dirs)
+!papers/*/plots/*.png
 
 # Day 16 specific (Pointer Networks generated files)
 papers/16_order_matters/checkpoints/

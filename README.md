@@ -8,7 +8,7 @@
 
 > Complete implementations • Interactive notebooks • Beginner-friendly • 100% Free
 
-## 🚀 Units 1-3 Complete! Now Starting Unit 4: The Transformer Era
+## 🚀 Units 1-3 Complete! Now in Unit 4: Specialized Architectures
 
 ### ✅ Unit 1: The Foundations (Days 1-7) - COMPLETE!
 
@@ -126,11 +126,23 @@
 - 5 exercises: pointer attention, convex hull formatting, TSP cost analysis  
 **[Start Day 18 →](papers/18_pointer_networks/)**
 
-**Day 19: "Relational Reasoning"** [NEW]
+**Day 19: "Relational Reasoning"**
 - Pairwise object processing for VQA and physical reasoning
 - g_theta and f_phi modules, set-based inductive bias
 - 5 exercises: pair generation, sort-of-CLEVR logic, masking  
 **[Start Day 19 →](papers/19_relational_reasoning/)**
+
+**Day 20: "Relational Recurrent Neural Networks"**
+- Multi-head dot-product attention inside a recurrent cell (MHDPA)
+- Relational memory core: memory slots interact via self-attention at each timestep
+- 5 exercises: memory attention, slot interactions, sequence modeling  
+**[Start Day 20 →](papers/20_Relational_RNNs/)**
+
+**Day 21: "Neural Message Passing for Quantum Chemistry"** [NEW]
+- Unifying framework for graph neural networks: message, update, readout
+- Edge networks, GRU update, Set2Set readout, QM9 benchmark
+- 5 exercises: message functions, graph construction, property prediction  
+**[Start Day 21 →](papers/21_Neural_Message_Passing/)**
 
 ---
 
@@ -193,6 +205,8 @@ Each paper gets the full treatment:
 | 17 | [Neural Turing Machines](papers/17_neural_turing_machines/) | 🚀 **LIVE** | Differentiable external memory |
 | 18 | [Pointer Networks](papers/18_pointer_networks/) | 🚀 **LIVE** | Selecting input via attention |
 | 19 | [Relational Reasoning](papers/19_relational_reasoning/) | 🚀 **LIVE** | Pairwise object relations; g_theta & f_phi modules |
+| 20 | [Relational RNNs](papers/20_Relational_RNNs/) | 🚀 **LIVE** | Self-attention inside recurrence |
+| 21 | [Neural Message Passing](papers/21_Neural_Message_Passing/) | 🚀 **LIVE** | MPNN framework for graph neural networks |
 
 ### Unit 5: Generative Models & Scaling (Days 22-27)
 *From theory to massive models*
@@ -301,6 +315,8 @@ MIT License - Free to use, learn, and share.
 → **[Day 16: Order Matters (Pointer Networks)](papers/16_order_matters/)**  
 → **[Day 17: Neural Turing Machines](papers/17_neural_turing_machines/)**  
 → **[Day 18: Pointer Networks](papers/18_pointer_networks/)**  
-→ **[Day 19: Relational Reasoning](papers/19_relational_reasoning/)** 🆕 **← START HERE!**
+→ **[Day 19: Relational Reasoning](papers/19_relational_reasoning/)**  
+→ **[Day 20: Relational RNNs](papers/20_Relational_RNNs/)**  
+→ **[Day 21: Neural Message Passing](papers/21_Neural_Message_Passing/)** 🆕 **← START HERE!**
 
 Let's build something amazing together! 🚀
