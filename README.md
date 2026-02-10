@@ -1,12 +1,19 @@
 # 30u30: Master Ilya's 30 Foundational AI Papers in 30 Days
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Python 3.8+](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/)
-[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md)
+[![License: CC BY-NC-ND 4.0](https://img.shields.io/badge/License-CC%20BY--NC--ND%204.0-lightgrey.svg?style=for-the-badge)](https://creativecommons.org/licenses/by-nc-nd/4.0/)
+[![Python 3.8+](https://img.shields.io/badge/python-3.8+-blue.svg?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org/downloads/)
+[![GitHub stars](https://img.shields.io/github/stars/Ojhaharsh/30u30?style=for-the-badge&logo=github)](https://github.com/Ojhaharsh/30u30)
+[![Website](https://img.shields.io/badge/Website-30u30-blue?style=for-the-badge&logo=googlechrome&logoColor=white)](https://ojhaharsh.github.io/30u30/)
 
 > *"If you really learn all of these, you'll know 90% of what matters today"* - Ilya Sutskever
 
 > Complete implementations • Interactive notebooks • Beginner-friendly • 100% Free
+
+**30u30 is an open-source study guide that takes you through the 30 foundational AI papers recommended by Ilya Sutskever — one paper per day.** 
+Each paper comes with a full implementation from scratch, detailed notes, interactive exercises with solutions, and visualizations.  
+Think of it as [Rustlings](https://github.com/rust-lang/rustlings), but for deep learning fundamentals. You read the paper, understand the math, and build it yourself.
+
+---
 
 ## 🚀 Units 1-3 Complete! Now in Unit 4: Specialized Architectures
 
@@ -277,7 +284,7 @@ Every contribution helps thousands of learners.
 
 ## 📜 License
 
-MIT License - Free to use, learn, and share.
+CC BY-NC-ND 4.0 — Free to read, learn, and share with attribution. Not for commercial use.
 
 ## 🙏 Acknowledgments
 
