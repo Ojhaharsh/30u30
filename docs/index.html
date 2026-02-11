@@ -111,7 +111,7 @@
 
             <div class="hero-badge">
                 <span class="badge-dot"></span>
-                <span>22 Papers Live • Open Source</span>
+                <span>23 Papers Live • Open Source</span>
             </div>
 
             <h1 class="hero-title">
@@ -157,12 +157,12 @@
 
             <div class="hero-stats">
                 <div class="stat">
-                    <span class="stat-value">22</span>
+                    <span class="stat-value">23</span>
                     <span class="stat-label">PAPERS LIVE</span>
                 </div>
                 <div class="stat-divider"></div>
                 <div class="stat">
-                    <span class="stat-value">280+</span>
+                    <span class="stat-value">300+</span>
                     <span class="stat-label">ACTIVE USERS</span>
                 </div>
                 <div class="stat-divider"></div>
@@ -172,7 +172,7 @@
                 </div>
                 <div class="stat-divider"></div>
                 <div class="stat">
-                    <span class="stat-value">29K+</span>
+                    <span class="stat-value">31K+</span>
                     <span class="stat-label">LINES OF CODE</span>
                 </div>
             </div>
@@ -213,7 +213,7 @@
         <div class="container">
             <div class="section-header">
                 <span class="section-tag">The Collection</span>
-                <h2 class="section-title">22 Papers, Fully Implemented</h2>
+                <h2 class="section-title">23 Papers, Fully Implemented</h2>
                 <p class="section-desc">Each paper comes with deep explanations, clean code, visualizations, and
                     exercises. Click any card to explore.</p>
             </div>
@@ -224,6 +224,7 @@
                 <button class="filter-btn" data-filter="vision">Vision</button>
                 <button class="filter-btn" data-filter="transformers">Transformers</button>
                 <button class="filter-btn" data-filter="specialized">Specialized</button>
+                <button class="filter-btn" data-filter="generative">Generative</button>
             </div>
 
             <div class="papers-grid">
@@ -920,6 +921,40 @@
                         </svg>
                     </div>
                 </a>
+
+                <a href="https://github.com/Ojhaharsh/30u30/tree/main/papers/23_variational_lossy_autoencoder"
+                    target="_blank" class="paper-card" data-day="23" data-unit="generative">
+                    <div class="paper-symbol">
+                        <svg viewBox="0 0 80 80">
+                            <!-- Latent Code Z -->
+                            <circle cx="40" cy="25" r="10" fill="none" stroke="currentColor" stroke-width="2" />
+                            <text x="40" y="29" text-anchor="middle" font-size="12" fill="currentColor"
+                                font-weight="bold">z</text>
+                            <!-- Decoder Grid -->
+                            <rect x="25" y="45" width="30" height="20" rx="2" fill="none" stroke="currentColor"
+                                stroke-width="2" opacity="0.6" />
+                            <!-- Connection (Information Flow) -->
+                            <line x1="40" y1="35" x2="40" y2="45" stroke="currentColor" stroke-width="2"
+                                stroke-dasharray="3 3" />
+                            <!-- Receptive Field Limit -->
+                            <rect x="38" y="52" width="4" height="4" fill="currentColor" opacity="0.9" />
+                        </svg>
+                    </div>
+                    <div class="paper-content">
+                        <span class="paper-day">Day 23</span>
+                        <h3>Variational Lossy Autoencoder</h3>
+                        <p>Solving posterior collapse by limiting the decoder's receptive field</p>
+                        <div class="paper-meta">
+                            <span class="meta-item"><i class="fas fa-code"></i> PyTorch</span>
+                            <span class="meta-item"><i class="fas fa-dumbbell"></i> 5 exercises</span>
+                        </div>
+                    </div>
+                    <div class="paper-arrow">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M5 12h14M12 5l7 7-7 7" />
+                        </svg>
+                    </div>
+                </a>
             </div>
 
             <div class="papers-coming">
@@ -927,19 +962,20 @@
                 <div class="coming-grid">
 
                     <div class="coming-card">
-                        <span class="coming-day">Day 23</span>
-                        <span class="coming-title">Variational Lossy Autoencoder</span>
-                    </div>
-                    <div class="coming-card">
                         <span class="coming-day">Day 24</span>
                         <span class="coming-title">GPipe</span>
                     </div>
+                    <div class="coming-card">
+                        <span class="coming-day">Day 25</span>
+                        <span class="coming-title">Scaling Laws for Neural Language Models</span>
+                    </div>
 
                     <div class="coming-card more">
-                        <span>+6 more</span>
+                        <span>+5 more</span>
                     </div>
                 </div>
             </div>
+        </div>
         </div>
     </section>
 
@@ -1015,7 +1051,7 @@
                     </div>
                 </div>
 
-                <div class="timeline-unit active">
+                <div class="timeline-unit complete">
                     <div class="unit-marker">
                         <span class="unit-number">04</span>
                         <div class="unit-line"></div>
@@ -1023,7 +1059,7 @@
                     <div class="unit-content">
                         <div class="unit-header">
                             <h3>Specialized Architectures</h3>
-                            <span class="unit-status active">In Progress</span>
+                            <span class="unit-status complete">Complete</span>
                         </div>
                         <p>Days 17-22 · Memory networks, graphs, reasoning, and speech</p>
                         <div class="unit-papers">
@@ -1037,7 +1073,7 @@
                     </div>
                 </div>
 
-                <div class="timeline-unit upcoming">
+                <div class="timeline-unit active">
                     <div class="unit-marker">
                         <span class="unit-number">05</span>
                         <div class="unit-line"></div>
@@ -1045,9 +1081,12 @@
                     <div class="unit-content">
                         <div class="unit-header">
                             <h3>Generative Models & Scale</h3>
-                            <span class="unit-status upcoming">Coming</span>
+                            <span class="unit-status active">In Progress</span>
                         </div>
                         <p>Days 23-28 · GANs, VAEs, diffusion, and scaling laws</p>
+                        <div class="unit-papers">
+                            <span>VLAE</span>
+                        </div>
                     </div>
                 </div>
 

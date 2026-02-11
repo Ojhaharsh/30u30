@@ -15,7 +15,7 @@ Think of it as [Rustlings](https://github.com/rust-lang/rustlings), but for deep
 
 ---
 
-## 🚀 Units 1-3 Complete! Now in Unit 4: Specialized Architectures
+## 🚀 Units 1-4 Complete! Now in Unit 5: Generative Models & Scaling
 
 ### ✅ Unit 1: The Foundations (Days 1-7) - COMPLETE!
 
@@ -119,7 +119,7 @@ Think of it as [Rustlings](https://github.com/rust-lang/rustlings), but for deep
 - 5 exercises: pointer attention, set encoder, sorting, convex hull, TSP  
 **[Start Day 16 →](papers/16_order_matters/)**
 
-### 🧠 Unit 4: Specialized Architectures - STARTING NOW!
+### ✅ Unit 4: Specialized Architectures (Days 17-22) - COMPLETE!
 
 **Day 17: "Neural Turing Machines"**
 - Differentiable external memory for neural networks
@@ -151,11 +151,19 @@ Think of it as [Rustlings](https://github.com/rust-lang/rustlings), but for deep
 - 5 exercises: message functions, graph construction, property prediction  
 **[Start Day 21 →](papers/21_Neural_Message_Passing/)**
 
-**Day 22: "Deep Speech 2: End-to-End Speech Recognition"** [NEW]
+**Day 22: "Deep Speech 2: End-to-End Speech Recognition"**
 - End-to-end speech recognition replacing traditional ASR pipelines
 - Conv + bidirectional GRU + CTC loss, sequence-wise BatchNorm, SortaGrad
 - 5 exercises: spectrogram features, CTC decoding, RNN BatchNorm, curriculum learning, full pipeline  
 **[Start Day 22 →](papers/22_deep_speech_2/)**
+
+### 🧠 Unit 5: Generative Models & Scaling (Days 23-27) - STARTING NOW!
+
+**Day 23: "Variational Lossy Autoencoder"**
+- Curing posterior collapse in VAEs with powerful decoders
+- Restricted receptive field (PixelCNN) + Inverse Autoregressive Flows (IAF)
+- 5 exercises: from masked convolutions to full flow priors   
+**[Start Day 23 →](papers/23_variational_lossy_autoencoder/)**
 
 ---
 
@@ -210,7 +218,7 @@ Each paper gets the full treatment:
 | 15 | [Bahdanau Attention (NMT)](papers/15_bahdanau_attention/) | 🚀 **LIVE** | Original attention mechanism |
 | 16 | [Order Matters (Pointer Networks)](papers/16_order_matters/) | 🚀 **LIVE** | Set-to-sequence problems |
 
-### Unit 4: Specialized Architectures (Days 17-21) - 🔥 IN PROGRESS
+### ✅ Unit 4: Specialized Architectures (Days 17-22) - COMPLETE
 *Memory, graphs, and reasoning*
 
 | Day | Paper | Status | Core Concept |
@@ -222,9 +230,14 @@ Each paper gets the full treatment:
 | 21 | [Neural Message Passing](papers/21_Neural_Message_Passing/) | 🚀 **LIVE** | MPNN framework for graph neural networks |
 | 22 | [Deep Speech 2](papers/22_deep_speech_2/) | 🚀 **LIVE** | End-to-end speech recognition with CTC |
 
-### Unit 5: Generative Models & Scaling (Days 23-27)
+### Unit 5: Generative Models & Scaling (Days 23-27) - 🔥 IN PROGRESS
 *From theory to massive models*
-- GANs, VAEs, diffusion models, scaling laws
+
+| Day | Paper | Status | Core Concept |
+|-----|-------|--------|-------------|
+| 23 | [Variational Lossy Autoencoder](papers/23_variational_lossy_autoencoder/) | 🚀 **LIVE** | Curing posterior collapse with IAF |
+| 24 | [GPipe: Efficient Training of Giant Neural Networks](papers/24_gpipe/) | ⏳ Coming | Pipeline parallelism |
+| 25 | [Scaling Laws for Neural Language Models](papers/25_scaling_laws/) | ⏳ Coming | The physics of AI scaling |
 
 ### Modern Extensions (Days 28-30)
 *RLHF and the path to ChatGPT*
@@ -332,6 +345,7 @@ CC BY-NC-ND 4.0 — Free to read, learn, and share with attribution. Not for com
 → **[Day 19: Relational Reasoning](papers/19_relational_reasoning/)**  
 → **[Day 20: Relational RNNs](papers/20_Relational_RNNs/)**  
 → **[Day 21: Neural Message Passing](papers/21_Neural_Message_Passing/)**  
-→ **[Day 22: Deep Speech 2](papers/22_deep_speech_2/)** 🆕 **← START HERE!**
+→ **[Day 22: Deep Speech 2](papers/22_deep_speech_2/)**  
+→ **[Day 23: Variational Lossy Autoencoder](papers/23_variational_lossy_autoencoder/)** 🆕 **← START HERE!**
 
 Let's build something amazing together! 🚀
