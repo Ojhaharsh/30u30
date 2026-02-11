@@ -145,11 +145,17 @@ Think of it as [Rustlings](https://github.com/rust-lang/rustlings), but for deep
 - 5 exercises: memory attention, slot interactions, sequence modeling  
 **[Start Day 20 →](papers/20_Relational_RNNs/)**
 
-**Day 21: "Neural Message Passing for Quantum Chemistry"** [NEW]
+**Day 21: "Neural Message Passing for Quantum Chemistry"**
 - Unifying framework for graph neural networks: message, update, readout
 - Edge networks, GRU update, Set2Set readout, QM9 benchmark
 - 5 exercises: message functions, graph construction, property prediction  
 **[Start Day 21 →](papers/21_Neural_Message_Passing/)**
+
+**Day 22: "Deep Speech 2: End-to-End Speech Recognition"** [NEW]
+- End-to-end speech recognition replacing traditional ASR pipelines
+- Conv + bidirectional GRU + CTC loss, sequence-wise BatchNorm, SortaGrad
+- 5 exercises: spectrogram features, CTC decoding, RNN BatchNorm, curriculum learning, full pipeline  
+**[Start Day 22 →](papers/22_deep_speech_2/)**
 
 ---
 
@@ -214,8 +220,9 @@ Each paper gets the full treatment:
 | 19 | [Relational Reasoning](papers/19_relational_reasoning/) | 🚀 **LIVE** | Pairwise object relations; g_theta & f_phi modules |
 | 20 | [Relational RNNs](papers/20_Relational_RNNs/) | 🚀 **LIVE** | Self-attention inside recurrence |
 | 21 | [Neural Message Passing](papers/21_Neural_Message_Passing/) | 🚀 **LIVE** | MPNN framework for graph neural networks |
+| 22 | [Deep Speech 2](papers/22_deep_speech_2/) | 🚀 **LIVE** | End-to-end speech recognition with CTC |
 
-### Unit 5: Generative Models & Scaling (Days 22-27)
+### Unit 5: Generative Models & Scaling (Days 23-27)
 *From theory to massive models*
 - GANs, VAEs, diffusion models, scaling laws
 
@@ -324,6 +331,7 @@ CC BY-NC-ND 4.0 — Free to read, learn, and share with attribution. Not for com
 → **[Day 18: Pointer Networks](papers/18_pointer_networks/)**  
 → **[Day 19: Relational Reasoning](papers/19_relational_reasoning/)**  
 → **[Day 20: Relational RNNs](papers/20_Relational_RNNs/)**  
-→ **[Day 21: Neural Message Passing](papers/21_Neural_Message_Passing/)** 🆕 **← START HERE!**
+→ **[Day 21: Neural Message Passing](papers/21_Neural_Message_Passing/)**  
+→ **[Day 22: Deep Speech 2](papers/22_deep_speech_2/)** 🆕 **← START HERE!**
 
 Let's build something amazing together! 🚀
