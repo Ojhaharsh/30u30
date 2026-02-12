@@ -115,5 +115,5 @@ python train_minimal.py --epochs 10 --use-flow
 
 ---
 
-**Previous:** [Day 22 — VQ-VAE](../22_VQ_VAE/)  
+**Previous:** [Day 22-DeepSpeech2](../22_deep_speech_2/)
 **Next:** [Day 24 — GPipe](../24_GPipe/)
