@@ -165,6 +165,12 @@ Think of it as [Rustlings](https://github.com/rust-lang/rustlings), but for deep
 - 5 exercises: from masked convolutions to full flow priors   
 **[Start Day 23 →](papers/23_variational_lossy_autoencoder/)**
 
+**Day 24: "GPipe: Efficient Training of Giant Neural Networks"**
+- Pipeline parallelism + micro-batching + activation checkpointing
+- Training giant 6B+ parameter models on limited hardware
+- 5 exercises: from micro-batching to full pipeline integration
+**[Start Day 24 →](papers/24_gpipe/)**
+
 ---
 
 ## 🎯 Mission
@@ -236,7 +242,7 @@ Each paper gets the full treatment:
 | Day | Paper | Status | Core Concept |
 |-----|-------|--------|-------------|
 | 23 | [Variational Lossy Autoencoder](papers/23_variational_lossy_autoencoder/) | 🚀 **LIVE** | Curing posterior collapse with IAF |
-| 24 | [GPipe: Efficient Training of Giant Neural Networks](papers/24_gpipe/) | ⏳ Coming | Pipeline parallelism |
+| 24 | [GPipe: Efficient Training of Giant Neural Networks](papers/24_gpipe/) | 🚀 **LIVE** | Pipeline parallelism |
 | 25 | [Scaling Laws for Neural Language Models](papers/25_scaling_laws/) | ⏳ Coming | The physics of AI scaling |
 
 ### Modern Extensions (Days 28-30)
@@ -346,6 +352,7 @@ CC BY-NC-ND 4.0 — Free to read, learn, and share with attribution. Not for com
 → **[Day 20: Relational RNNs](papers/20_Relational_RNNs/)**  
 → **[Day 21: Neural Message Passing](papers/21_Neural_Message_Passing/)**  
 → **[Day 22: Deep Speech 2](papers/22_deep_speech_2/)**  
-→ **[Day 23: Variational Lossy Autoencoder](papers/23_variational_lossy_autoencoder/)** 🆕 **← START HERE!**
+→ **[Day 23: Variational Lossy Autoencoder](papers/23_variational_lossy_autoencoder/)**  
+→ **[Day 24: GPipe (Giant Neural Networks)](papers/24_gpipe/)** 🆕 **← START HERE!**
 
 Let's build something amazing together! 🚀
