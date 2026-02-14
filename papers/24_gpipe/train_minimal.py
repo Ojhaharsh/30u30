@@ -42,7 +42,7 @@ def main():
     
     # Setup Log Header
     print("\n" + "+" + "-"*58 + "+")
-    print(f"|{'GPIPE GOLD STANDARD BENCHMARK':^58}|")
+    print(f"|{'GPIPE STANDARD BENCHMARK':^58}|")
     print("+" + "-"*58 + "+")
     print(f"  Device: {str(device).upper()}")
     print(f"  Model:  {args.layers} Layers, {args.hidden_dim} Hidden Dim")
