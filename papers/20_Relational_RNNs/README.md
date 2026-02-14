@@ -65,7 +65,7 @@ The **Relational Memory Core (RMC)** consists of three main parts:
 
 ---
 
-## Gold Standard Update: Baseline & Visualization
+## Baseline & Visualization
 
 We now include a rigorous comparison against a standard **LSTM baseline** to demonstrate the "Relational Gap".
 

@@ -168,8 +168,14 @@ Think of it as [Rustlings](https://github.com/rust-lang/rustlings), but for deep
 **Day 24: "GPipe: Efficient Training of Giant Neural Networks"**
 - Pipeline parallelism + micro-batching + activation checkpointing
 - Training giant 6B+ parameter models on limited hardware
-- 5 exercises: from micro-batching to full pipeline integration
+- 5 exercises: from micro-batching to full pipeline integration  
 **[Start Day 24 →](papers/24_gpipe/)**
+
+**Day 25: "Scaling Laws for Neural Language Models"**
+- The power-law relationships between model size, compute, and performance
+- Scaling compute budget vs. model size vs. dataset size
+- 5 exercises: scaling law calculations, compute-optimal training, dataset scaling  
+**[Start Day 25 →](papers/25_scaling_laws/)**
 
 ---
 
@@ -236,16 +242,19 @@ Each paper gets the full treatment:
 | 21 | [Neural Message Passing](papers/21_Neural_Message_Passing/) | 🚀 **LIVE** | MPNN framework for graph neural networks |
 | 22 | [Deep Speech 2](papers/22_deep_speech_2/) | 🚀 **LIVE** | End-to-end speech recognition with CTC |
 
-### Unit 5: Generative Models & Scaling (Days 23-27) - 🔥 IN PROGRESS
+### Unit 5: Generative Models & Scaling (Days 23-28) - 🔥 IN PROGRESS
 *From theory to massive models*
 
 | Day | Paper | Status | Core Concept |
 |-----|-------|--------|-------------|
 | 23 | [Variational Lossy Autoencoder](papers/23_variational_lossy_autoencoder/) | 🚀 **LIVE** | Curing posterior collapse with IAF |
 | 24 | [GPipe: Efficient Training of Giant Neural Networks](papers/24_gpipe/) | 🚀 **LIVE** | Pipeline parallelism |
-| 25 | [Scaling Laws for Neural Language Models](papers/25_scaling_laws/) | ⏳ Coming | The physics of AI scaling |
+| 25 | [Scaling Laws for Neural Language Models](papers/25_scaling_laws/) | 🚀 **LIVE** | The physics of AI scaling |
+| 26 | [Kolmogorov Complexity and Algorithmic Randomness](papers/26_KCA_Randomness/) | ⏳ Coming | Math of compression & randomness |
+| 27 | [Machine Super Intelligence (Shane Legg)](papers/27_MSI/) | ⏳ Coming | Safety & intelligence definitions |
 
-### Modern Extensions (Days 28-30)
+
+### Modern Extensions (Days 29-30)
 *RLHF and the path to ChatGPT*
 - Reinforcement learning from human feedback, instruction tuning, alignment
 
@@ -353,6 +362,7 @@ CC BY-NC-ND 4.0 — Free to read, learn, and share with attribution. Not for com
 → **[Day 21: Neural Message Passing](papers/21_Neural_Message_Passing/)**  
 → **[Day 22: Deep Speech 2](papers/22_deep_speech_2/)**  
 → **[Day 23: Variational Lossy Autoencoder](papers/23_variational_lossy_autoencoder/)**  
-→ **[Day 24: GPipe (Giant Neural Networks)](papers/24_gpipe/)** 🆕 **← START HERE!**
+→ **[Day 24: GPipe (Giant Neural Networks)](papers/24_gpipe/)**  
+→ **[Day 25: Scaling Laws for Neural Language Models](papers/25_scaling_laws/)** 🆕 **← START HERE!**
 
 Let's build something amazing together! 🚀

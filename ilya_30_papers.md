@@ -198,6 +198,16 @@ https://cdn.openai.com/better-language-models/language_models_are_unsupervised_m
 Scale is all you need. 175B parameters, emergent abilities, and in-context learning.  
 https://arxiv.org/abs/2005.14165
 
+**Bonus 4: Training Compute-Optimal Large Language Models (Chinchilla)**  
+*Hoffmann et al., DeepMind (2022)*  
+Finding the correct balance between model size and data.  
+https://arxiv.org/abs/2203.15556
+
+**Bonus 5: Outrageously Large Neural Networks: The Sparsely-Gated Mixture-of-Experts Layer (MoE)**  
+*Shazeer et al. (2017)*  
+The foundation of modern sparsely activated models.  
+https://arxiv.org/abs/1701.06538
+
 ---
 
 ## Additional Resources

@@ -13,7 +13,7 @@ accelerator's memory. We solve this by:
 
 Reference: https://arxiv.org/abs/1811.06965
 
-Author: 30u30 Project (Gold Standard Implementation)
+Author: 30u30 Project
 """
 
 import torch
