@@ -1,0 +1,1 @@
+The quick brown fox jumps over the lazy dog. Scaling laws are the physics of language models. Larger models learn faster and reach lower loss. Scaling $N, D, C$ is the path to artificial general intelligence. Compute is the bottleneck. Data is the fuel. Parameters are the engine. The three walls of scaling: data, compute, and precision.
