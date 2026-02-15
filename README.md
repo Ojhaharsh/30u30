@@ -177,6 +177,12 @@ Think of it as [Rustlings](https://github.com/rust-lang/rustlings), but for deep
 - 5 exercises: scaling law calculations, compute-optimal training, dataset scaling  
 **[Start Day 25 →](papers/25_scaling_laws/)**
 
+**Day 26: "Kolmogorov Complexity and Algorithmic Randomness"**
+- The mathematical bedrock of information theory: Compression = Intelligence
+- From-scratch implementation of Huffman and Arithmetic coding
+- 5 exercises: entropy comparison, NCD similarity clustering, and incompressibility  
+**[Start Day 26 →](papers/26_kolmogorov_complexity/)**
+
 ---
 
 ## 🎯 Mission
@@ -250,8 +256,9 @@ Each paper gets the full treatment:
 | 23 | [Variational Lossy Autoencoder](papers/23_variational_lossy_autoencoder/) | 🚀 **LIVE** | Curing posterior collapse with IAF |
 | 24 | [GPipe: Efficient Training of Giant Neural Networks](papers/24_gpipe/) | 🚀 **LIVE** | Pipeline parallelism |
 | 25 | [Scaling Laws for Neural Language Models](papers/25_scaling_laws/) | 🚀 **LIVE** | The physics of AI scaling |
-| 26 | [Kolmogorov Complexity and Algorithmic Randomness](papers/26_KCA_Randomness/) | ⏳ Coming | Math of compression & randomness |
+| 26 | [Kolmogorov Complexity](papers/26_kolmogorov_complexity/) | 🚀 **LIVE** | Math of compression & randomness |
 | 27 | [Machine Super Intelligence (Shane Legg)](papers/27_MSI/) | ⏳ Coming | Safety & intelligence definitions |
+| 28 | [CS231n: CNNs for Visual Recognition](papers/28_cs231n/) | ⏳ Coming | Deep Vision & Neural Training |
 
 
 ### Modern Extensions (Days 29-30)
@@ -363,6 +370,7 @@ CC BY-NC-ND 4.0 — Free to read, learn, and share with attribution. Not for com
 → **[Day 22: Deep Speech 2](papers/22_deep_speech_2/)**  
 → **[Day 23: Variational Lossy Autoencoder](papers/23_variational_lossy_autoencoder/)**  
 → **[Day 24: GPipe (Giant Neural Networks)](papers/24_gpipe/)**  
-→ **[Day 25: Scaling Laws for Neural Language Models](papers/25_scaling_laws/)** 🆕 **← START HERE!**
+→ **[Day 25: Scaling Laws for Neural Language Models](papers/25_scaling_laws/)**  
+→ **[Day 26: Kolmogorov Complexity](papers/26_kolmogorov_complexity/)** 🆕 **← START HERE!**
 
 Let's build something amazing together! 🚀
