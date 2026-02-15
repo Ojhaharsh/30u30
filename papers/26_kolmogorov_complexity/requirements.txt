@@ -1,0 +1,13 @@
+# Day 26: Kolmogorov Complexity - Requirements
+# ==========================================
+
+# Core dependencies
+numpy>=1.21.0
+matplotlib>=3.4.0
+
+# For notebooks
+jupyter>=1.0.0
+ipykernel>=6.0.0
+
+# Optional: Better visualizations
+seaborn>=0.11.0
