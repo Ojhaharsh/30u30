@@ -1,0 +1,9 @@
+# Day 27: Machine Super Intelligence | Dependencies
+# Part of the 30u30 Project | Shane Legg (2008)
+
+numpy>=1.20.0
+matplotlib>=3.3.0
+
+# Optional for notebook interaction
+jupyter>=1.0.0
+ipykernel>=6.0.0
