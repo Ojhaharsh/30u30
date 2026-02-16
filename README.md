@@ -183,6 +183,12 @@ Think of it as [Rustlings](https://github.com/rust-lang/rustlings), but for deep
 - 5 exercises: entropy comparison, NCD similarity clustering, and incompressibility  
 **[Start Day 26 →](papers/26_kolmogorov_complexity/)**
 
+**Day 27: "Machine Super Intelligence (Shane Legg)"**
+- Universal Intelligence (Υ), Kolmogorov Complexity proxies, and the Agent-Environment loop
+- Formal benchmarking of Random vs. RL vs. Predictive agents
+- 5 exercises on Upsilon calculation, environment design, and complexity invariance
+**[Start Day 27 →](papers/27_MSI/)**
+
 ---
 
 ## 🎯 Mission
@@ -257,7 +263,7 @@ Each paper gets the full treatment:
 | 24 | [GPipe: Efficient Training of Giant Neural Networks](papers/24_gpipe/) | 🚀 **LIVE** | Pipeline parallelism |
 | 25 | [Scaling Laws for Neural Language Models](papers/25_scaling_laws/) | 🚀 **LIVE** | The physics of AI scaling |
 | 26 | [Kolmogorov Complexity](papers/26_kolmogorov_complexity/) | 🚀 **LIVE** | Math of compression & randomness |
-| 27 | [Machine Super Intelligence (Shane Legg)](papers/27_MSI/) | ⏳ Coming | Safety & intelligence definitions |
+| 27 | [Machine Super Intelligence](papers/27_MSI/) | 🚀 **LIVE** | Safety & intelligence definitions |
 | 28 | [CS231n: CNNs for Visual Recognition](papers/28_cs231n/) | ⏳ Coming | Deep Vision & Neural Training |
 
 
@@ -371,6 +377,7 @@ CC BY-NC-ND 4.0 — Free to read, learn, and share with attribution. Not for com
 → **[Day 23: Variational Lossy Autoencoder](papers/23_variational_lossy_autoencoder/)**  
 → **[Day 24: GPipe (Giant Neural Networks)](papers/24_gpipe/)**  
 → **[Day 25: Scaling Laws for Neural Language Models](papers/25_scaling_laws/)**  
-→ **[Day 26: Kolmogorov Complexity](papers/26_kolmogorov_complexity/)** 🆕 **← START HERE!**
+→ **[Day 26: Kolmogorov Complexity](papers/26_kolmogorov_complexity/)**  
+→ **[Day 27: Machine Super Intelligence](papers/27_MSI/)** 🆕 **← START HERE!**
 
 Let's build something amazing together! 🚀
