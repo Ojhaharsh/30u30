@@ -157,7 +157,7 @@ Think of it as [Rustlings](https://github.com/rust-lang/rustlings), but for deep
 - 5 exercises: spectrogram features, CTC decoding, RNN BatchNorm, curriculum learning, full pipeline  
 **[Start Day 22 →](papers/22_deep_speech_2/)**
 
-### 🧠 Unit 5: Generative Models & Scaling (Days 23-27) - STARTING NOW!
+### 🧠 Unit 5: Generative Models & Scaling (Days 23-28) - IN PROGRESS!
 
 **Day 23: "Variational Lossy Autoencoder"**
 - Curing posterior collapse in VAEs with powerful decoders
@@ -188,6 +188,12 @@ Think of it as [Rustlings](https://github.com/rust-lang/rustlings), but for deep
 - Formal benchmarking of Random vs. RL vs. Predictive agents
 - 5 exercises on Upsilon calculation, environment design, and complexity invariance
 **[Start Day 27 →](papers/27_MSI/)**
+
+**Day 28: "CS231n: CNNs for Visual Recognition"**
+- Conv layers (naive + im2col), pooling, ReLU, FC — full CNN from scratch in NumPy
+- VGGNet-16 parameter analysis, spatial dimension progression, architecture case studies
+- 5 exercises: conv forward, pooling backprop, output sizes, parameter counting, feature viz  
+**[Start Day 28 →](papers/28_CS231n/)**
 
 ---
 
@@ -264,7 +270,7 @@ Each paper gets the full treatment:
 | 25 | [Scaling Laws for Neural Language Models](papers/25_scaling_laws/) | 🚀 **LIVE** | The physics of AI scaling |
 | 26 | [Kolmogorov Complexity](papers/26_kolmogorov_complexity/) | 🚀 **LIVE** | Math of compression & randomness |
 | 27 | [Machine Super Intelligence](papers/27_MSI/) | 🚀 **LIVE** | Safety & intelligence definitions |
-| 28 | [CS231n: CNNs for Visual Recognition](papers/28_cs231n/) | ⏳ Coming | Deep Vision & Neural Training |
+| 28 | [CS231n: CNNs for Visual Recognition](papers/28_CS231n/) | 🚀 **LIVE** | CNN layers from scratch, VGGNet analysis |
 
 
 ### Modern Extensions (Days 29-30)
@@ -378,6 +384,7 @@ CC BY-NC-ND 4.0 — Free to read, learn, and share with attribution. Not for com
 → **[Day 24: GPipe (Giant Neural Networks)](papers/24_gpipe/)**  
 → **[Day 25: Scaling Laws for Neural Language Models](papers/25_scaling_laws/)**  
 → **[Day 26: Kolmogorov Complexity](papers/26_kolmogorov_complexity/)**  
-→ **[Day 27: Machine Super Intelligence](papers/27_MSI/)** 🆕 **← START HERE!**
+→ **[Day 27: Machine Super Intelligence](papers/27_MSI/)**  
+→ **[Day 28: CS231n — CNNs for Visual Recognition](papers/28_CS231n/)** 🆕 **← START HERE!**
 
 Let's build something amazing together! 🚀
