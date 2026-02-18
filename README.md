@@ -15,7 +15,7 @@ Think of it as [Rustlings](https://github.com/rust-lang/rustlings), but for deep
 
 ---
 
-## 🚀 Units 1-4 Complete! Now in Unit 5: Generative Models & Scaling
+## 🚀 Units 1-5 Complete! Now in Unit 6: Reinforcement Learning & Human Feedback
 
 ### ✅ Unit 1: The Foundations (Days 1-7) - COMPLETE!
 
@@ -157,7 +157,7 @@ Think of it as [Rustlings](https://github.com/rust-lang/rustlings), but for deep
 - 5 exercises: spectrogram features, CTC decoding, RNN BatchNorm, curriculum learning, full pipeline  
 **[Start Day 22 →](papers/22_deep_speech_2/)**
 
-### 🧠 Unit 5: Generative Models & Scaling (Days 23-28) - IN PROGRESS!
+### ✅ Unit 5: Generative Models & Scaling (Days 23-28) - COMPLETE!
 
 **Day 23: "Variational Lossy Autoencoder"**
 - Curing posterior collapse in VAEs with powerful decoders
@@ -194,6 +194,14 @@ Think of it as [Rustlings](https://github.com/rust-lang/rustlings), but for deep
 - VGGNet-16 parameter analysis, spatial dimension progression, architecture case studies
 - 5 exercises: conv forward, pooling backprop, output sizes, parameter counting, feature viz  
 **[Start Day 28 →](papers/28_CS231n/)**
+
+### 🧠 Unit 6: Deep Reinforcement Learning & Alignment (Days 29-30)
+
+**Day 29: "Proximal Policy Optimization (PPO)"**
+- The algorithm behind ChatGPT (RLHF)
+- Clipped surrogate objective & GAE from scratch
+- 5 exercises on policy constraints and stability  
+**[Start Day 29 →](papers/29_PPO/)**
 
 ---
 
@@ -260,7 +268,7 @@ Each paper gets the full treatment:
 | 21 | [Neural Message Passing](papers/21_Neural_Message_Passing/) | 🚀 **LIVE** | MPNN framework for graph neural networks |
 | 22 | [Deep Speech 2](papers/22_deep_speech_2/) | 🚀 **LIVE** | End-to-end speech recognition with CTC |
 
-### Unit 5: Generative Models & Scaling (Days 23-28) - 🔥 IN PROGRESS
+### ✅ Unit 5: Generative Models & Scaling (Days 23-28) - COMPLETE
 *From theory to massive models*
 
 | Day | Paper | Status | Core Concept |
@@ -273,9 +281,13 @@ Each paper gets the full treatment:
 | 28 | [CS231n: CNNs for Visual Recognition](papers/28_CS231n/) | 🚀 **LIVE** | CNN layers from scratch, VGGNet analysis |
 
 
-### Modern Extensions (Days 29-30)
-*RLHF and the path to ChatGPT*
-- Reinforcement learning from human feedback, instruction tuning, alignment
+### 🤖 Unit 6: Deep Reinforcement Learning & Alignment (Days 29-30)- IN PROGRESS 💻
+*From Policy Gradients to RLHF*
+
+| Day | Paper | Status | Core Concept |
+|-----|-------|--------|-------------|
+| 29 | [Proximal Policy Optimization (PPO)](papers/29_PPO/) | 🚀 **LIVE** | The algorithm behind ChatGPT (RLHF) |
+| 30 | [Deep Reinforcement Learning from Human Feedback](papers/30_Deep_RLHF/) | **Coming Soon** |The birth of "Human Feedback" (RLHF) |
 
 **[Complete paper list with links →](ilya_30_papers.md)**
 
@@ -385,6 +397,7 @@ CC BY-NC-ND 4.0 — Free to read, learn, and share with attribution. Not for com
 → **[Day 25: Scaling Laws for Neural Language Models](papers/25_scaling_laws/)**  
 → **[Day 26: Kolmogorov Complexity](papers/26_kolmogorov_complexity/)**  
 → **[Day 27: Machine Super Intelligence](papers/27_MSI/)**  
-→ **[Day 28: CS231n — CNNs for Visual Recognition](papers/28_CS231n/)** 🆕 **← START HERE!**
+→ **[Day 28: CS231n — CNNs for Visual Recognition](papers/28_CS231n/)**  
+→ **[Day 29: Proximal Policy Optimization (PPO)](papers/29_PPO/)** 🆕 **← START HERE!**
 
 Let's build something amazing together! 🚀

@@ -111,7 +111,7 @@
 
             <div class="hero-badge">
                 <span class="badge-dot"></span>
-                <span>28 Papers Live • Open Source</span>
+                <span>29 Papers Live • Open Source</span>
             </div>
 
             <h1 class="hero-title">
@@ -157,7 +157,7 @@
 
             <div class="hero-stats">
                 <div class="stat">
-                    <span class="stat-value">28</span>
+                    <span class="stat-value">29</span>
                     <span class="stat-label">PAPERS LIVE</span>
                 </div>
                 <div class="stat-divider"></div>
@@ -172,7 +172,7 @@
                 </div>
                 <div class="stat-divider"></div>
                 <div class="stat">
-                    <span class="stat-value">38K+</span>
+                    <span class="stat-value">40K+</span>
                     <span class="stat-label">LINES OF CODE</span>
                 </div>
             </div>
@@ -213,7 +213,7 @@
         <div class="container">
             <div class="section-header">
                 <span class="section-tag">The Collection</span>
-                <h2 class="section-title">28 Papers, Fully Implemented</h2>
+                <h2 class="section-title">29 Papers, Fully Implemented</h2>
                 <p class="section-desc">Each paper comes with deep explanations, clean code, visualizations, and
                     exercises. Click any card to explore.</p>
             </div>
@@ -225,6 +225,7 @@
                 <button class="filter-btn" data-filter="transformers">Transformers</button>
                 <button class="filter-btn" data-filter="specialized">Specialized</button>
                 <button class="filter-btn" data-filter="generative">Generative</button>
+                <button class="filter-btn" data-filter="rl">Reinforcement Learning</button>
             </div>
 
             <div class="papers-grid">
@@ -1120,19 +1121,55 @@
                         </svg>
                     </div>
                 </a>
+
+                <a href="https://github.com/Ojhaharsh/30u30/tree/main/papers/29_PPO" target="_blank" class="paper-card"
+                    data-day="29" data-unit="rl">
+                    <div class="paper-symbol">
+                        <svg viewBox="0 0 80 80">
+                            <!-- PPO Clipping Function -->
+                            <line x1="10" y1="70" x2="70" y2="70" stroke="currentColor" stroke-width="2"
+                                opacity="0.5" />
+                            <line x1="10" y1="70" x2="10" y2="10" stroke="currentColor" stroke-width="2"
+                                opacity="0.5" />
+
+                            <!-- Unclipped objective (dashed) -->
+                            <line x1="15" y1="65" x2="65" y2="15" stroke="currentColor" stroke-width="2"
+                                stroke-dasharray="4 4" opacity="0.5" />
+
+                            <!-- Clipped objective (solid) -->
+                            <path d="M15 65 L35 45 L55 45 L65 35" stroke="currentColor" stroke-width="2.5"
+                                fill="none" />
+
+                            <!-- Clip bounds -->
+                            <line x1="35" y1="70" x2="35" y2="40" stroke="currentColor" stroke-width="1"
+                                stroke-dasharray="2 2" opacity="0.3" />
+                            <line x1="55" y1="70" x2="55" y2="40" stroke="currentColor" stroke-width="1"
+                                stroke-dasharray="2 2" opacity="0.3" />
+                        </svg>
+                    </div>
+                    <div class="paper-content">
+                        <span class="paper-day">Day 29</span>
+                        <h3>Proximal Policy Optimization</h3>
+                        <p>The algorithm behind RLHF and ChatGPT — simple, stable policy gradients via clipping</p>
+                        <div class="paper-meta">
+                            <span class="meta-item"><i class="fas fa-code"></i> PyTorch</span>
+                            <span class="meta-item"><i class="fas fa-dumbbell"></i> 5 exercises</span>
+                        </div>
+                    </div>
+                    <div class="paper-arrow">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M5 12h14M12 5l7 7-7 7" />
+                        </svg>
+                    </div>
+                </a>
             </div>
 
             <div class="papers-coming">
                 <h3>Coming Next</h3>
                 <div class="coming-grid">
                     <div class="coming-card">
-                        <span class="coming-day">Day 29</span>
-                        <span class="coming-title">PPO: Proximal Policy Optimization</span>
-                    </div>
-
-                    <div class="coming-card">
                         <span class="coming-day">Day 30</span>
-                        <span class="coming-title">Deep Reinforcement Learning from Human Feedback</span>
+                        <span class="coming-title">Deep Reinforcement Learning from Human Feedback (RLHF)</span>
                     </div>
                 </div>
             </div>
@@ -1234,7 +1271,7 @@
                     </div>
                 </div>
 
-                <div class="timeline-unit active">
+                <div class="timeline-unit complete">
                     <div class="unit-marker">
                         <span class="unit-number">05</span>
                         <div class="unit-line"></div>
@@ -1242,7 +1279,7 @@
                     <div class="unit-content">
                         <div class="unit-header">
                             <h3>Generative Models & Scale</h3>
-                            <span class="unit-status active">In Progress</span>
+                            <span class="unit-status complete">Complete</span>
                         </div>
                         <p>Days 23-28 · VAEs, Scaling, Kolmogorov Complexity, SMI, and CNNs</p>
                         <div class="unit-papers">
@@ -1264,13 +1301,16 @@
                     <div class="unit-content">
                         <div class="unit-header">
                             <h3>Modern Foundations</h3>
-                            <span class="unit-status upcoming">Coming</span>
+                            <span class="unit-status upcoming">In Progress</span>
                         </div>
                         <p>Days 29-30 · PPO and the path to ChatGPT (RLHF)</p>
+                        <div class="unit-papers">
+                            <span>Proximal Policy Optimization</span>
+                            <span>RLHF (coming soon)</span>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
     </section>
 
     <section id="about" class="about">
