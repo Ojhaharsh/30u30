@@ -15,7 +15,7 @@ Think of it as [Rustlings](https://github.com/rust-lang/rustlings), but for deep
 
 ---
 
-## 🚀 Units 1-5 Complete! Now in Unit 6: Reinforcement Learning & Human Feedback
+## 🚀 All units are complete! Bonus papers are coming soon!!!
 
 ### ✅ Unit 1: The Foundations (Days 1-7) - COMPLETE!
 
@@ -186,7 +186,7 @@ Think of it as [Rustlings](https://github.com/rust-lang/rustlings), but for deep
 **Day 27: "Machine Super Intelligence (Shane Legg)"**
 - Universal Intelligence (Υ), Kolmogorov Complexity proxies, and the Agent-Environment loop
 - Formal benchmarking of Random vs. RL vs. Predictive agents
-- 5 exercises on Upsilon calculation, environment design, and complexity invariance
+- 5 exercises on Upsilon calculation, environment design, and complexity invariance  
 **[Start Day 27 →](papers/27_MSI/)**
 
 **Day 28: "CS231n: CNNs for Visual Recognition"**
@@ -195,13 +195,19 @@ Think of it as [Rustlings](https://github.com/rust-lang/rustlings), but for deep
 - 5 exercises: conv forward, pooling backprop, output sizes, parameter counting, feature viz  
 **[Start Day 28 →](papers/28_CS231n/)**
 
-### 🧠 Unit 6: Deep Reinforcement Learning & Alignment (Days 29-30)
+### ✅ Unit 6: Deep Reinforcement Learning & Alignment (Days 29-30) - COMPLETE!
 
 **Day 29: "Proximal Policy Optimization (PPO)"**
 - The algorithm behind ChatGPT (RLHF)
 - Clipped surrogate objective & GAE from scratch
 - 5 exercises on policy constraints and stability  
 **[Start Day 29 →](papers/29_PPO/)**
+
+**Day 30: "Deep Reinforcement Learning from Human Feedback (RLHF)"**
+- Aligning AI with human preferences
+- Reward Modeling, Preference Loss, and PPO integration
+- Synthetic Oracle and full training loop from scratch  
+**[Start Day 30 →](papers/30_RLHF/)**
 
 ---
 
@@ -281,13 +287,25 @@ Each paper gets the full treatment:
 | 28 | [CS231n: CNNs for Visual Recognition](papers/28_CS231n/) | 🚀 **LIVE** | CNN layers from scratch, VGGNet analysis |
 
 
-### 🤖 Unit 6: Deep Reinforcement Learning & Alignment (Days 29-30)- IN PROGRESS 💻
+### ✅ Unit 6: Deep Reinforcement Learning & Alignment (Days 29-30) - COMPLETE
 *From Policy Gradients to RLHF*
 
 | Day | Paper | Status | Core Concept |
 |-----|-------|--------|-------------|
 | 29 | [Proximal Policy Optimization (PPO)](papers/29_PPO/) | 🚀 **LIVE** | The algorithm behind ChatGPT (RLHF) |
-| 30 | [Deep Reinforcement Learning from Human Feedback](papers/30_Deep_RLHF/) | **Coming Soon** |The birth of "Human Feedback" (RLHF) |
+| 30 | [Deep Reinforcement Learning from Human Feedback](papers/30_RLHF/) | 🚀 **LIVE** | The birth of "Human Feedback" (RLHF) |
+
+
+### 💻⏭️ Bonus Papers: The Language Model Revolution (Coming Soon)
+*The modern era of LLMs*
+
+| Paper | Core Concept |
+|-------|--------------|
+| [BERT: Pre-training of Deep Bidirectional Transformers](papers/bonus_BERT/) | **Coming Soon** |
+| [GPT-2: Language Models are Unsupervised Multitask Learners](papers/bonus_GPT2/) | **Coming Soon** |
+| [GPT-3: Language Models are Few-Shot Learners](papers/bonus_GPT3/) | **Coming Soon** |
+| [Chinchilla: Training Compute-Optimal Large Language Models](papers/bonus_Chinchilla/) | **Coming Soon** |
+
 
 **[Complete paper list with links →](ilya_30_papers.md)**
 
@@ -398,6 +416,7 @@ CC BY-NC-ND 4.0 — Free to read, learn, and share with attribution. Not for com
 → **[Day 26: Kolmogorov Complexity](papers/26_kolmogorov_complexity/)**  
 → **[Day 27: Machine Super Intelligence](papers/27_MSI/)**  
 → **[Day 28: CS231n — CNNs for Visual Recognition](papers/28_CS231n/)**  
-→ **[Day 29: Proximal Policy Optimization (PPO)](papers/29_PPO/)** 🆕 **← START HERE!**
+→ **[Day 29: Proximal Policy Optimization (PPO)](papers/29_PPO/)**  
+→ **[Day 30: RLHF](papers/30_RLHF/)** 🆕 **← Start here!**
 
 Let's build something amazing together! 🚀
